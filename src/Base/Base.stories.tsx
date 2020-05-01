@@ -1,8 +1,14 @@
 /** @jsx jsx */
-import Base, { ComponentValues } from './Base';
 import { jsx, css } from '@emotion/core';
-import { withKnobs, text, boolean, select, number } from '@storybook/addon-knobs';
+import {
+  withKnobs,
+  text,
+  boolean,
+  select,
+  number,
+} from "@storybook/addon-knobs";
 
+import Base, { ComponentValues } from './Base';
 import {
   colorTypes,
   positionValues,

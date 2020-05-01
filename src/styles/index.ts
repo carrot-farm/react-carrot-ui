@@ -108,7 +108,6 @@ const flexWrap = (wrap: flexWrapType) => css`flex-wrap: ${wrap}`;
 // ===== flex wrap
 const flexDirection = (direction: flexDirectionType) => css`flex-direction: ${direction}`;
 
-
 export default {
   marginTop,
   marginRight,

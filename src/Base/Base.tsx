@@ -36,7 +36,9 @@ export type ComponentType = typeof ComponentValues[number];
 // # props
 export type BaseProps = {
   /** 내부에 렌더링 될 요소 */
-  children: React.ReactNode,
+  children?: React.ReactNode,
+  /** 클래스명 */
+  className?: string;
   /** 생성될 HTML 엘리먼트명 */
   component?: ComponentType;
 
@@ -97,43 +99,43 @@ export type BaseProps = {
 
 // ===== 컴포넌트
 /** 다른 컴포넌트의 토대가 되는 컴포넌트 */
-function Base(props: BaseProps) {
-  const {
-    component,
-    children,
+function Base({
+  children,
+  className,
+  component,
   
-    marginTop,
-    marginRight,
-    marginBottom,
-    marginLeft,
-  
-    paddingTop,
-    paddingRight,
-    paddingBottom,
-    paddingLeft,
-  
-    border,
-    borderTop,
-    borderRight,
-    borderBottom,
-    borderLeft,
-    borderColor,
-  
-    width,
-    height,
-  
-    backgroundColor,
-    color,
-  
-    position,
-    display,
-    textAlign,
-    flexAlign,
-    flexWrap,
-    flexDirection,
-  
-    ...args
-  } = props;
+  marginTop,
+  marginRight,
+  marginBottom,
+  marginLeft,
+
+  paddingTop,
+  paddingRight,
+  paddingBottom,
+  paddingLeft,
+
+  border,
+  borderTop,
+  borderRight,
+  borderBottom,
+  borderLeft,
+  borderColor,
+
+  width,
+  height,
+
+  backgroundColor,
+  color,
+
+  position,
+  display,
+  textAlign,
+  flexAlign,
+  flexWrap,
+  flexDirection,
+
+  ...args
+}:  BaseProps) {
   const styleProps = {
     marginTop,
     marginRight,
@@ -169,40 +171,88 @@ function Base(props: BaseProps) {
   // console.log('> ', styleProps.border)
   // # 컴포넌트 랜더링
   if (component === "span") {
-    <span {...args} css={cssCreator(styleProps, styles)} >{children}</span>;
-  } else if(component === 'p') {
-    <p {...args} css={cssCreator(styleProps, styles)} >{children}</p>;
-  } else if(component === 'ul') {
-    <ul {...args} css={cssCreator(styleProps, styles)} >{children}</ul>;
-  } else if(component === 'li') {
-    <li {...args} css={cssCreator(styleProps, styles)} >{children}</li>;
-  } else if(component === 'h1') {
-    <h1 {...args} css={cssCreator(styleProps, styles)} >{children}</h1>;
-  } else if(component === 'h2') {
-    <h2 {...args} css={cssCreator(styleProps, styles)} >{children}</h2>;
-  } else if(component === 'h3') {
-    <h3 {...args} css={cssCreator(styleProps, styles)} >{children}</h3>;
-  } else if(component === 'h4') {
-    <h4 {...args} css={cssCreator(styleProps, styles)} >{children}</h4>;
-  } else if(component === 'h5') {
-    <h5 {...args} css={cssCreator(styleProps, styles)} >{children}</h5>;
-  } else if(component === 'h6') {
-    <h6 {...args} css={cssCreator(styleProps, styles)} >{children}</h6>;
-  } else if(component === 'button') {
-    <button {...args} css={cssCreator(styleProps, styles)} >{children}</button>;
-  } else if(component === 'table') {
-    <table {...args} css={cssCreator(styleProps, styles)} >{children}</table>;
-  } else if(component === 'i') {
-    <i {...args} css={cssCreator(styleProps, styles)} >{children}</i>;
-  } else if(component === 'article') {
-    <article {...args} css={cssCreator(styleProps, styles)} >{children}</article>;
-  } else if(component === 'section') {
-    <section {...args} css={cssCreator(styleProps, styles)} >{children}</section>;
-  } else if(component === 'a') {
-    <a {...args} css={cssCreator(styleProps, styles)} >{children}</a>;
+    return <span {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </span>;
+  } else if (component === "p") {
+    return <p {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </p>;
+  } else if (component === "ul") {
+    return <ul {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </ul>;
+  } else if (component === "li") {
+    return <li {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </li>;
+  } else if (component === "h1") {
+    return <h1 {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </h1>;
+  } else if (component === "h2") {
+    return <h2 {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </h2>;
+  } else if (component === "h3") {
+    return <h3 {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </h3>;
+  } else if (component === "h4") {
+    return <h4 {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </h4>;
+  } else if (component === "h5") {
+    return <h5 {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </h5>;
+  } else if (component === "h6") {
+    return <h6 {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </h6>;
+  } else if (component === "button") {
+    return <button
+      {...args}
+      css={cssCreator(styleProps, styles)}
+      className={className}
+    >
+      {children}
+    </button>;
+  } else if (component === "table") {
+    return <table {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </table>;
+  } else if (component === "i") {
+    return <i {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </i>;
+  } else if (component === "article") {
+    return <article
+      {...args}
+      css={cssCreator(styleProps, styles)}
+      className={className}
+    >
+      {children}
+    </article>;
+  } else if (component === "section") {
+    return <section
+      {...args}
+      css={cssCreator(styleProps, styles)}
+      className={className}
+    >
+      {children}
+    </section>;
+  } else if (component === "a") {
+    return <a {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </a>;
   }
 
-  return <div {...args} css={cssCreator(styleProps, styles)} >{children}</div>;
+  return (
+    <div {...args} css={cssCreator(styleProps, styles)} className={className}>
+      {children}
+    </div>
+  );
 }
 
 // ===== 기본 props 설정
@@ -221,8 +271,8 @@ const cssCreator = (props: any, styles: any) => {
   const result = [];
   let i = 0;
   for(const a in props) {
-    // console.log('> ', a, props[a]);
-    if(a !== undefined && styles[a] && props[a] !== false) {
+    if(props[a] !== undefined && styles[a] && props[a] !== false) {
+      // console.log('> ', a, props[a]);
       result[i++] = styles[a](props[a]);
     }
   }
