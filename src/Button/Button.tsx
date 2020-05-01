@@ -28,6 +28,7 @@ function Button({
   width,
   iconOnly,
 }: ButtonProps) {
+  // console.log('> ', style)
   return (
     <button
       css={[
