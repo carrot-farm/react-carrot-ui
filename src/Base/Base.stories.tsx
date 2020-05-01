@@ -3,7 +3,15 @@ import Base, { ComponentValues } from './Base';
 import { jsx, css } from '@emotion/core';
 import { withKnobs, text, boolean, select, number } from '@storybook/addon-knobs';
 
-import { colorTypes } from '../styles';
+import {
+  colorTypes,
+  positionValues,
+  textAlignValues,
+  displayValues,
+  flexAlignValues,
+  flexWrapValues,
+  flexDirectionValues,
+} from "../styles";
 
 export default {
   title: 'components|Base',
@@ -12,57 +20,48 @@ export default {
 };
 
 export const base = ()  => {
+  // # margin
   const children = text("children", 'children');
 
-  const component = select("component", ComponentValues, "div");
-  // # margin
-  const marginTop = number('marginTop', 0);
-  const marginRight = number('marginRight', 0);
-  const marginBottom = number('marginBottom', 0);
-  const marginLeft = number('marginLeft', 0);
-
-  const paddingTop = number('paddingTop', 0);
-  const paddingRight = number('paddingRight', 0);
-  const paddingBottom = number('paddingBottom', 0);
-  const paddingLeft = number('paddingLeft', 0);
-
-  const width = text('width', '100px');
-  const height = text('height', '100px');
-  
-  const color = select('color', colorTypes, 'black');
-  const backgroundColor = select('backgroundColor', colorTypes, 'grey');
-
   const props: any = {
+    component: select("component", ComponentValues, "div"),
+
+    marginTop: number('marginTop', 0),
+    marginRight: number('marginRight', 0),
+    marginBottom: number('marginBottom', 0),
+    marginLeft: number('marginLeft', 0),
+
+    paddingTop: number('paddingTop', 0),
+    paddingRight: number('paddingRight', 0),
+    paddingBottom: number('paddingBottom', 0),
+    paddingLeft: number('paddingLeft', 0),
+
     border: boolean('border', false),
-    borderColor: select('borderColor', colorTypes, 'transparent')
+    borderTop: boolean('borderTop', false),
+    borderRight: boolean('borderRight', false),
+    borderBottom: boolean('borderBottom', false),
+    borderLeft: boolean('borderLeft', false),
+    borderColor: select('borderColor', colorTypes, 'transparent'),
+
+    width: text('width', '100px'),
+    height: text('height', '100px'),
+
+    color: select('color', colorTypes, 'black'),
+    backgroundColor: select('backgroundColor', colorTypes, 'grey'),
+    
+    textAlign: select('textAlign', textAlignValues, 'center'),
+    position: select('position', positionValues, 'relative'),
+    display: select('display', displayValues, 'flex'),
+    flexAlign: select('flexAlign', flexAlignValues, 'middle'),
+    flexWrap: select('flexWrap', flexWrapValues, 'nowrap'),
+    flexDirection: select('flexDirection', flexDirectionValues, 'row'),
   }
 
   return (
     <div css={[style]}>
-      <Base
-        component={component}
-
-        marginTop={marginTop}
-        marginRight={marginRight}
-        marginBottom={marginBottom}
-        marginLeft={marginLeft}
-
-        paddingTop={paddingTop}
-        paddingRight={paddingRight}
-        paddingBottom={paddingBottom}
-        paddingLeft={paddingLeft}
-
-        width={width}
-        height={height}
-
-        color={color}
-        backgroundColor={backgroundColor}
-
-        {...props}
-        className="test"
-      >{children}</Base>
+      <Base {...props}>{children}</Base>
     </div>
-  )
+  );
 };
 
 base.story = {
