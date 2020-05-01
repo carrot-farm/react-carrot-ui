@@ -34,6 +34,29 @@ const backgroundColor = (color: ColorsType) => css`background-color: ${colors[co
 // ===== color
 const color = (color: ColorsType) => css`color: ${colors[color]}`;
 
+// ===== border
+const border = () => css`
+  box-sizing: border-box;
+  border: 1px solid;
+`;
+const borderTop = () => css`
+  box-sizing: border-box;
+  border-top: 1px solid;
+`;
+const borderRight = () => css`
+  box-sizing: border-box;
+  border-right: 1px solid;
+`;
+const borderBottom = () => css`
+  box-sizing: border-box;
+  border-bottom: 1px solid;
+`;
+const borderLeft = () => css`
+  box-sizing: border-box;
+  border-left: 1px solid;
+`;
+const borderColor = (color: ColorsType) => css`border-color: ${colors[color]}`;
+
 export default {
   marginTop,
   marginRight,
@@ -44,6 +67,13 @@ export default {
   paddingRight,
   paddingBottom,
   paddingLeft,
+
+  border,
+  borderTop,
+  borderRight,
+  borderBottom,
+  borderLeft,
+  borderColor,
 
   width, 
   height,

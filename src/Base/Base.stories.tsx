@@ -32,6 +32,11 @@ export const base = ()  => {
   const color = select('color', colorTypes, 'black');
   const backgroundColor = select('backgroundColor', colorTypes, 'grey');
 
+  const props: any = {
+    border: boolean('border', false),
+    borderColor: select('borderColor', colorTypes, 'transparent')
+  }
+
   return (
     <div css={[style]}>
       <Base
@@ -52,6 +57,9 @@ export const base = ()  => {
 
         color={color}
         backgroundColor={backgroundColor}
+
+        {...props}
+        className="test"
       >{children}</Base>
     </div>
   )

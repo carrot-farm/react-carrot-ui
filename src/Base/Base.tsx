@@ -48,6 +48,14 @@ export type BaseProps = {
   /** padding left */
   paddingLeft?: number;
 
+  /** 전체 border */
+  border?: boolean;
+  borderTop?: boolean;
+  borderRight?: boolean;
+  borderBottom?: boolean;
+  borderLeft?: boolean;
+  borderColor?: ColorsType;
+
   /** width */
   width?: string;
   /** height */
@@ -64,13 +72,16 @@ export type BaseProps = {
 function Base(props: BaseProps) {
   const {
     component,
-    children
+    children,
+    ...args
   } = props;
 
-  // console.log('> ', ComponentType)
+  const otherProps = otherPropsFilter(args, styles);
+
+  // console.log('> ', otherProps)
   // # 컴포넌트 랜더링
   if (component === "div") {
-    return <div css={cssCreator(props, styles)}>{children}</div>
+    return <div {...otherProps} css={cssCreator(props, styles)} >{children}</div>;
   }
 }
 
@@ -85,8 +96,19 @@ const cssCreator = (props: any, styles: any) => {
   const result = [];
   let i = 0;
   for(const a in props) {
-    if(a !== undefined && styles[a]) {
+    // console.log('> ', a, props[a]);
+    if(a !== undefined && styles[a] && props[a] !== false) {
       result[i++] = styles[a](props[a]);
+    }
+  }
+  return result;
+}
+// # 스타일링에 사용될 props를 제외한 props
+const otherPropsFilter = (props: any, styles: any) => {
+  const result: any = {} ;
+  for(const a in props) {
+    if(!styles[a]) {
+      result[a] = props[a];
     }
   }
   return result;
