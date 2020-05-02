@@ -4,9 +4,12 @@ import colors from '../styles/colors';
 import { ColorsType } from '../styles';
 
 export default css`
+  margin: auto;
   position: relative;
   overflow: hidden;
-  display: block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   outline: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -14,6 +17,7 @@ export default css`
   font-size: 14px;
   padding: 0 16px;
   height: 36px;
+  // width: 200px;
   text-align: center;
   box-sizing: border-box;
   &[disabled] {

@@ -108,6 +108,32 @@ const flexWrap = (wrap: flexWrapType) => css`flex-wrap: ${wrap}`;
 // ===== flex wrap
 const flexDirection = (direction: flexDirectionType) => css`flex-direction: ${direction}`;
 
+// ===== media query
+const media: any = {
+  s: (styles: string) => {
+    return css`
+      @media screen and (max-width: 600px) {
+        ${styles}
+      }
+    `;
+  },
+  m: (styles: string) => { 
+    return (
+      css`
+      @media screen and (min-width: 601px) and (max-width: 960px) {
+        ${styles}
+      }`
+    )
+  },
+  l: (styles: string) => {
+    return (css`
+      @media screen and (min-width: 961px) {
+        ${styles}
+      }
+    `)
+  },
+}
+
 export default {
   marginTop,
   marginRight,
@@ -138,4 +164,6 @@ export default {
   flexAlign,
   flexWrap,
   flexDirection,
+
+  media,
 }

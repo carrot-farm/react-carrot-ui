@@ -1,5 +1,7 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { useRef, useEffect, useState } from 'react';
+import { jsx, css } from '@emotion/core';
+import gsap from 'gsap';
 
 import Base, { BaseProps } from '../Base/Base';
 import { ColorsType } from '../styles'
@@ -38,32 +40,93 @@ function Button({
   border,
   ...args
 }: ButtonPropsType) {
+  const rootEl = useRef(null);
+  const buttonEl = useRef<HTMLButtonElement>(null);
+  const [sw, setSw] = useState(false);
+  const { current: tl } = useRef(gsap.timeline({ paused: true }));
+
+  useEffect(() => {
+    gsap.set(rootEl.current, { perspective: 1000 });
+    gsap.set(buttonEl.current, {
+      transformStyle: "perspective-3d",
+    })
+  }, [])
+
+  // # 버튼 클릭
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if(sw) {return false;}
+    setSw(true);
+    const el = e.currentTarget;
+    const elInfo = el.getBoundingClientRect();
+    const x = e.pageX - elInfo.x - elInfo.width / 2;
+    const y = e.pageY - elInfo.y - elInfo.height / 2;
+    const xRatio = x / (elInfo.width / 2) * 100;
+    const yRatio = y / (elInfo.height / 2) * 100;
+    const yMove = (50 * xRatio / 100);
+    const xMove = (30 * yRatio / 100) * -1;
+    const xShadow = (10 * xRatio / 100) * -1
+    const yShadow = (10 * yRatio / 100) * -1
+
+    gsap.to(buttonEl.current, 
+      { 
+        duration: 0.3,
+        rotateY: yMove,
+        rotateX: xMove,
+        boxShadow: `${xShadow}px ${yShadow}px 15px rgba(0,0,0, 0.2)`
+      }
+      )
+    gsap.to(buttonEl.current, {
+      delay: 0.3,
+      rotateY: 0,
+      rotateX: 0,
+      boxShadow: `0px 0px 0px rgba(0,0,0, 0)`,
+      onComplete: () => {
+        setSw(false);
+      }
+    });
+
+    // console.log('> ', elInfo, x, y, xRatio, yRatio)
+    if(onClick) {
+      onClick(e);
+    }
+    
+
+  };
+
   return (
-    <Base
-      {...{ type, onClick, disabled }}
-      {...args}
-      component="button"
-      backgroundColor={backgroundColor}
-      color={color}
-      border={border}
-      css={[
-        styles,
-        hoverColor !== undefined ? hoverColorStyle(hoverColor) : undefined,
-        !border ? borderNone : undefined,
-        sizeStyle[size]
-      ]}
-    >
-      {children}
-      {!disabled && <Ripple color={rippleColor} />}
-    </Base>
+    <div ref={rootEl} style={{position: 'relative'}} css={[rootStyle]}>
+      <Base
+        {...{ type, onClick: handleClick, disabled }}
+        {...args}
+        refEl={buttonEl}
+        // component="div"
+        backgroundColor={backgroundColor}
+        color={color}
+        border={border}
+        css={[
+          styles,
+          hoverColor !== undefined ? hoverColorStyle(hoverColor) : undefined,
+          !border ? borderNone : undefined,
+          sizeStyle[size]
+        ]}
+      >
+        {children}
+        {!disabled && <Ripple color={rippleColor} />}
+      </Base>
+    </div>
   );
 }
+
 
 // // ===== 기본 props
 // Button.defaultProps = {
 //   type: 'button',
 //   size: 'm',
 // }
+
+const rootStyle = css`
+  display: inline-block;
+`
 
 
 // ===== export

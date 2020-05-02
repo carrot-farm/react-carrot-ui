@@ -20,6 +20,7 @@ type rippleArrayType = {
 }
 
 // ===== 컴포넌트
+/** parent의 속성이 `position:relative; overflow: hidden;`을 포함해야 한다. */
 function Ripple({ color = 'white', duration = 850 }: RippleType) {
   const [rippleArray, setRippleArray] = useState<rippleArrayType[]>([]);
 

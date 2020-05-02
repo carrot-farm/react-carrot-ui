@@ -80,16 +80,6 @@ const Dialog = ({
               {title && <h3>{title}</h3>}
               {description && <p>{description}</p>}
               {children}
-              {!hideButtons && (
-                <ButtonGroup css={{ marginTop: "3rem" }} rightAlign>
-                  {cancellable && (
-                    <Button theme="tertiary" onClick={onCancel}>
-                      {cancelText}
-                    </Button>
-                  )}
-                  <Button onClick={onConfirm}>{confirmText}</Button>
-                </ButtonGroup>
-              )}
             </div>
           </animated.div>
         ) : null
