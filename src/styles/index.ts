@@ -75,6 +75,8 @@ const backgroundColor = (color: ColorsType) => css`background-color: ${colors[co
 // ===== color
 const color = (color: ColorsType) => css`color: ${colors[color]}`;
 
+
+
 // ===== position
 const position = (position: positionType) => css`position: ${position}`;
 
@@ -134,6 +136,11 @@ const media: any = {
   },
 }
 
+// ===== 컬럭의 색상을 반환
+const getColor = (color: ColorsType) => colors[color];
+
+
+// ===== export
 export default {
   marginTop,
   marginRight,
@@ -166,4 +173,5 @@ export default {
   flexDirection,
 
   media,
+  getColor,
 }
