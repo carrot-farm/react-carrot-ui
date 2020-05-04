@@ -7,20 +7,20 @@ import { ColorsType } from '../styles';
 import colors from '../styles/colors';
 
 const iconSize = {
-  xs: '20px',
-  s: '25px',
-  m: '30px',
-  l: '35px',
-  xl: '40px'
+  xs: '14px',
+  s: '20px',
+  m: '25px',
+  l: '30px',
+  xl: '35px'
 }
 
 // ===== 타입
 // # 아이콘 명
-type IconType = keyof typeof icons; // icons 객체가 가지는 key를 추출하여 타입으로 사용.
+export type IconType = keyof typeof icons; // icons 객체가 가지는 key를 추출하여 타입으로 사용.
 export const iconTypes: IconType[] = Object.keys(icons) as any []; // 스토리에서 불러오기 위함
 
 // # 아이콘 사이즈
-type IconSizeType = keyof typeof iconSize;
+export type IconSizeType = keyof typeof iconSize;
 export const iconSizeValues: IconSizeType[] = Object.keys(iconSize) as any [];
 
 // # props type

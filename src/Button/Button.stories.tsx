@@ -4,6 +4,7 @@ import {
   withKnobs,
   boolean,
   select,
+  text,
 } from "@storybook/addon-knobs";
 import { action } from '@storybook/addon-actions';
 
@@ -27,6 +28,8 @@ export const Default = () => {
   const rippleColor = select('rippleColor', colorTypes, 'white');
   const border = boolean('border', false);
   const borderColor = select('borderColor', colorTypes, 'transparent');
+  const borderRadius = text('borderRadius', '5px');
+  const square = boolean('square', false);
 
   return (
     <Button 
@@ -39,6 +42,8 @@ export const Default = () => {
       rippleColor={rippleColor}
       border={border}
       borderColor={borderColor}
+      borderRadius={borderRadius}
+      square={square}
     >
       Button
     </Button>

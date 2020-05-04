@@ -53,6 +53,7 @@ function Grid({
         xs ? xsCol(xs) : undefined,
         s ? sCol(s) : undefined,
         m ? mCol(m) : undefined,
+        l ? lCol(l) : undefined,
         offsetS ? offsetSCol(offsetS, 's') : undefined,
         offsetM ? offsetSCol(offsetM, 'm') : undefined,
         offsetL ? offsetSCol(offsetL, 'l') : undefined,

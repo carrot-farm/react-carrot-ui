@@ -51,6 +51,28 @@ export const sizeStyle = {
 };
 
 
+// ===== border radius
+export const borderRadiusStyle = (radius: string) => css`border-radius: ${radius}`;
+
+// ===== 정사각현
+export const squareStyle = {
+  s: css`
+    width: 22px;
+    height: 22px;
+    padding: 0 !important;
+  `,
+  m: css`
+    width: 36px;
+    height: 36px;
+    padding: 0 !important;
+  `,
+  l: css`
+    width: 40px;
+    height: 40px;
+    padding: 0 !important;
+  `,
+}
+
 // ===== 마우스 오버시 컬러 스타일
 export const hoverColorStyle = (color: ColorsType) =>
   css`
@@ -60,14 +82,6 @@ export const hoverColorStyle = (color: ColorsType) =>
   `;
 
 
-// ===== 리플 
-// # 키프레임
-const ripple = keyframes`
-  to {
-    opacity: 0;
-    transform: scale(2);
-  }
-`;
 
 
 

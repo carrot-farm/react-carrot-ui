@@ -16,7 +16,7 @@ export type textAlignType = typeof textAlignValues[number];
 export const displayValues = ["inline", "inline-block", "block", "flex", "inline-flex", "none"] as const;
 export type displayType = typeof displayValues[number];
 // # flext align type
-export const flexAlignValues = ["space-around", "space-between", "flex-end", "middle-center", "middle", "center"] as const; 
+export const flexAlignValues = ["space-around", "space-between", "flex-start","flex-end", "middle-center", "middle", "center"] as const; 
 export type flexAlignType = typeof flexAlignValues[number];
 // # flex wrap
 export const flexWrapValues = ["wrap", "nowrap"];
@@ -97,6 +97,8 @@ const flexAlign = (align: flexAlignType) => {
       justify-content: center;
       align-items: center;
     `);
+  } else if(align === 'flex-start') {
+    return css`justify-content: flex-start;`;
   } else if(align === 'flex-end') {
     return css`justify-content: flex-end;`;
   } else if (align === "space-around") {

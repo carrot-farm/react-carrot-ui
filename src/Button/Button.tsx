@@ -5,31 +5,43 @@ import gsap from 'gsap';
 
 import Base, { BaseProps } from '../Base/Base';
 import { ColorsType } from '../styles'
-import styles, { hoverColorStyle, sizeStyle, borderNone } from './ButtonStyles';
+import styles, {
+  hoverColorStyle,
+  sizeStyle,
+  borderNone,
+  borderRadiusStyle,
+  squareStyle,
+} from "./ButtonStyles";
 import Ripple from '../Ripple/Ripple';
 
 // ===== 타입
-type ButtonPropsType = BaseProps & {
+export type ButtonPropsType = BaseProps & {
   /** 버튼 타입 */
   type?: 'button' | 'submit';
   /** 버튼 사이즈 */
   size?: 's' | 'm' | 'l';
   /** 마우스 오버시 컬러 */
   hoverColor?: ColorsType;
-  /** 클릭 했을 때 함수 */
-  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
   /** 버튼 비활성화 */
   disabled?: boolean;
   /** 라벨 색상 */
   color?: ColorsType;
   /** ripple 생삭 */
   rippleColor?: ColorsType;
+  /** 보더 생성 유무 */
+  border?: boolean;
+  /** 모서리 둥글기 */
+  borderRadius?: string;
+  /** 정사각형 */
+  square?: boolean;
+  /** 내부 컴포넌트 */
+  children: React.ReactNode;
+  /** 클릭 했을 때 함수 */
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 // ===== 컴포넌트
 function Button({
-  children,
-  onClick,
   type,
   size = 'm',
   color = 'white',
@@ -38,12 +50,16 @@ function Button({
   disabled,
   rippleColor = 'white',
   border,
+  borderRadius,
+  square,
+  children,
+  onClick,
   ...args
 }: ButtonPropsType) {
   const rootEl = useRef(null);
   const buttonEl = useRef<HTMLButtonElement>(null);
   const [sw, setSw] = useState(false);
-  const { current: tl } = useRef(gsap.timeline({ paused: true }));
+  // const { current: tl } = useRef(gsap.timeline({ paused: true }));
 
   useEffect(() => {
     gsap.set(rootEl.current, { perspective: 1000 });
@@ -63,7 +79,7 @@ function Button({
     const xRatio = x / (elInfo.width / 2) * 100;
     const yRatio = y / (elInfo.height / 2) * 100;
     const yMove = (50 * xRatio / 100);
-    const xMove = (30 * yRatio / 100) * -1;
+    const xMove = (50 * yRatio / 100) * -1;
     const xShadow = (10 * xRatio / 100) * -1
     const yShadow = (10 * yRatio / 100) * -1
 
@@ -107,7 +123,9 @@ function Button({
           styles,
           hoverColor !== undefined ? hoverColorStyle(hoverColor) : undefined,
           !border ? borderNone : undefined,
-          sizeStyle[size]
+          borderRadius ? borderRadiusStyle(borderRadius) : undefined,
+          square ?  squareStyle[size] : undefined,
+          sizeStyle[size],
         ]}
       >
         {children}
