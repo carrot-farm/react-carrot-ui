@@ -58,7 +58,6 @@ function Button({
 }: ButtonPropsType) {
   const rootEl = useRef(null);
   const buttonEl = useRef<HTMLButtonElement>(null);
-  const [sw, setSw] = useState(false);
   // const { current: tl } = useRef(gsap.timeline({ paused: true }));
 
   useEffect(() => {
@@ -70,8 +69,7 @@ function Button({
 
   // # 버튼 클릭
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if(sw) {return false;}
-    setSw(true);
+    if(disabled) {return false;}
     const el = e.currentTarget;
     const elInfo = el.getBoundingClientRect();
     const x = e.pageX - elInfo.x - elInfo.width / 2;
@@ -96,9 +94,6 @@ function Button({
       rotateY: 0,
       rotateX: 0,
       boxShadow: `0px 0px 0px rgba(0,0,0, 0)`,
-      onComplete: () => {
-        setSw(false);
-      }
     });
 
     // console.log('> ', elInfo, x, y, xRatio, yRatio)

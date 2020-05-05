@@ -37,7 +37,7 @@ export default css`
 // ===== 사이즈
 export const sizeStyle = {
   s: css`
-    height: 22px;
+    height: 25px;
     padding: 0 13px
   `,
   m: css`
@@ -57,8 +57,8 @@ export const borderRadiusStyle = (radius: string) => css`border-radius: ${radius
 // ===== 정사각현
 export const squareStyle = {
   s: css`
-    width: 22px;
-    height: 22px;
+    width: 25px;
+    height: 25px;
     padding: 0 !important;
   `,
   m: css`

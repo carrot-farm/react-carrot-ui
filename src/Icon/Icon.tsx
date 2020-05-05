@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
+import { InterpolationWithTheme } from '@emotion/core/types/index';
 import * as icons from './svg';
 
 import { BaseProps } from '../Base/Base';
@@ -39,12 +40,13 @@ function Icon({
   name,
   size = 's',
   color = 'black',
+  ...args
 }: IconTPropsType) {
   const SVGIcon = icons[name];
-  // console.log('> ', col)
 
   return (
     <SVGIcon
+      {...args}
       css={{
         fill: colors[color],
         width: iconSize[size],

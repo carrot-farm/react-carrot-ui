@@ -52,7 +52,7 @@ function IconButton({
   ...args
 }: IconButtonPropsType) {
   let iSize: IconSizeType = "s";
-  
+
   // # 사이즈 값에 따른 아이콘 사이즈
   if(size === 's') {
     iSize = 'xs';
@@ -71,14 +71,14 @@ function IconButton({
       hoverColor={hoverColor}
       rippleColor={rippleColor}
       border={border}
-      borderColor={color}
+      borderColor={disabled ? 'grey' : color}
       size={size}
       disabled={disabled}
       onClick={onClick}
       borderRadius={'50%'}
       square={true}
     >
-      <Icon name={'home'} color={color} size={iSize} />
+      <Icon name={'home'} color={disabled ? 'grey' : color} size={iSize} />
     </Button>
   );
 }
