@@ -5,7 +5,7 @@ import gsap from 'gsap';
 
 import Base, { BaseProps } from '../Base/Base';
 import Container from '../Container/Container';
-import styles, { flexAlignType } from '../styles';
+import styles, { flexAlignType, ColorsType } from '../styles';
 
 // ===== 타입
 /** props type */
@@ -16,6 +16,8 @@ type AppBarPropsType = BaseProps & {
   fullWidth?: boolean;
   /** 정렬방식 */
   align?: flexAlignType;
+  /** 배경색 */
+  backgroundColor?: ColorsType;
   /** 내부 컴포넌트 */
   children?: React.ReactNode;
 };
@@ -26,12 +28,18 @@ function AppBar({
   height = '60px',
   fullWidth,
   align = 'flex-start',
+  backgroundColor = 'white',
   children,
   ...args
 }: AppBarPropsType) {
 
   return (
-    <Base {...args} height={height} css={rootStyle}>
+    <Base
+      {...args}
+      height={height}
+      css={rootStyle}
+      backgroundColor={backgroundColor}
+    >
       <Container
         fullWidth={fullWidth}
         css={[containerStyle, styles.flexAlign(align)]}
@@ -46,13 +54,13 @@ function AppBar({
 // ===== styles
 const rootStyle = css`
   position: relative;
-  overflow: hidden;
   display: flex;
   align-items: center;
-`;
+  `;
 const containerStyle = css`
   position: relative;
   display: flex;
+  align-items: center;
 `;
 
 

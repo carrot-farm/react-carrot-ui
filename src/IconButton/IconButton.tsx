@@ -78,7 +78,7 @@ function IconButton({
       borderRadius={'50%'}
       square={true}
     >
-      <Icon name={'home'} color={disabled ? 'grey' : color} size={iSize} />
+      <Icon name={iconName} color={disabled ? 'grey' : color} size={iSize} />
     </Button>
   );
 }

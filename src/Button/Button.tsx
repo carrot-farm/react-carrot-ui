@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
 import gsap from 'gsap';
 

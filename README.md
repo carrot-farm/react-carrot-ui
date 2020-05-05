@@ -16,3 +16,7 @@ or
 ```bash
 npm install --save react-carrot-ui react-spring @emotion/core
 ```
+
+
+## 개발예정
+* [ ] turn button 기능 구현

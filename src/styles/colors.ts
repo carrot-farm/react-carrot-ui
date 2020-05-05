@@ -145,6 +145,6 @@ const colors = {
   ['orange-lighten-3']: '#ffd8a8',
   ['orange-lighten-4']: '#ffe8cc',
   ['orange-lighten-5']: '#fff4e6',
-};
+} as const;
 
 export default colors;
