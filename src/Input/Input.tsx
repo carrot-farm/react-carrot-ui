@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
-import gsap from 'gsap';
 
 import styles, { ColorsType } from '../styles';
 

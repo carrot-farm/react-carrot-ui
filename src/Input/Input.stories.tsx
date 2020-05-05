@@ -9,11 +9,10 @@ import {
 import { action } from '@storybook/addon-actions';
 
 import Input from './Input';
-import { flexAlignValues } from '../styles';
 
 // ===== export 정보
 export default {
-  title: 'components|Input',
+  title: 'form|Input',
   component: Input,
   decorators: [withKnobs],
 };
