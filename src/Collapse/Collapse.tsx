@@ -19,6 +19,8 @@ type CollapsePropsType = {
   height?: string;
   /** 첫 렌더링시 컨테츠 노출 여부 */
   show?: boolean;
+  /** 컨텐츠 최대넓이 */
+  childrenFullWidth?: boolean;
   /** 컨텐츠 */
   children?: React.ReactNode;
   /** 변경 이벤트 */
@@ -30,6 +32,7 @@ function Collapse({
   headText,
   height = '50px',
   show = false,
+  childrenFullWidth,
   children,
   onToggle,
 }: CollapsePropsType) {
@@ -91,7 +94,7 @@ function Collapse({
 
       {/* ===== contents ===== */}
       <div css={[contentsStyle(firstShow.current)]} ref={contentsContainerEl}>
-        <Container>
+        <Container fullWidth={childrenFullWidth}>
           {children}
         </Container>
       </div>

@@ -8,26 +8,26 @@ import {
 } from "@storybook/addon-knobs";
 import { action } from '@storybook/addon-actions';
 
-import Collapse from './Collapse';
+import Folding from './Folding';
 import { flexAlignValues } from '../styles';
 
 // ===== export 정보
 export default {
-  title: 'components|Collapse',
-  component: Collapse,
+  title: 'components|Folding',
+  component: Folding,
   decorators: [withKnobs],
 };
 
 // ===== 컴포넌트
 // # default
 export const Default = () => {
-  const headText = text('headText', 'headText') ;
-  const children = text('children', 'children') ;
-  const childrenFullWidth = boolean('childrenFullWidth', false) ;
+  const sw = boolean('sw', true) ;
 
   return (
-    <Collapse headText={headText} childrenFullWidth={childrenFullWidth}>
-      {children}
-    </Collapse>
+    <Folding sw={sw}>
+      <div style={{height: 100, width: 100, backgroundColor: '#ff9547'}}>
+        carrot
+      </div>
+    </Folding>
   );
 }
