@@ -9,7 +9,9 @@
     "/dist"
   ],
   "dependencies": {
-    "react-spring": "^8.0.27"
+    "react-spring": "^8.0.27",
+    "gsap": "^3.2.6",
+    "@emotion/core": "^10.0.28"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

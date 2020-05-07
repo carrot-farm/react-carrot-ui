@@ -23,7 +23,7 @@ jobs:
         run: yarn install
       
       - name: 스토리북 빌드
-        run: yarn build-storybook
+        run: npx build-storybook
 
       - name: Deploy
         env:
