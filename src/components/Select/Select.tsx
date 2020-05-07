@@ -61,11 +61,14 @@ function Select({
   };
 
   // # option 클릭
-  const handleOptionClick = useCallback((index: number) => {
+  const handleOptionClick = useCallback((index: number, disabled:boolean) => {
     // 이벤트 트리거 
     if(nativeEl.current) {
       nativeEl.current.selectedIndex = index;
       nativeEl.current.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if(!disabled) {
+      setSw(false);
     }
   }, [value, options, onChange]);
 
@@ -79,8 +82,8 @@ function Select({
       <select
         {...attr}
         name={name}
-        value={value}
-        onChange={onChange}
+        // value={value}
+        // onChange={onChange}
         css={nativeSelectSTyle(native)}
         ref={nativeEl}
       >
@@ -116,7 +119,7 @@ function Select({
                     }`}
                     data-value={a.value}
                     key={`custom-select-${i}`}
-                    onClick={() => handleOptionClick(i)}
+                    onClick={() => handleOptionClick(i, a.disabled)}
                   >
                     <Container>{a.text}</Container>
                     {!a.disabled && <Ripple color={'grey-lighten-2'} />}
