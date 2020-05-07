@@ -81,13 +81,15 @@ function Button({
     const xShadow = (10 * xRatio / 100) * -1
     const yShadow = (10 * yRatio / 100) * -1
 
-    tl.to(buttonEl.current, { 
+    gsap.to(buttonEl.current, { 
       duration: 0.3,
       rotateY: yMove,
       rotateX: xMove,
       boxShadow: `${xShadow}px ${yShadow}px 15px rgba(0,0,0, 0.2)`,
-    })
-    .to(buttonEl.current, {
+    });
+
+    gsap.to(buttonEl.current, {
+      delay: 0.3,
       rotateY: 0,
       rotateX: 0,
       boxShadow: `0px 0px 0px rgba(0,0,0, 0)`,
