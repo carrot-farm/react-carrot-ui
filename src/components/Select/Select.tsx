@@ -61,7 +61,7 @@ function Select({
   };
 
   // # option 클릭
-  const handleOptionClick = useCallback((index: number, disabled:boolean) => {
+  const handleOptionClick = useCallback((index: number, disabled:boolean | undefined) => {
     // 이벤트 트리거 
     if(nativeEl.current) {
       nativeEl.current.selectedIndex = index;

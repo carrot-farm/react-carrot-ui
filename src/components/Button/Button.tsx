@@ -81,27 +81,22 @@ function Button({
     const xShadow = (10 * xRatio / 100) * -1
     const yShadow = (10 * yRatio / 100) * -1
 
-    gsap.to(buttonEl.current, 
-      { 
-        duration: 0.3,
-        rotateY: yMove,
-        rotateX: xMove,
-        boxShadow: `${xShadow}px ${yShadow}px 15px rgba(0,0,0, 0.2)`
-      }
-      )
-    gsap.to(buttonEl.current, {
-      delay: 0.3,
+    tl.to(buttonEl.current, { 
+      duration: 0.3,
+      rotateY: yMove,
+      rotateX: xMove,
+      boxShadow: `${xShadow}px ${yShadow}px 15px rgba(0,0,0, 0.2)`,
+    })
+    .to(buttonEl.current, {
       rotateY: 0,
       rotateX: 0,
       boxShadow: `0px 0px 0px rgba(0,0,0, 0)`,
-    });
+    })
 
     // console.log('> ', elInfo, x, y, xRatio, yRatio)
     if(onClick) {
       onClick(e);
     }
-    
-
   };
 
   return (
@@ -129,6 +124,8 @@ function Button({
     </div>
   );
 }
+
+const tl = gsap.timeline();
 
 
 // // ===== 기본 props
