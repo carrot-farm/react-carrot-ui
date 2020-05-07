@@ -9,7 +9,13 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: 레포지토리 체크아웃
-        uses: actions/checkout@master
+        uses: actions/checkout@v1
+        
+      - name: node setup
+        uses: actions/setup-node@v1 
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
 
       - name: node_modules 디렉토리캐싱
         uses: actions/cache@v1

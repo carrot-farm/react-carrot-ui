@@ -1,7 +1,7 @@
 {
   "name": "react-carrot-ui",
   "username": "carrot-farm",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "license": "MIT",
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
