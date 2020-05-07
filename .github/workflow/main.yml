@@ -1,0 +1,39 @@
+name: react-carrot-ui
+on:
+  push:
+    branches:
+      - master
+
+jobs: 
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: 레포지토리 체크아웃
+        uses: actions/checkout@master
+
+      - name: node_modules 디렉토리캐싱
+        uses: actions/cache@v1
+        with: 
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-
+        
+      - name: 의존성 파일 설치
+        run: yarn install
+      
+      - name: 스토리북 빌드
+        run: yarn build-storybook
+
+      - name: Deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 cp \
+            --recursive \
+            --region ap-northeast-2 \
+            storybook-static s3://static-server-bucket/react-carrot-ui
+
+
+
