@@ -10,13 +10,18 @@ react ui library
 
 ## Installation
 ```bash
-yarn add react-carrot-ui react-spring @emotion/core
-```
-or
-```bash
-npm install --save react-carrot-ui react-spring @emotion/core
+yarn add react-carrot-ui @emotion/core gsap
 ```
 
 
-## 개발예정
-* [ ] turn button 기능 구현
+## usage
+* **button**
+```ts
+import { Button } from 'react-carrot-ui';
+
+function Comp() {
+  return (
+    <Button>버튼</Button>
+  )
+}
+```
