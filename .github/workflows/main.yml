@@ -25,6 +25,17 @@ jobs:
       - name: 스토리북 빌드
         run: npx build-storybook
 
+      - name: 기본 빌드
+        run: yarn build
+
+      - name: 타입스크립트 빌드
+        run: yarn build:types
+
+      - name: npm 배포
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: npm publish --access public
+
       - name: Deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
