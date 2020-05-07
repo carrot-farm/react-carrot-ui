@@ -10,9 +10,12 @@ import styles, {
   sizeStyle,
   borderNone,
   borderRadiusStyle,
+  disabledStyle,
   squareStyle,
 } from "./ButtonStyles";
 import Ripple from '../Ripple/Ripple';
+import ButtonStyles from './ButtonStyles';
+import { borderColor } from '../Icon/svg';
 
 // ===== 타입
 export type ButtonPropsType = BaseProps & {
@@ -30,6 +33,8 @@ export type ButtonPropsType = BaseProps & {
   rippleColor?: ColorsType;
   /** 보더 생성 유무 */
   border?: boolean;
+  /** 보더 생성 유무 */
+  borderColor?: ColorsType;
   /** 모서리 둥글기 */
   borderRadius?: string;
   /** 정사각형 */
@@ -42,7 +47,7 @@ export type ButtonPropsType = BaseProps & {
 
 // ===== 컴포넌트
 function Button({
-  type,
+  type = 'button',
   size = 'm',
   color = 'white',
   backgroundColor = "lime",
@@ -50,6 +55,7 @@ function Button({
   disabled,
   rippleColor = 'white',
   border,
+  borderColor,
   borderRadius,
   square,
   children,
@@ -96,49 +102,69 @@ function Button({
     })
 
     // console.log('> ', elInfo, x, y, xRatio, yRatio)
-    if(onClick) {
-      onClick(e);
-    }
   };
 
   return (
-    <div ref={rootEl} style={{position: 'relative'}} css={[rootStyle]}>
+    <div ref={rootEl} css={[rootStyle]}>
+      {/* Slosh */}
       <Base
-        {...{ type, onClick: handleClick, disabled }}
-        {...args}
+        {...{ onClick: handleClick }}
         refEl={buttonEl}
         // component="div"
         backgroundColor={backgroundColor}
-        color={color}
         border={border}
+        borderColor={borderColor}
         css={[
           styles,
           hoverColor !== undefined ? hoverColorStyle(hoverColor) : undefined,
           !border ? borderNone : undefined,
           borderRadius ? borderRadiusStyle(borderRadius) : undefined,
-          square ?  squareStyle[size] : undefined,
+          disabled ? disabledStyle(disabled) : undefined,
+          square ? squareStyle[size] : undefined,
           sizeStyle[size],
         ]}
       >
-        {children}
+        <button
+          {...args}
+          type={type}
+          disabled={disabled}
+          css={[buttonStyle(color, disabled)]}
+          onClick={onClick}
+        >
+          {children}
+        </button>
         {!disabled && <Ripple color={rippleColor} />}
       </Base>
     </div>
   );
 }
 
-const tl = gsap.timeline();
-
-
-// // ===== 기본 props
-// Button.defaultProps = {
-//   type: 'button',
-//   size: 'm',
-// }
-
+// ===== styles
 const rootStyle = css`
   display: inline-block;
-`
+  position: relative;
+`;
+
+const buttonStyle = (color: ColorsType, disabled?: boolean) => css`
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font: inherit;
+  line-height: normal;
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+  width: auto;
+  &::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+  color: ${color};
+  ${disabled ? 'color: grey !important;' : ''}
+
+`;
+
 
 
 // ===== export

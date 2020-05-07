@@ -17,7 +17,6 @@ export default css`
   font-size: 14px;
   padding: 0 16px;
   height: 36px;
-  // width: 200px;
   text-align: center;
   box-sizing: border-box;
   &[disabled] {
@@ -81,6 +80,11 @@ export const hoverColorStyle = (color: ColorsType) =>
     }
   `;
 
+// ===== border style
+export const disabledStyle = (boolean?: boolean) => css`
+  ${boolean ? `background-color: ${colors['grey-lighten-4']};` : ''}
+  
+`
 
 
 
