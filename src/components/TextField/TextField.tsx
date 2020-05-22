@@ -2,14 +2,16 @@
 import { jsx, css } from '@emotion/core';
 import { useEffect, useCallback, useState } from 'react';
 
-import styles, { ColorsType } from '../../styles'
+import styles from '../../styles';
+import { TMainColorKeys } from '../../types/colors';
+import ThemeContext from '../../theme';
 
 // ===== 타입
 export type TextFieldPropsType = {
   /** name 속성 */
-  name: string;
+  name?: string;
   /** value */
-  value: string;
+  value?: string;
   /** label */
   label?: string;
   /** row 크기 */
@@ -23,9 +25,9 @@ export type TextFieldPropsType = {
   /** 기타 속성 */
   attr?: boolean;
   /** 메인 원색 */
-  primaryColor?: ColorsType;
+  mainColor?: TMainColorKeys;
   /** textarea 속성 */
-  onChange: (e:React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChange?: (e:React.ChangeEvent<HTMLTextAreaElement>) => any;
 };
 
 // ===== 컴포넌트
@@ -38,7 +40,7 @@ function TextField({
   readOnly,
   error,
   attr,
-  primaryColor = 'blue',
+  mainColor,
   onChange,
 }: TextFieldPropsType) {
   const lineHeightPx = rows * (22); // 라인 수 크기
@@ -70,38 +72,46 @@ function TextField({
   );
 
   return (
-    <div css={[rootStyle]} onClick={handleFocusIn}>
-      {/* ===== label ===== */}
-      {label && (
-        <label
-          className={`${focused ? "focused" : ""} ${error ? "error" : ""} ${
-            disabled ? "disabled" : ""
-          }`}
-          css={[labelStyle(primaryColor)]}
-        >
-          {label}
-        </label>
-      )}
+    <ThemeContext.Consumer>
+      {({theme}) => {
+        const _mainColor = mainColor || theme.primaryColor!;
 
-      {/* ===== textarea ===== */}
-      <div
-        className={`${focused ? "focused" : ""} ${error ? "error" : ""} ${
-          disabled ? "disabled" : ""
-        }`}
-        css={[textareaContainerStyle(primaryColor, lineHeightPx)]}
-      >
-        <textarea
-          {...attr}
-          name={name}
-          value={value}
-          disabled={disabled}
-          readOnly={readOnly}
-          onChange={onChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-      </div>
-    </div>
+        return (
+          <div css={[rootStyle]} onClick={handleFocusIn}>
+            {/* ===== label ===== */}
+            {label && (
+              <label
+                className={`${focused ? "focused" : ""} ${error ? "error" : ""} ${
+                  disabled ? "disabled" : ""
+                }`}
+                css={[labelStyle(_mainColor)]}
+              >
+                {label}
+              </label>
+            )}
+
+            {/* ===== textarea ===== */}
+            <div
+              className={`${focused ? "focused" : ""} ${error ? "error" : ""} ${
+                disabled ? "disabled" : ""
+              }`}
+              css={[textareaContainerStyle(_mainColor, lineHeightPx)]}
+            >
+              <textarea
+                {...attr}
+                name={name}
+                value={value}
+                disabled={disabled}
+                readOnly={readOnly}
+                onChange={onChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            </div>
+          </div>
+        )
+      }}
+    </ThemeContext.Consumer>
   );
 }
 
@@ -118,7 +128,7 @@ const rootStyle = css`
   line-height: 1.4rem;
 `
 
-const labelStyle = (primaryColor: ColorsType) => css`
+const labelStyle = (mainColor: TMainColorKeys) => css`
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   top: 0;
   left: 0;
@@ -127,12 +137,13 @@ const labelStyle = (primaryColor: ColorsType) => css`
   transform: translate(0, 6px) scale(1);
   transform-origin: top left;
   padding: 0;
-  transition: color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms, 
+  transition: all 200ms cubic-bezier(0, 0, 0.2, 1) 0ms, 
   transform 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
-  color: ${styles.getColor('grey-darken-1')};
+  color: ${styles.getColor(mainColor)};
+  fotn-size: 0.9rem;
   &.focused {
     transform: translate(0, -1rem) scale(0.75);
-    color: ${styles.getColor(primaryColor)};
+    font-size: 0.8rem;
   }
   &.disabled {
     color: ${styles.getColor('grey')};
@@ -142,7 +153,7 @@ const labelStyle = (primaryColor: ColorsType) => css`
   }
 `;
 
-const textareaContainerStyle = (primaryColor: ColorsType, lineHeightPx: number) => css`
+const textareaContainerStyle = (mainColor: TMainColorKeys, lineHeightPx: number) => css`
   width: inherit;
   line-height: inherit;
   &::before {
@@ -151,16 +162,15 @@ const textareaContainerStyle = (primaryColor: ColorsType, lineHeightPx: number) 
     right: 0;
     bottom: 0;
     content: "\\00a0";
-    transition: border-bottom-color;
-    border-bottom 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     border-bottom: 1px solid;
     pointer-events: none;
     box-sizing: inherit;
     color: ${styles.getColor("grey-lighten-3")};
   }
   &:hover:not(.disabled)::before {
-    border-bottom: 2px solid;
-    color: ${styles.getColor("black")};
+    border-bottom: 1px solid;
+    color: ${styles.getColor(mainColor)};
   }
 
   &::after {
@@ -171,7 +181,7 @@ const textareaContainerStyle = (primaryColor: ColorsType, lineHeightPx: number) 
     content: "";
     transform: scaleX(0);
     transition: transform 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
-    border-bottom: 2px solid ${styles.getColor(primaryColor)};
+    border-bottom: 2px solid ${styles.getColor(mainColor)};
     pointer-events: none;
   }
   &.focused::after {

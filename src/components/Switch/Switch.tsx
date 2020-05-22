@@ -2,22 +2,24 @@
 import { jsx, css } from '@emotion/core';
 import React, { useEffect, useCallback, useState } from 'react';
 
-import styles, { ColorsType } from '../../styles'
+import styles from '../../styles'
+import { TMainColorKeys } from '../../types/colors';
+import ThemeContext from '../../theme';
 
 // ===== 타입
 export type SwitchPropsType = {
   /** name 속성 */
-  name: string;
+  name?: string;
   /** checked 값 */
-  checked: boolean;
+  checked?: boolean;
   /** 비활성화 유무 */
   disabled?: boolean;
   /** 메인 원색 */
-  primaryColor?: ColorsType;
+  mainColor?: TMainColorKeys;
   /** 기타 속성 */
   attr?: boolean;
   /** textarea 속성 */
-  onChange: (e:React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e:React.ChangeEvent<HTMLInputElement>) => any;
 };
 
 // ===== 컴포넌트
@@ -25,37 +27,45 @@ function Switch({
   name,
   checked,
   disabled,
-  primaryColor = 'blue',
+  mainColor,
   attr,
   onChange,
 }: SwitchPropsType) {
 
   return (
-    <div css={[rootStyle(primaryColor)]} >
-      <label>
-        {/* switch */}
-        <input
-          {...attr}
-          type="checkbox"
-          name={name}
-          checked={checked}
-          disabled={disabled}
-          onChange={onChange}
-          
-        />
+    <ThemeContext.Consumer>
+      {({theme}) => {
+        const _mainColor = mainColor || theme.primaryColor!;
 
-        {/* switch 모양 */}
-        <div className={`carrot-ui_switch-conatiner ${disabled ? 'disabled' : ''}`}>
-          <div className={"carrot-ui_switch-track"} />
-          <div className={"carrot-ui_switch-thumb"} />
-        </div>
-      </label>
-    </div>
+        return (
+          <div css={[rootStyle(_mainColor)]} >
+            <label>
+              {/* switch */}
+              <input
+                {...attr}
+                type="checkbox"
+                name={name}
+                checked={checked}
+                disabled={disabled}
+                onChange={onChange}
+                
+              />
+
+              {/* switch 모양 */}
+              <div className={`carrot-ui_switch-conatiner ${disabled ? 'disabled' : ''}`}>
+                <div className={"carrot-ui_switch-track"} />
+                <div className={"carrot-ui_switch-thumb"} />
+              </div>
+            </label>
+          </div>
+        )
+      }}
+    </ThemeContext.Consumer>
   );
 }
 
 // ===== styles
-const rootStyle = (primaryColor:ColorsType) => css`
+const rootStyle = (mainColor:TMainColorKeys) => css`
   position: relative;
   display: inline-block;
   input {
@@ -75,7 +85,7 @@ const rootStyle = (primaryColor:ColorsType) => css`
       width: 50px;
       height: 30px;
       border-radius: 15.5px;
-      background-color: ${styles.getColor('grey-lighten-2')};
+      background-color: ${styles.getColor('grey-lighten-3')};
       transition: background-color .2s;
     }
     .carrot-ui_switch-thumb {
@@ -103,7 +113,7 @@ const rootStyle = (primaryColor:ColorsType) => css`
 
   input:checked + .carrot-ui_switch-conatiner {
     .carrot-ui_switch-track {
-      background-color: ${styles.getColor(primaryColor)};
+      background-color: ${styles.getColor(mainColor)};
       transition: background-color .2s;
     }
     .carrot-ui_switch-thumb {

@@ -9,7 +9,7 @@ import {
 import { action } from '@storybook/addon-actions';
 
 import Button from './Button';
-import { colorTypes } from '../../styles';
+import { colorTypes, mainColorsArr } from '../../styles';
 
 // ===== export 정보
 export default {
@@ -23,7 +23,7 @@ export const Default = () => {
   const size = select('size', ['s', 'm', 'l'], 'm');
   const disabled = boolean('disabled', false);
   const color = select('color', colorTypes, 'white');
-  const backgroundColor = select('backgroundColor', colorTypes, 'lime');
+  const backgroundColor = select('backgroundColor', mainColorsArr, 'lime');
   const hoverColor = select('hoverColor', colorTypes, 'lime-darken-1');
   const rippleColor = select('rippleColor', colorTypes, 'white');
   const border = boolean('border', false);

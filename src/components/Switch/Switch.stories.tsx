@@ -6,10 +6,12 @@ import {
   text,
   number,
   object,
+  select,
 } from "@storybook/addon-knobs";
 import { action } from '@storybook/addon-actions';
 
 import Switch from './Switch';
+import { mainColorsArr } from '../../styles'
 
 // ===== export 정보
 export default {
@@ -23,6 +25,7 @@ export const Default = () => {
   const props = {
     checked: boolean('checked', false),
     disabled: boolean('disabled', false),
+    mainColor: select('mainColor', mainColorsArr, 'blue'),
     onChange: action('onChange'),
   };
 

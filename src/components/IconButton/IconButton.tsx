@@ -32,7 +32,7 @@ type IconButtonPropsType = {
   /** 버튼 비활성화 */
   disabled?: boolean;
   /** 클릭 했을 때 함수 */
-  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => any;
 };
 
 // ===== 컴포넌트
@@ -85,7 +85,6 @@ function IconButton({
             onClick={onClick}
             borderRadius={circleButton ? '50%': '0'}
             square={true}
-            css={buttonStyle}
           >
             <Icon name={iconName} color={_color} size={iSize} />
           </Button>
@@ -97,11 +96,6 @@ function IconButton({
 
 
 // ===== styles
-const buttonStyle = css`
-  
-    padding: 0 16px;
-  
-`;
 
 
 // ===== export

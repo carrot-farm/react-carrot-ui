@@ -3,7 +3,6 @@ import { useCallback, useState, useRef, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
 import gsap from 'gsap';
 
-import styles, { ColorsType } from '../../styles';
 import AppBar from '../AppBar/AppBar';
 import IconButton from '../IconButton/IconButton';
 import Container from '../Container/Container';
@@ -86,6 +85,10 @@ function Collapse({
             {/* toggle button */}
             <IconButton
               iconName={'angleDownThin'}
+              backgroundColor={'transparent'}
+              color={'black'}
+              rippleColor={'grey'}
+              hoverColor={'grey-lighten-5'}
               circleButton={true}
               border={false}
               onClick={handleToggle}
@@ -115,6 +118,7 @@ const contentsStyle = (firstShow: boolean) => css`
 const buttonSTyle = css`
   border-radius: 50%;
   overflow: hidden;
+  line-height: 0;
 `;
 
 // ===== func

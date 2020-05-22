@@ -1,9 +1,7 @@
 /** @jsx jsx */
-import { useRef, useEffect } from 'react';
-import { jsx, css } from '@emotion/core';
-import gsap from 'gsap';
+import { useRef } from 'react';
+import { jsx } from '@emotion/core';
 
-import Base, { BaseProps } from '../Base/Base';
 import Slosh from '../Shosh/Slosh';
 import styles, {
   hoverColorStyle,
@@ -20,8 +18,7 @@ import styles, {
   containerStyle,
 } from "./ButtonStyles";
 import Ripple from '../Ripple/Ripple';
-import { getColor } from '../../styles';
-import ThemeContext, { themes } from '../../theme';
+import ThemeContext from '../../theme';
 import { TMainColorKeys, TColorKeys } from '../../types/colors';
 
 
@@ -74,7 +71,7 @@ function Button({
   ...args
 }: ButtonPropsType) {
   const rootEl = useRef(null);
-  // console.log('> ', args)
+  // console.log('> ', onClick)
   // const buttonEl = useRef<HTMLButtonElement>(null);
 
   return (
@@ -86,57 +83,13 @@ function Button({
         const _rippleColor = rippleColor || theme.primaryRippleColor as TColorKeys;
         const _borderColor = borderColor || theme.primaryColor!;
         
+        // console.log('> ', _rippleColor)
+
         return (
           <div ref={rootEl} css={[rootStyle]}>
-            {/* Slosh */}
-            {/* <Base
-              refEl={buttonEl}
-              component="div"
-              backgroundColor={_backgroundColor}
-              border={border}
-              borderColor={borderColor}
-              css={[
-                styles,
-                hoverColorStyle(_hoverColor),
-                !border ? borderNone : undefined,
-                borderRadius ? borderRadiusStyle(borderRadius) : undefined,
-                disabled ? disabledStyle(disabled) : undefined,
-                square ? squareStyle[size] : undefined,
-                sizeStyle[size],
-              ]}
-              onClickDiv={handleClick}
-            >
-              <button
-                {...args}
-                type={type}
-                disabled={disabled}
-                css={[buttonStyle(_color, disabled)]}
-              >
-                {children}
-              </button>
-              {!disabled && <Ripple color={_rippleColor} />}
-            </Base> */}
-
-
-
-
-            {/* <Base
-              refEl={buttonEl}
-              component="div"
-              
-              css={[
-                styles,
-                hoverColorStyle(_hoverColor),
-                !border ? borderNone : undefined,
-                borderRadius ? borderRadiusStyle(borderRadius) : undefined,
-                disabled ? disabledStyle(disabled) : undefined,
-                square ? squareStyle[size] : undefined,
-                sizeStyle[size],
-              ]}
-              onClickDiv={handleClick}
-            > */}
             <Slosh disabled={disabled} borderRadius={borderRadius}>
               <div css={containerStyle}>
+                
                 <button
                   {...args}
                   type={type}
@@ -156,12 +109,12 @@ function Button({
                   ]}
                   onClick={onClick}
                 >
-                  {children}
+                  <span>{children}</span>
+                  {!disabled && <Ripple color={_rippleColor} />}
                 </button>
-                {!disabled && <Ripple color={_rippleColor} />}
+                
               </div>
             </Slosh>
-            {/* </Base> */}
           </div>
         )
       }}

@@ -31,6 +31,13 @@ export const createSubColors = (mainColor: TMainColorKeys, isSecondaryColor?: bo
     subColors[`${prefix}DarkenColor`] = mainColor;
     subColors[`${prefix}LightenColor`] = mainColor;
     subColors[`${prefix}RippleColor`] = 'grey-lighten-3';
+  } 
+  else if(mainColor === 'black') {
+    subColors[`${prefix}TextColor`] = 'white';
+    subColors[`${prefix}BorderColor`] = mainColor;
+    subColors[`${prefix}DarkenColor`] = `black`;
+    subColors[`${prefix}LightenColor`] = `grey-darken-2`;
+    subColors[`${prefix}RippleColor`] = `white`;
   } else {
     subColors[`${prefix}TextColor`] = 'white';
     subColors[`${prefix}BorderColor`] = mainColor;

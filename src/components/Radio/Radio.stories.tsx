@@ -9,7 +9,7 @@ import {
 import { action } from '@storybook/addon-actions';
 
 import Radio from './Radio';
-import { colorTypes } from '../../styles';
+import { mainColorsArr } from '../../styles';
 
 // ===== export 정보
 export default {
@@ -22,7 +22,7 @@ export default {
 // # default
 export const Default = () => {
   const value = text('value', 'value');
-  const themeColor = select('themeColor',colorTypes, 'lime' )
+  const mainColor = select('mainColor', mainColorsArr, 'lime' )
   const disabled = boolean('disabled', false);
   const onChange = action('onChange');
 
@@ -32,7 +32,7 @@ export const Default = () => {
         name="radio"
         value={value}
         label={'A'}
-        themeColor={themeColor}
+        mainColor={mainColor}
         disabled={disabled}
         onChange={onChange}
       />
@@ -41,7 +41,7 @@ export const Default = () => {
         name="radio"
         value={value}
         label={'B'}
-        themeColor={themeColor}
+        mainColor={mainColor}
         disabled={disabled}
         onChange={onChange}
       />

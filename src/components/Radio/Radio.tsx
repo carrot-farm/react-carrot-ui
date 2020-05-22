@@ -1,26 +1,28 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
 
-import styles, { ColorsType } from '../../styles';
+import styles from '../../styles';
 import Ripple from '../Ripple/Ripple';
+import { TMainColorKeys, TColorKeys } from '../../types/colors';
+import ThemeContext from '../../theme';
 
 // ===== type
 // # props type
 type RadioPropsType = {
   /** name attribute */
-  name: string;
+  name?: string;
   /** value 속성 */
-  value: string;
+  value?: string;
   /** checked 속성 */
   checked?: boolean;
   /** label */
   label?: string;
   /** 테마 색상 */
-  themeColor?: ColorsType;
+  mainColor?: TMainColorKeys;
   /** 비활성화 */
   disabled?: boolean;
   /** 값 변경 이벤트 */
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
 };
 
 // ===== component
@@ -29,35 +31,44 @@ function Radio({
   value,
   checked,
   label,
-  themeColor = 'lime',
+  mainColor,
   disabled,
   onChange,
 }: RadioPropsType) {
 
   // # 렌더링
   return (
-    <div css={[rootStyle]}>
-      <label css={[radioContainerStyle]}>
-        {/* radio button */}
-        <span css={[radioButtonStyle(themeColor)]}>
-          <input
-            type="radio"
-            name={name}
-            value={value}
-            checked={checked}
-            disabled={disabled}
-            onChange={onChange}
-          />
-          <span className={`button-outer`} >
-            {(!disabled || !checked) && <Ripple color={themeColor} />}
-          </span>
-          <span className={`button-inner`} />
-        </span>
+    <ThemeContext.Consumer>
+      {({theme})=> {
+        const _mainColor = mainColor || (theme.primaryColor === 'white') ? 'black' : theme.primaryColor!;
+        const _rippleColor = mainColor || theme.primaryRippleColor as TColorKeys;
 
-        {/* label */}
-        <span className={`label ${disabled ? 'disabled' : ''}`}>{label}</span>
-      </label>
-    </div>
+        return (
+          <div css={[rootStyle]}>
+            <label css={[radioContainerStyle]}>
+              {/* radio button */}
+              <span css={[radioButtonStyle(_mainColor)]}>
+                <input
+                  type="radio"
+                  name={name}
+                  value={value}
+                  checked={checked}
+                  disabled={disabled}
+                  onChange={onChange}
+                />
+                <span className={`button-outer`} >
+                  {(!disabled || !checked) && <Ripple color={_rippleColor} />}
+                </span>
+                <span className={`button-inner`} />
+              </span>
+
+              {/* label */}
+              <span className={`label ${disabled ? 'disabled' : ''}`}>{label}</span>
+            </label>
+          </div>
+        )
+      }}
+    </ThemeContext.Consumer>
   );
 }
 
@@ -82,7 +93,7 @@ const radioContainerStyle = css`
   }
 `
 
-const radioButtonStyle = (themeColor: ColorsType) => css`
+const radioButtonStyle = (mainColor: TMainColorKeys) => css`
   position: relative;
   display: inline-block;
   height: 25px;
@@ -102,7 +113,7 @@ const radioButtonStyle = (themeColor: ColorsType) => css`
     line-height: 0;
     overflow: hidden;
     position: relative;
-    background-color: ${styles.getColor('grey-lighten-5')}
+    background-color: ${styles.getColor('grey-lighten-3')}
   }
 
   .button-inner {
@@ -117,7 +128,7 @@ const radioButtonStyle = (themeColor: ColorsType) => css`
     border-radius: 50%;
     transform: scale(0);
     transition: transform 0.2s linear;
-    background-color: ${styles.getColor(themeColor)};
+    background-color: ${styles.getColor(mainColor)};
   }
   input:checked ~ .button-inner {
     transform: scale(1);

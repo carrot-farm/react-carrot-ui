@@ -4,7 +4,8 @@ import { jsx, css } from '@emotion/core';
 import Icon from '../Icon/Icon';
 import Ripple from '../Ripple/Ripple';
 import ThemeContext from '../../theme';
-import {  } from '../../types/colors';
+import { TMainColorKeys, TColorKeys } from '../../types/colors';
+import { getColor } from '../../styles'
 
 // ===== 타입
 /** props type */
@@ -19,6 +20,10 @@ type CheckBoxPropsType = {
   circleBox?: boolean;
   /** 레이블 */
   label?: string;
+  /** 아이콘 색상 */
+  iconColor?: TMainColorKeys;
+  /** ripple 색상 */
+  rippleColor?: TColorKeys;
   /** checkebox에 적용될 기타 속성 */
   attr?: any;
   /** 값 변경 이벤트 핸들러 */
@@ -29,21 +34,26 @@ type CheckBoxPropsType = {
 /** 체크박스 */
 function CheckBox({
   name,
-  checked = false,
+  checked = true,
   disabled = false,
   circleBox = false,
   label,
+  iconColor,
+  rippleColor,
   attr,
   onChange,
 }: CheckBoxPropsType) {
   // console.log('> ', disabled, checked, circleBox)
-  let iconColor = 'white';
-  if(checked) {iconColor = 'black';}
-  if(disabled) {iconColor = 'grey'}
+  // let iconColor = 'white';
+  // if(checked) {iconColor = 'black';}
+  // if(disabled) {iconColor = 'grey'}
 
   return (
     <ThemeContext.Consumer>
       {({theme}) => {
+        const _iconColor = iconColor || (theme.primaryColor === 'white') ? 'black' : theme.primaryColor!;
+        const _rippleColor = rippleColor || theme.primaryRippleColor as TColorKeys;
+
         return(
           <div css={[rootStyle]}>
             <label>
@@ -62,12 +72,12 @@ function CheckBox({
                 <Icon
                   name="checkThin"
                   size="s"
-                  color={iconColor}
+                  color={_iconColor}
                   css={[iconStyle]}
                 />
 
                 {/* ripple */}
-                {!disabled && <Ripple color={'white'} />}
+                {!disabled && <Ripple color={_rippleColor} />}
               </div>
               {/* 레이블 */}
               {label && <div css={[labelStyle(disabled)]}>{label}</div>}
@@ -86,6 +96,7 @@ const rootStyle = css`
   input {
     display: none;
   }
+  lihe-height: 0;
 `;
 
 const wrapperStyle = (disabled: boolean, circleBox: boolean) => css`
@@ -93,7 +104,7 @@ const wrapperStyle = (disabled: boolean, circleBox: boolean) => css`
   position: relative;
   width: 25px;
   height: 25px;
-  background-color: ${disabled ? '#f8f9fa' : '#e9ecef'};
+  background-color: ${disabled ? '#f8f9fa' : getColor('grey-lighten-3')};
   transition: all 0.2s;
   cursor: ${disabled ? "default" : "pointer"};
   border-radius: ${circleBox ? "50%" : "none"};

@@ -103,6 +103,7 @@ export const buttonStyle = (color: TColorKeys, disabled?: boolean) => css`
     padding: 0;
   }
   color: ${getColor(color)};
+  overflow: hidden;
   ${disabled ? 'color: grey !important;' : ''}
 `;
 
@@ -110,6 +111,7 @@ export const buttonStyle = (color: TColorKeys, disabled?: boolean) => css`
 export const rootStyle = css`
   display: inline-block;
   position: relative;
+  line-height:0;
 `;
 
 // ===== 배경 색상

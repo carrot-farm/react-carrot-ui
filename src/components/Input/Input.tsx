@@ -2,8 +2,8 @@
 import { useCallback, useState, useRef, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
 
-import styles, { ColorsType } from '../../styles';
-import { TMainColors } from '../../types/colors';
+import styles from '../../styles';
+import { TMainColorKeys, TColorKeys } from '../../types/colors';
 import colors from '../../styles/colors'
 import ThemeContext from '../../theme';
 
@@ -29,7 +29,7 @@ type InputPropsType = {
   /** input의 기타 속성 */
   attr?: any
   /** 컬러 */
-  color?: TMainColors;
+  color?: TMainColorKeys;
   /** 값 변경 이벤트 */
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
 };
@@ -140,7 +140,7 @@ const rootStyle = () => css`
   margin-bottom: 1.2rem;
 `;
 
-const labelStyle = (color: TMainColors) =>  css`
+const labelStyle = (color: TMainColorKeys) =>  css`
   top: 0;
   left: 0;
   position: absolute;
@@ -164,7 +164,7 @@ const labelStyle = (color: TMainColors) =>  css`
   }
 `;
 
-const inputContainerStyle = (color: TMainColors) => css`
+const inputContainerStyle = (color: TMainColorKeys) => css`
   width: inherit;
   &::before {
     position: absolute;
@@ -245,13 +245,13 @@ const inputContainerStyle = (color: TMainColors) => css`
   }
 `;
 
-const helperTextStyle = (color: ColorsType )=> css`
+const helperTextStyle = (color: TColorKeys )=> css`
   position: absolute;
   bottom: -1.3rem;
   left:0;
   font-size: 0.7rem;
   transition: color .2s;
-  color: ${colors[color]}
+  color: ${styles.getColor(color)}
 `;
 
 // ===== export

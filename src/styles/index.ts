@@ -1,10 +1,12 @@
 import { css } from '@emotion/core';
-import colors from './colors';
+import colors, { mainColors } from './colors';
 import { TMainColorKeys, TColorKeys } from '../types/colors'
 
 // ===== 타입
 // # 색상 타입을 순회하기 위한 키배열
 export const colorTypes: TColorKeys[] = Object.keys(colors) as any[];
+// # 메인 색상의 배열
+export const mainColorsArr: TMainColorKeys[] = Object.keys(mainColors) as any[];
 // # position Type
 export const positionValues = ["relative", "absolute", "fixed", "static", "sticky"] as const;
 export type positionType = typeof positionValues[number];

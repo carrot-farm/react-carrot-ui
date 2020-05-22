@@ -15,6 +15,9 @@ import Button from '../Button/Button';
 import Input from '../Input/Input';
 import IconButton from '../IconButton/IconButton';
 import CheckBox from '../CheckBox/CheckBox';
+import Radio from '../Radio/Radio';
+import Switch from '../Switch/Switch';
+import TextField from '../TextField/TextField';
 import { mainColors } from '../../styles/colors'
 
 // ===== export 정보
@@ -44,6 +47,15 @@ export const Default = () => {
       </div>
       <div>
         <CheckBox checked onChange={action('checkBoxOnChange')} />
+      </div>
+      <div>
+        <Radio checked onChange={action('radioOnChange')} />
+      </div>
+      <div>
+        <Switch checked onChange={action('switchOnChange')} />
+      </div>
+      <div>
+        <TextField  />
       </div>
     </ThemeProvider>
   );
