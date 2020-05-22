@@ -4,7 +4,7 @@ import { jsx, css } from '@emotion/core';
 import gsap from 'gsap';
 
 import Base, { BaseProps } from '../Base/Base';
-import { ColorsType } from '../../styles'
+import Slosh from '../Shosh/Slosh';
 import styles, {
   hoverColorStyle,
   sizeStyle,
@@ -12,29 +12,40 @@ import styles, {
   borderRadiusStyle,
   disabledStyle,
   squareStyle,
+  buttonStyle,
+  rootStyle,
+  backgroundColorStyle,
+  borderStyle,
+  borderColorStyle,
+  containerStyle,
 } from "./ButtonStyles";
 import Ripple from '../Ripple/Ripple';
-import ButtonStyles from './ButtonStyles';
-import { borderColor } from '../Icon/svg';
+import { getColor } from '../../styles';
+import ThemeContext, { themes } from '../../theme';
+import { TMainColorKeys, TColorKeys } from '../../types/colors';
+
+
 
 // ===== 타입
-export type ButtonPropsType = BaseProps & {
+export type ButtonPropsType = {
   /** 버튼 타입 */
   type?: 'button' | 'submit';
   /** 버튼 사이즈 */
   size?: 's' | 'm' | 'l';
+  /** 배경 색상 */
+  backgroundColor?: TMainColorKeys;
   /** 마우스 오버시 컬러 */
-  hoverColor?: ColorsType;
+  hoverColor?: TColorKeys;
   /** 버튼 비활성화 */
   disabled?: boolean;
   /** 라벨 색상 */
-  color?: ColorsType;
+  color?: TColorKeys;
   /** ripple 생삭 */
-  rippleColor?: ColorsType;
+  rippleColor?: TColorKeys;
   /** 보더 생성 유무 */
   border?: boolean;
   /** 보더 생성 유무 */
-  borderColor?: ColorsType;
+  borderColor?: TColorKeys;
   /** 모서리 둥글기 */
   borderRadius?: string;
   /** 정사각형 */
@@ -49,11 +60,11 @@ export type ButtonPropsType = BaseProps & {
 function Button({
   type = 'button',
   size = 'm',
-  color = 'white',
-  backgroundColor = "lime",
-  hoverColor = "lime-darken-1",
+  color,
+  backgroundColor,
+  hoverColor,
   disabled,
-  rippleColor = 'white',
+  rippleColor,
   border,
   borderColor,
   borderRadius,
@@ -63,109 +74,101 @@ function Button({
   ...args
 }: ButtonPropsType) {
   const rootEl = useRef(null);
-  const buttonEl = useRef<HTMLButtonElement>(null);
-  // const { current: tl } = useRef(gsap.timeline({ paused: true }));
-
-  useEffect(() => {
-    gsap.set(rootEl.current, { perspective: 1000 });
-    gsap.set(buttonEl.current, {
-      transformStyle: "perspective-3d",
-    })
-  }, [])
-
-  // # 버튼 클릭
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if(disabled) {return false;}
-    const el = e.currentTarget;
-    const elInfo = el.getBoundingClientRect();
-    const x = e.pageX - elInfo.x - elInfo.width / 2;
-    const y = e.pageY - elInfo.y - elInfo.height / 2;
-    const xRatio = x / (elInfo.width / 2) * 100;
-    const yRatio = y / (elInfo.height / 2) * 100;
-    const yMove = (50 * xRatio / 100);
-    const xMove = (50 * yRatio / 100) * -1;
-    const xShadow = (10 * xRatio / 100) * -1
-    const yShadow = (10 * yRatio / 100) * -1
-
-    gsap.to(buttonEl.current, { 
-      duration: 0.3,
-      rotateY: yMove,
-      rotateX: xMove,
-      boxShadow: `${xShadow}px ${yShadow}px 15px rgba(0,0,0, 0.2)`,
-    });
-
-    gsap.to(buttonEl.current, {
-      delay: 0.3,
-      rotateY: 0,
-      rotateX: 0,
-      boxShadow: `0px 0px 0px rgba(0,0,0, 0)`,
-    })
-
-    // console.log('> ', elInfo, x, y, xRatio, yRatio)
-  };
+  // console.log('> ', args)
+  // const buttonEl = useRef<HTMLButtonElement>(null);
 
   return (
-    <div ref={rootEl} css={[rootStyle]}>
-      {/* Slosh */}
-      <Base
-        {...{ onClick: handleClick }}
-        refEl={buttonEl}
-        // component="div"
-        backgroundColor={backgroundColor}
-        border={border}
-        borderColor={borderColor}
-        css={[
-          styles,
-          hoverColor !== undefined ? hoverColorStyle(hoverColor) : undefined,
-          !border ? borderNone : undefined,
-          borderRadius ? borderRadiusStyle(borderRadius) : undefined,
-          disabled ? disabledStyle(disabled) : undefined,
-          square ? squareStyle[size] : undefined,
-          sizeStyle[size],
-        ]}
-      >
-        <button
-          {...args}
-          type={type}
-          disabled={disabled}
-          css={[buttonStyle(color, disabled)]}
-          onClick={onClick}
-        >
-          {children}
-        </button>
-        {!disabled && <Ripple color={rippleColor} />}
-      </Base>
-    </div>
+    <ThemeContext.Consumer>
+      {({ theme }) => {
+        const _backgroundColor = backgroundColor || theme.primaryColor!;
+        const _hoverColor = hoverColor || theme.primaryDarkenColor as TColorKeys;
+        const _color = color || theme.primaryTextColor as TColorKeys;
+        const _rippleColor = rippleColor || theme.primaryRippleColor as TColorKeys;
+        const _borderColor = borderColor || theme.primaryColor!;
+        
+        return (
+          <div ref={rootEl} css={[rootStyle]}>
+            {/* Slosh */}
+            {/* <Base
+              refEl={buttonEl}
+              component="div"
+              backgroundColor={_backgroundColor}
+              border={border}
+              borderColor={borderColor}
+              css={[
+                styles,
+                hoverColorStyle(_hoverColor),
+                !border ? borderNone : undefined,
+                borderRadius ? borderRadiusStyle(borderRadius) : undefined,
+                disabled ? disabledStyle(disabled) : undefined,
+                square ? squareStyle[size] : undefined,
+                sizeStyle[size],
+              ]}
+              onClickDiv={handleClick}
+            >
+              <button
+                {...args}
+                type={type}
+                disabled={disabled}
+                css={[buttonStyle(_color, disabled)]}
+              >
+                {children}
+              </button>
+              {!disabled && <Ripple color={_rippleColor} />}
+            </Base> */}
+
+
+
+
+            {/* <Base
+              refEl={buttonEl}
+              component="div"
+              
+              css={[
+                styles,
+                hoverColorStyle(_hoverColor),
+                !border ? borderNone : undefined,
+                borderRadius ? borderRadiusStyle(borderRadius) : undefined,
+                disabled ? disabledStyle(disabled) : undefined,
+                square ? squareStyle[size] : undefined,
+                sizeStyle[size],
+              ]}
+              onClickDiv={handleClick}
+            > */}
+            <Slosh disabled={disabled} borderRadius={borderRadius}>
+              <div css={containerStyle}>
+                <button
+                  {...args}
+                  type={type}
+                  disabled={disabled}
+                  css={[
+                    hoverColorStyle(_hoverColor),
+                    styles,
+                    !border ? borderNone : undefined,
+                    borderRadius ? borderRadiusStyle(borderRadius) : undefined,
+                    disabled ? disabledStyle(disabled) : undefined,
+                    square ? squareStyle[size] : undefined,
+                    sizeStyle[size],
+                    buttonStyle(_color, disabled),
+                    backgroundColorStyle(_backgroundColor),
+                    border ? borderStyle(border) : undefined,
+                    border ? borderColorStyle(_borderColor) : undefined,
+                  ]}
+                  onClick={onClick}
+                >
+                  {children}
+                </button>
+                {!disabled && <Ripple color={_rippleColor} />}
+              </div>
+            </Slosh>
+            {/* </Base> */}
+          </div>
+        )
+      }}
+    </ThemeContext.Consumer>
   );
 }
 
-// ===== styles
-const rootStyle = css`
-  display: inline-block;
-  position: relative;
-`;
-
-const buttonStyle = (color: ColorsType, disabled?: boolean) => css`
-  padding: 0;
-  margin: 0;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  font: inherit;
-  line-height: normal;
-  -webkit-font-smoothing: inherit;
-  -moz-osx-font-smoothing: inherit;
-  width: auto;
-  &::-moz-focus-inner {
-    border: 0;
-    padding: 0;
-  }
-  color: ${color};
-  ${disabled ? 'color: grey !important;' : ''}
-
-`;
-
-
-
 // ===== export
 export default Button;
+

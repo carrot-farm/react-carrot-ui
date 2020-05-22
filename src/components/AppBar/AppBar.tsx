@@ -5,7 +5,8 @@ import gsap from 'gsap';
 
 import Base, { BaseProps } from '../Base/Base';
 import Container from '../Container/Container';
-import styles, { flexAlignType, ColorsType } from '../../styles';
+import styles, { flexAlignType } from '../../styles';
+import { TColorKeys } from '../../types/colors'
 
 // ===== 타입
 /** props type */
@@ -17,7 +18,7 @@ type AppBarPropsType = BaseProps & {
   /** 정렬방식 */
   align?: flexAlignType;
   /** 배경색 */
-  backgroundColor?: ColorsType;
+  backgroundColor?: TColorKeys;
   /** 내부 컴포넌트 */
   children?: React.ReactNode;
 };

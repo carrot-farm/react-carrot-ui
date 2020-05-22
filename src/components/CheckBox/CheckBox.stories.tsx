@@ -12,7 +12,7 @@ import CheckBox from './CheckBox';
 
 // ===== export 정보
 export default {
-  title: 'components|CheckBox',
+  title: 'form|CheckBox',
   component: CheckBox,
   decorators: [withKnobs],
 };

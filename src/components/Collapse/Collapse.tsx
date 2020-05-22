@@ -30,12 +30,12 @@ type CollapsePropsType = {
 function Collapse({
   headText,
   height = '50px',
-  show = false,
+  show = true,
   childrenFullWidth,
   children,
   onToggle,
 }: CollapsePropsType) {
-  const [sw, setSw] = useState(show);
+  const [sw, setSw] = useState(false);
   const contentsContainerEl = useRef<HTMLDivElement>(null);
   const buttonEl = useRef(null);
   let firstShow = useRef<boolean>(show); // 첫 렌더링 시 컨텐츠 보일지 말지 결정
@@ -65,11 +65,12 @@ function Collapse({
   }, [sw]);
 
   const handleToggle = useCallback(() => {
+    console.log('> ', )
     setSw(!sw);
     if(typeof onToggle === 'function') {
       onToggle(sw);
     }
-  }, [sw]);
+  }, [sw, show]);
 
   return (
     <div>
@@ -80,14 +81,16 @@ function Collapse({
           {headText && headText}
         </span>
 
-        <div ref={buttonEl}>
-          {/* toggle button */}
-          <IconButton
-            iconName={'angleDownThin'}
-            circleButton={true}
-            border={false}
-            onClick={handleToggle}
-          />
+        <div css={buttonSTyle}>
+          <div ref={buttonEl} >
+            {/* toggle button */}
+            <IconButton
+              iconName={'angleDownThin'}
+              circleButton={true}
+              border={false}
+              onClick={handleToggle}
+            />
+          </div>
         </div>
       </AppBar>
       <Divider />
@@ -108,6 +111,10 @@ const contentsStyle = (firstShow: boolean) => css`
   overflow: hidden;
   display: block;
   ${!firstShow ? 'height: 0px' : ''}
+`;
+const buttonSTyle = css`
+  border-radius: 50%;
+  overflow: hidden;
 `;
 
 // ===== func

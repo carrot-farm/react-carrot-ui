@@ -2,7 +2,6 @@
 import React from 'react';
 import { jsx } from '@emotion/core';
 import styles, {
-  ColorsType,
   positionType,
   textAlignType,
   displayType,
@@ -10,6 +9,7 @@ import styles, {
   flexDirectionType,
   flexWrapType,
 } from "../../styles";
+import { TMainColorKeys, TColorKeys } from '../../types/colors'
 
 // ===== 타입 정의
 // # componrntType
@@ -73,7 +73,7 @@ export type BaseProps = {
   /** 왼쪽 보더 */
   borderLeft?: boolean;
   /** 보더 색상 */
-  borderColor?: ColorsType;
+  borderColor?: TColorKeys;
 
   /** width */
   width?: string;
@@ -81,9 +81,9 @@ export type BaseProps = {
   height?: string;
 
   /** background color */
-  backgroundColor?: ColorsType;
+  backgroundColor?: TColorKeys | TMainColorKeys;
   /** color */
-  color?: ColorsType;
+  color?: TColorKeys | TMainColorKeys;
 
   /** position */
   position?: positionType;
@@ -97,6 +97,11 @@ export type BaseProps = {
   flexWrap?: flexWrapType;
   /** flexAlign */
   flexDirection?: flexDirectionType;
+
+  /** 클릭 했을 때 함수 */
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => any;
+  /** 클릭 했을 때 함수 */
+  onClickDiv?: (e: React.MouseEvent<HTMLDivElement>) => any;
 };
 
 // ===== 컴포넌트
@@ -137,6 +142,8 @@ function Base({
   flexWrap,
   flexDirection,
 
+  onClick,
+  onClickDiv,
   ...args
 }:  BaseProps) {
   const styleProps = {
@@ -290,6 +297,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </button>
@@ -350,7 +358,9 @@ function Base({
   }
 
   return (
-    <div {...args} css={cssCreator(styleProps, styles)} className={className} ref={refEl}>
+    <div {...args} css={cssCreator(styleProps, styles)} className={className} ref={refEl}
+      onClick={onClickDiv}
+    >
       {children}
     </div>
   );

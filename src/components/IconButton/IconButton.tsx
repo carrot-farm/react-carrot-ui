@@ -1,12 +1,12 @@
 /** @jsx jsx */
 import { useRef, useEffect, useState } from 'react';
 import { jsx, css } from '@emotion/core';
-import gsap from 'gsap';
 
-import Base, { BaseProps } from '../Base/Base';
+// import Base, { BaseProps } from '../Base/Base';
 import Button from '../Button/Button';
 import Icon, { IconType, IconSizeType } from '../Icon/Icon';
-import { ColorsType } from '../../styles';
+import { TColorKeys, TMainColorKeys } from '../../types/colors'
+import ThemeContext from '../../theme';
 
 // ===== 타입
 /** props type */
@@ -16,13 +16,13 @@ type IconButtonPropsType = {
   /** 아이콘명 */
   iconName: IconType;
   /** 아이콘 색상과 보더의 색상 */
-  color?: ColorsType;
+  color?: TColorKeys;
   /** 배경 색상 */
-  backgroundColor?: ColorsType;
+  backgroundColor?: TMainColorKeys;
   /** hvoer시 색상 */
-  hoverColor?: ColorsType;
+  hoverColor?: TColorKeys;
   /** 클릭시 웨이브 컬럭 */
-  rippleColor?: ColorsType;
+  rippleColor?: TColorKeys;
   /** 원형 버튼 여부 */
   circleButton?: boolean;
   /** border여부 */
@@ -40,12 +40,12 @@ type IconButtonPropsType = {
 function IconButton({
   type = 'button',
   iconName,
-  color = 'black',
-  backgroundColor = 'transparent',
-  hoverColor = 'transparent',
-  rippleColor = 'grey-lighten-1',
+  color,
+  backgroundColor,
+  hoverColor,
+  rippleColor,
   circleButton = true,
-  border = true,
+  border,
   size = 'm',
   disabled,
   onClick,
@@ -63,28 +63,45 @@ function IconButton({
   }
 
   return (
-    <Button
-      {...args}
-      type={"button"}
-      color={color}
-      backgroundColor={backgroundColor}
-      hoverColor={hoverColor}
-      rippleColor={rippleColor}
-      border={border}
-      borderColor={disabled ? 'grey' : color}
-      size={size}
-      disabled={disabled}
-      onClick={onClick}
-      borderRadius={'50%'}
-      square={true}
-    >
-      <Icon name={iconName} color={disabled ? 'grey' : color} size={iSize} />
-    </Button>
+    <ThemeContext.Consumer>
+      {({theme}) => {
+        const _backgroundColor = backgroundColor || theme.primaryColor;
+        const _hoverColor = hoverColor || theme.primaryDarkenColor as TColorKeys;
+        const _color = color || theme.primaryTextColor as TColorKeys;
+        const _rippleColor = rippleColor || theme.primaryRippleColor as TColorKeys;
+
+        return (
+          <Button
+            {...args}
+            type={type}
+            color={_color}
+            backgroundColor={_backgroundColor}
+            hoverColor={_hoverColor}
+            rippleColor={_rippleColor}
+            border={border}
+            borderColor={_color}
+            size={size}
+            disabled={disabled}
+            onClick={onClick}
+            borderRadius={circleButton ? '50%': '0'}
+            square={true}
+            css={buttonStyle}
+          >
+            <Icon name={iconName} color={_color} size={iSize} />
+          </Button>
+        )
+      }}
+    </ThemeContext.Consumer>
   );
 }
 
 
 // ===== styles
+const buttonStyle = css`
+  
+    padding: 0 16px;
+  
+`;
 
 
 // ===== export

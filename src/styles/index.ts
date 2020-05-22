@@ -1,11 +1,10 @@
 import { css } from '@emotion/core';
 import colors from './colors';
+import { TMainColorKeys, TColorKeys } from '../types/colors'
 
 // ===== 타입
-// # 색상 타입
-export type ColorsType = keyof typeof colors;
 // # 색상 타입을 순회하기 위한 키배열
-export const colorTypes: ColorsType[] = Object.keys(colors) as any[];
+export const colorTypes: TColorKeys[] = Object.keys(colors) as any[];
 // # position Type
 export const positionValues = ["relative", "absolute", "fixed", "static", "sticky"] as const;
 export type positionType = typeof positionValues[number];
@@ -61,7 +60,7 @@ const borderLeft = () => css`
   box-sizing: border-box;
   border-left: 1px solid;
 `;
-const borderColor = (color: ColorsType) => css`border-color: ${colors[color]}`;
+const borderColor = (color: TColorKeys) => css`border-color: ${colors[color]}`;
 
 // ===== width
 const width = (width: string) => css`width: ${width}`;
@@ -70,10 +69,10 @@ const width = (width: string) => css`width: ${width}`;
 const height = (height: string) => css`height: ${height}`;
 
 // ===== background color
-const backgroundColor = (color: ColorsType) => css`background-color: ${colors[color]}`;
+const backgroundColor = (color: TColorKeys) => css`background-color: ${colors[color]}`;
 
 // ===== color
-const color = (color: ColorsType) => css`color: ${colors[color]}`;
+const color = (color: TColorKeys) => css`color: ${colors[color]}`;
 
 
 
@@ -138,9 +137,10 @@ const media: any = {
   },
 }
 
-// ===== 컬럭의 색상을 반환
-const getColor = (color: ColorsType) => colors[color];
 
+
+// ===== 컬럭의 색상을 반환
+export const getColor = (color: keyof typeof colors) => colors[color];
 
 // ===== export
 export default {

@@ -24,9 +24,12 @@ export const Default = () => {
   const headText = text('headText', 'headText') ;
   const children = text('children', 'children') ;
   const childrenFullWidth = boolean('childrenFullWidth', false) ;
+  const show = boolean("show", false)
 
   return (
-    <Collapse headText={headText} childrenFullWidth={childrenFullWidth}>
+    <Collapse headText={headText} childrenFullWidth={childrenFullWidth}
+      show={show}
+    >
       {children}
     </Collapse>
   );

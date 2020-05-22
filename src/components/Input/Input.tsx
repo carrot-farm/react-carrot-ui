@@ -3,6 +3,9 @@ import { useCallback, useState, useRef, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
 
 import styles, { ColorsType } from '../../styles';
+import { TMainColors } from '../../types/colors';
+import colors from '../../styles/colors'
+import ThemeContext from '../../theme';
 
 // ===== type
 // # props type
@@ -25,6 +28,8 @@ type InputPropsType = {
   helperText?: string;
   /** input의 기타 속성 */
   attr?: any
+  /** 컬러 */
+  color?: TMainColors;
   /** 값 변경 이벤트 */
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
 };
@@ -40,6 +45,7 @@ function Input({
   error,
   helperText,
   attr,
+  color,
   onChange,
 }: InputPropsType) {
   const inputEl = useRef<HTMLInputElement>(null); // input element
@@ -71,42 +77,50 @@ function Input({
 
   // # 렌더링
   return (
-    <div css={[rootStyle()]} onClick={handleFocusIn}>
-      {/* label */}
-      {label && <label css={labelStyle}
-        className={`${focused ? "focused" : ""} ${error ? "error" : ""} ${
-          disabled ? "disabled" : ""
-        }`}
-      >{label}</label>}
+    <ThemeContext.Consumer>
+      {({theme}) => {
+        const _color = color || theme.primaryColor!;
 
-      {/* input */}
-      <div
-        css={[inputContainerStyle]}
-        className={`${focused ? "focused" : ""} ${error ? "error" : ""} ${
-          disabled ? "disabled" : ""
-        }`}
-      >
-        <input
-          {...attr}
-          name={name}
-          type={type}
-          value={value}
-          disabled={disabled}
-          readOnly={readOnly}
-          onChange={onChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          ref={inputEl}
-        />
-      </div>
+        return (
+        <div css={[rootStyle()]} onClick={handleFocusIn}>
+          {/* label */}
+          {label && <label css={labelStyle(_color)}
+            className={`${focused ? "focused" : ""} ${error ? "error" : ""} ${
+              disabled ? "disabled" : ""
+            }`}
+          >{label}</label>}
 
-      {/* helper text */}
-      {helperText && (
-        <div css={[helperTextStyle(error ? "red" : "grey-darken-1")]}>
-          {helperText}
+          {/* input */}
+          <div
+            css={[inputContainerStyle(_color)]}
+            className={`${focused ? "focused" : ""} ${error ? "error" : ""} ${
+              disabled ? "disabled" : ""
+            }`}
+          >
+            <input
+              {...attr}
+              name={name}
+              type={type}
+              value={value}
+              disabled={disabled}
+              readOnly={readOnly}
+              onChange={onChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              ref={inputEl}
+            />
+          </div>
+
+          {/* helper text */}
+          {helperText && (
+            <div css={[helperTextStyle(error ? "red" : "grey-darken-1")]}>
+              {helperText}
+            </div>
+          )}
         </div>
-      )}
-    </div>
+        )
+      }}
+    </ThemeContext.Consumer>
   );
 }
 
@@ -126,7 +140,7 @@ const rootStyle = () => css`
   margin-bottom: 1.2rem;
 `;
 
-const labelStyle = css`
+const labelStyle = (color: TMainColors) =>  css`
   top: 0;
   left: 0;
   position: absolute;
@@ -136,12 +150,11 @@ const labelStyle = css`
   padding: 0;
   transition: color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms, 
   transform 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
-  color: ${styles.getColor('grey-darken-2')};
+  color: ${styles.getColor(color)};
   fotn-size: 0.9rem;
   &.focused {
     transform: translate(0, -1rem) scale(0.75);
     font-size: 0.8rem;
-    color: ${styles.getColor('black')};
   }
   &.error {
     color: ${styles.getColor('red')};
@@ -151,7 +164,7 @@ const labelStyle = css`
   }
 `;
 
-const inputContainerStyle = css`
+const inputContainerStyle = (color: TMainColors) => css`
   width: inherit;
   &::before {
     position: absolute;
@@ -159,16 +172,16 @@ const inputContainerStyle = css`
     right:0;
     bottom:0;
     content: '\\00a0';
-    transition: border-bottom-color, border-bottom 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    // transition: border-bottom-color, border-bottom 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     border-bottom: 1px solid;
     border-bottom-color: ${styles.getColor('grey-lighten-3')};
     pointer-events: none;
     box-sizing: inherit;
     height: 1px;
   }
-  &::hover:not(.disabled)::before {
-    border-bottom: 2px solid;
-    border-bottom-color: ${styles.getColor('black')};
+  &:hover:not(.disabled)::before {
+    border-bottom: 1px solid;
+    border-bottom-color: ${styles.getColor(color)};
   }
   &::after {
     position: absolute;
@@ -177,10 +190,11 @@ const inputContainerStyle = css`
     bottom: 0;
     content: "";
     transform: scaleX(0);
-    transition: transform, border-bottom-color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+    transition: all 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
     border-bottom: 2px solid;
-    border-bottom-color: ${styles.getColor('black')};
+    border-bottom-color: ${styles.getColor(color)};
     pointer-events: none;
+    paddint-top: 50px;
   }
   &.focused::after {
     transform: scaleX(1);
@@ -237,7 +251,7 @@ const helperTextStyle = (color: ColorsType )=> css`
   left:0;
   font-size: 0.7rem;
   transition: color .2s;
-  color: ${styles.getColor(color)}
+  color: ${colors[color]}
 `;
 
 // ===== export

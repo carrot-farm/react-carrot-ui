@@ -1,9 +1,10 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
 
-import { ColorsType } from '../../styles';
 import Icon from '../Icon/Icon';
 import Ripple from '../Ripple/Ripple';
+import ThemeContext from '../../theme';
+import {  } from '../../types/colors';
 
 // ===== 타입
 /** props type */
@@ -36,39 +37,45 @@ function CheckBox({
   onChange,
 }: CheckBoxPropsType) {
   // console.log('> ', disabled, checked, circleBox)
-  let iconColor: ColorsType = 'white';
+  let iconColor = 'white';
   if(checked) {iconColor = 'black';}
   if(disabled) {iconColor = 'grey'}
 
   return (
-    <div css={[rootStyle]}>
-      <label>
-        <div css={wrapperStyle(disabled, circleBox)}>
-          {/* 실제 체크박스 */}
-          <input
-            {...attr}
-            type="checkbox"
-            name={name}
-            checked={checked}
-            disabled={disabled}
-            onChange={onChange}
-          />
+    <ThemeContext.Consumer>
+      {({theme}) => {
+        return(
+          <div css={[rootStyle]}>
+            <label>
+              <div css={wrapperStyle(disabled, circleBox)}>
+                {/* 실제 체크박스 */}
+                <input
+                  {...attr}
+                  type="checkbox"
+                  name={name}
+                  checked={checked}
+                  disabled={disabled}
+                  onChange={onChange}
+                />
 
-          {/* 아이콘 */}
-          <Icon
-            name="checkThin"
-            size="s"
-            color={iconColor}
-            css={[iconStyle]}
-          />
+                {/* 아이콘 */}
+                <Icon
+                  name="checkThin"
+                  size="s"
+                  color={iconColor}
+                  css={[iconStyle]}
+                />
 
-          {/* ripple */}
-          {!disabled && <Ripple color={'white'} />}
-        </div>
-        {/* 레이블 */}
-        {label && <div css={[labelStyle(disabled)]}>{label}</div>}
-      </label>
-    </div>
+                {/* ripple */}
+                {!disabled && <Ripple color={'white'} />}
+              </div>
+              {/* 레이블 */}
+              {label && <div css={[labelStyle(disabled)]}>{label}</div>}
+            </label>
+          </div>
+        )
+      }}
+    </ThemeContext.Consumer>
   );
 }
 

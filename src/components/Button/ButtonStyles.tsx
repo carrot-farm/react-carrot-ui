@@ -1,12 +1,12 @@
 import { css, keyframes } from '@emotion/core';
 
+import { getColor } from '../../styles'
 import colors from '../../styles/colors';
-import { ColorsType } from '../../styles';
+import { TColorKeys, TMainColorKeys } from '../../types/colors';
 
 export default css`
   margin: auto;
   position: relative;
-  overflow: hidden;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -15,8 +15,7 @@ export default css`
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   letter-spacing: 0.5px;
   font-size: 14px;
-  padding: 0 16px;
-  height: 36px;
+  
   text-align: center;
   box-sizing: border-box;
   &[disabled] {
@@ -56,24 +55,24 @@ export const borderRadiusStyle = (radius: string) => css`border-radius: ${radius
 // ===== 정사각현
 export const squareStyle = {
   s: css`
-    width: 25px;
-    height: 25px;
+    width: 25px !important;
+    height: 25px !important;
     padding: 0 !important;
   `,
   m: css`
-    width: 36px;
-    height: 36px;
+    width: 36px !important;
+    height: 36px !important;
     padding: 0 !important;
   `,
   l: css`
-    width: 40px;
-    height: 40px;
+    width: 40px !important;
+    height: 40px !important;
     padding: 0 !important;
   `,
 }
 
 // ===== 마우스 오버시 컬러 스타일
-export const hoverColorStyle = (color: ColorsType) =>
+export const hoverColorStyle = (color: TColorKeys) =>
   css`
     &:hover {
       background-color: ${colors[color]};
@@ -86,6 +85,54 @@ export const disabledStyle = (boolean?: boolean) => css`
   
 `
 
+// ===== 버튼 스타일
+export const buttonStyle = (color: TColorKeys, disabled?: boolean) => css`
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font: inherit;
+  line-height: normal;
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+  width: auto;
+  padding: 0 16px;
+  height: 36px;
+  cursor: pointer;
+  &::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+  color: ${getColor(color)};
+  ${disabled ? 'color: grey !important;' : ''}
+`;
+
+// ===== 최상단 스타일
+export const rootStyle = css`
+  display: inline-block;
+  position: relative;
+`;
+
+// ===== 배경 색상
+export const backgroundColorStyle = (color: TMainColorKeys) => css`
+  background-color: ${getColor(color)}
+`;
+
+// ===== 보더 유무
+export const borderStyle = (border: boolean) => css`
+  border: 1px solid;
+  box-sizing: border-box;
+`;
+
+// ===== 보더 색상
+export const borderColorStyle = (color: TColorKeys) => css`
+  border-color: ${getColor(color)};
+`;
+
+// ===== 컨테이너
+export const containerStyle = css`
+  position: relative;
+  overflow: hidden;
+`;
 
 
 
