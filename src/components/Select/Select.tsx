@@ -2,11 +2,12 @@
 import { jsx, css } from '@emotion/core';
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-import styles, { ColorsType } from '../../styles';
+import styles from '../../styles';
 import Container from '../Container/Container';
 import Icon from '../Icon/Icon';
 import Ripple from '../Ripple/Ripple';
 import Folding from '../Folding/Folding';
+
 
 // ===== type
 // # props type

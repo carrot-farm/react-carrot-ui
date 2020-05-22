@@ -2,13 +2,14 @@
 import { useState, useLayoutEffect } from 'react';
 import { jsx, css } from '@emotion/core';
 
-import { ColorsType } from '../../styles'
 import colors from '../../styles/colors'
+import { TColorKeys } from '../../types/colors'
+
 
 // ===== 타입
 type RippleType = {
   /** 리플 색상 */
-  color?: ColorsType;
+  color?: TColorKeys;
   /** 애니메이션 시간 ms */
   duration?: number;
 };
@@ -93,7 +94,7 @@ const useDebouncedRippleCleanUp = (
 
 
 // ===== 스타일
-const rippleStyle = (color: ColorsType, duration: number) =>  css`
+const rippleStyle = (color: TColorKeys, duration: number) =>  css`
   position: absolute;
   top: 0;
   right: 0;

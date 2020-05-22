@@ -4,8 +4,9 @@ import { InterpolationWithTheme } from '@emotion/core/types';
 import * as icons from './svg';
 
 import { BaseProps } from '../Base/Base';
-import { ColorsType } from '../../styles';
 import colors from '../../styles/colors';
+import { TColorKeys } from '../../types/colors'
+
 
 const iconSize = {
   xs: '14px',
@@ -31,7 +32,7 @@ type IconTPropsType = {
   /** 아이콘 사이즈 */
   size?: IconSizeType;
   /** 아이콘 색상 */
-  color?: ColorsType;
+  color?: TColorKeys;
 };
 
 // ===== 컴포넌트

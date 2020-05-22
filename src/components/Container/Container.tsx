@@ -2,7 +2,7 @@
 import { jsx, css } from '@emotion/core';
 
 import Base, { BaseProps } from '../Base/Base';
-import styles, { ColorsType } from '../../styles';
+import styles from '../../styles';
 
 // ===== 타입
 type ContainerPropsType = BaseProps & {

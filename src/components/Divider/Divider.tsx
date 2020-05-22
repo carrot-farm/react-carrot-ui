@@ -2,8 +2,9 @@
 import { useCallback, useState } from 'react';
 import { jsx, css } from '@emotion/core';
 
-import styles, { ColorsType } from '../../styles';
+import styles from '../../styles';
 import colors from '../../styles/colors';
+import { TColorKeys } from '../../types/colors'
 
 // ===== type
 // # props type
@@ -11,7 +12,7 @@ type DividerPropsType = {
   /** 높이 */
   height?: number;
   /** 선의 색상 */
-  color?: ColorsType;
+  color?: TColorKeys;
 };
 
 // ===== component
@@ -26,7 +27,7 @@ function Divider({
 }
 
 // ===== styles
-const rootStyle = (height: number, color: ColorsType) => css`
+const rootStyle = (height: number, color: TColorKeys) => css`
   height: ${height}px;
   background-color: ${styles.getColor(color)};
   width: 100%;

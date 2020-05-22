@@ -17,3 +17,5 @@ export { default as Select } from './components/Select/Select';
 export { default as Switch } from './components/Switch/Switch';
 export { default as Table } from './components/Table/Table';
 export { default as TextField } from './components/TextField/TextField';
+export { default as ThemeProvider } from './components/ThemeProvider/ThemeProvider';
+export { default as Slosh } from './components/Shosh/Slosh';
