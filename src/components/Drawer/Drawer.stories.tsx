@@ -24,7 +24,8 @@ export const modal = ()  => {
   // # props
   const props: any = {
     sw: boolean("sw", false),
-    width: text('width', '400px'),
+    width: text('width', '320px'),
+    anchor: select('anchor', ['left', 'right', 'top', 'bottom'], 'left'),
     onClose: action('onClose')
   }
 

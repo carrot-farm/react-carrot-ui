@@ -1,130 +1,185 @@
 /** @jsx jsx */
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useCallback, useEffect, useMemo } from 'react';
 import { jsx, css } from '@emotion/core';
 import gsap from 'gsap';
+
+import BackLayer from '../BackLayer/BackLayer';
 
 // ===== type
 type DrawerType = {
   /** 모달 스위치 */
   sw: boolean;
-  /** 닫힐때 사용하는 핸들러 */
-  onClose: () => void;
+  /** 모달 보여지는 위치 */
+  anchor?: 'left'|'top'|'right'|'bottom';
+  /** 컨테이너의 넓이 */
+  width?: string;
   /** 컨텐츠 요소 */
   children: React.ReactNode;
-  /** 컨테이너의 넓이 */
-  width: string;
+  /** 닫힐때 사용하는 핸들러 */
+  onClose: () => void;
 };
+type TAnchorAlign = {
+  justifyContent: 'flex-start' | 'center' | 'flex-end';
+  alignItems: 'flex-start' | 'center' | 'flex-end';
+}
+type TAni = {
+  left?: string;
+  right?: string;
+  top?: string;
+  bottom?: string;
+}
 
 // ===== component
 function Drawer({
   sw = false,
-  onClose,
+  anchor = 'left',
   children,
-  width = '400px'
+  width = '320px',
+  onClose,
 }: DrawerType) {
-  const rootEl = useRef(null);
-  const backdropEl = useRef(null);
   const contentEl = useRef(null);
-  const { current: tl } = useRef(gsap.timeline({ paused: true }));
+
+  // # 앵커에 따른 컨텐츠 위치
+  const anchorAlign = useMemo<TAnchorAlign>(() => { 
+    const obj: TAnchorAlign = {
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start'
+    }
+
+    if(anchor === 'right') {
+      obj.justifyContent = 'flex-end';
+    } else if(anchor === 'top') {
+      obj.justifyContent = 'center';
+    } else if(anchor === 'bottom') {
+      obj.justifyContent = 'center';
+      obj.alignItems = 'flex-end';
+    }
+
+    return obj;
+  }, [anchor]);
   
-  useEffect(() => {
-    // # timeline 셋팅
-    tl.set(rootEl.current, { perspective: 1000 });
-    tl.set(contentEl.current, {
-      rotateX: 90,
-      transformStyle: "perspective-3d",
-      transformOrigin: "center bottom",
-    });
+  // # 보여지기
+  const onShow = useCallback(() => {
+    const from: TAni = {
+      left: 'auto',
+      right: 'auto',
+      top: 'auto',
+      bottom: 'auto'
+    };
+    const to: TAni = {}
+    if(anchor === 'left') {
+      from.left = '-100%';
+      from.top = '0';
+      from.bottom = '0';
+      to.left = '0%';
+    } else if(anchor === 'right') {
+      from.right = '-100%';
+      from.top = '0';
+      from.bottom = '0'
+      to.right = '0%';
+    } else if(anchor === 'top') {
+      from.left = '0';
+      from.top = '-100%';
+      to.top = '0%';
+    } else if(anchor === 'bottom') {
+      from.left = '0';
+      from.bottom = '-100%';
+      to.bottom = '0%';
+    }
+    // console.log('> ', anchor, from, to)
+    gsap.fromTo(contentEl.current, from, to);
+  }, [anchor]);
+  
+  // # 숨기기
+  const onHide = useCallback(() => {
+    const to: TAni = {};
+    if(anchor === 'left') {
+      to.left = '-100%';
+    } else if(anchor === 'right') {
+      to.right = '-100%';
+    } else if(anchor === 'top') {
+      to.top = '-100%';
+    } else if(anchor === 'bottom') {
+      to.bottom = '-100%';
+    }
+    gsap.to(contentEl.current, to);
+  }, [anchor])
 
-    // # 애니메이션
-    tl
-    .to(rootEl.current, {css: { display: 'block' }}, '-=0.5')
-    .fromTo(
-      backdropEl.current,
-      { autoAlpha: 0, css: { display: "flex" } },
-      { duration: 0.2, autoAlpha: 1 }
-    ).fromTo(
-      contentEl.current,
-      {
-        autoAlpha: 0,
-        css: { display: "block" },
+
+  // # 애니메이션
+  useEffect(() => {
+    gsap.set(contentEl.current, {
+      css: {
+        display: 'block'
       },
-      {
-        duration: 0.3,
-        autoAlpha: 1,
-        rotateX: 0,
-      }
-    );
-    // console.log('> tl', tl)
-    return () => {
-      onClose();
-    }
-  }, [])
+    })
 
-  // console.log('> ', tl)
-  useEffect(() => {
-    if(sw) {
-      tl.play()
-    } else {
-      tl.reverse()
-    }
-  }, [sw])
-
-
+  }, [anchor, width]);
+  
   return (
-    <div className={`react-carrot-ui_modal-root `} css={[style]} ref={rootEl}>
-      <div
-        className={`react-carrot-ui_modal-backdrop `}
-        css={[backdropStyle]}
-        onClick={onClose}
-        ref={backdropEl}
-      ></div>
-      <div
-        className={`react-carrot-ui_modal-content `}
-        css={[contentStyle(width)]}
-        ref={contentEl}
-      >
+    <BackLayer 
+      sw={sw} 
+      justifyContent={anchorAlign.justifyContent} 
+      alignItems={anchorAlign.alignItems}
+      onClick={onClose}
+      onShow={onShow}
+      onHide={onHide}
+    >
+      <div ref={contentEl} css={contentsStyle(anchor, width)}>
         {children}
       </div>
-    </div>
+    </BackLayer>
   );
 }
 
 // ===== styles
-const style = css`
-  position: fixed;
-  z-index: 1000;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  overflow: auto;
-  display: none;
-`;
-const backdropStyle = css`
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
-  position: fixed;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  display: none;
-`;
-const contentStyle = (width: string) => css`
-  padding: 16px 20px 24px;
-  margin: auto;
-  margin-top: 80px;
-  min-width: 200px;
-  width: ${width};
-  max-width: 90%;
-  background-color: #fff;
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 5px 8px 0px rgba(0,0,0,0.14),0px 1px 14px 0px rgba(0,0,0,0.12);
-  opacity: 0;
-`;
+const contentsStyle = (anchor: 'left' | 'top' | 'right' | 'bottom', width: string) => {
+  const base = `
+    background-color: #fff;
+    position: absolute;
+    overflow: auto;
+    display: none;
+  `;
+  if(anchor === 'left') {
+    return css`
+      ${base}
+      width: ${width};
+      left: 0;
+      top: 0;
+      bottom: 0;
+    `;
+  } else if(anchor === 'right') {
+    return css`
+      ${base}
+      width: ${width};
+      right: 0;
+      top: 0;
+      bottom: 0;
+    `;
+  } else if(anchor === 'top') {
+    return css`
+      ${base}
+      width: 100%;
+      left: 0;
+      right: 0;
+      top: 0;
+      max-height: 320px;
+    `
+  }else if(anchor === 'bottom') {
+    return css`
+      ${base}
+      width: 100%;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      max-height: 320px;
+    `
+  }
+}
+// css`
+//   background-color: #fff;
+//   display: none;
+// `;
 
 
 export default Drawer;

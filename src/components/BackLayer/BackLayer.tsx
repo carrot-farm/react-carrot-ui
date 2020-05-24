@@ -15,22 +15,21 @@ type TBackLayer = {
   /** 모달 스위치 */
   sw: boolean;
   /** contents 정렬. alignItmes */
-  alignItems: 'flext-start' | 'center' | 'flex-end';
+  alignItems?: 'flex-start' | 'center' | 'flex-end';
   /** contents 정렬. justifyContent */
-  justifyContent: 'flext-start' | 'center' | 'flex-end';
+  justifyContent?: 'flex-start' | 'center' | 'flex-end';
   /** 컨텐츠 요소 */
   children: React.ReactNode;
   /** 애니메이션 시작시 */
-  onShow: ({rootEl, backdropEl}: TEventParams) => any,
+  onShow?: ({rootEl, backdropEl}: TEventParams) => any,
   /** 시작 애니메이션 완료시 */
-  onComplete: ({rootEl, backdropEl}: TEventParams) => any,
+  onComplete?: ({rootEl, backdropEl}: TEventParams) => any,
   /** 종료시 */
-  onHide: ({rootEl, backdropEl}: TEventParams) => any,
+  onHide?: ({rootEl, backdropEl}: TEventParams) => any,
   /** 종료 애니메이션 완료시 */
-  onHideComplete: ({rootEl, backdropEl}: TEventParams) => any,
+  onHideComplete?: ({rootEl, backdropEl}: TEventParams) => any,
   /** back layer click 시 */
-  onClick: (e: React.MouseEvent<HTMLDivElement>) => any;
-  /** back layer click 시 */
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => any;
 };
 
 
@@ -38,7 +37,7 @@ type TBackLayer = {
 /** modal, drawer등에 사용되는 배경 */
 function BackLayer({
   sw = false,
-  alignItems = 'flext-start',
+  alignItems = 'flex-start',
   justifyContent = 'center',
   children,
   onShow,
@@ -68,7 +67,8 @@ function BackLayer({
     document.querySelector('body')?.appendChild(rootEl.current);
 
     // # timeline 셋팅
-    tl.set(rootEl.current, { 
+    tl.clear()
+    .set(rootEl.current, { 
       perspective: 1000, 
       onReverseComplete: () => {
         if(typeof onHideComplete === 'function') {
@@ -76,6 +76,9 @@ function BackLayer({
         }
       }
     });
+    tl.set(backdropEl.current, {
+      css: { display: "flex" } 
+    })
 
 
     // # 애니메이션
@@ -87,7 +90,7 @@ function BackLayer({
     })
     .fromTo(  
       backdropEl.current,
-      { autoAlpha: 0, css: { display: "flex" } },
+      { autoAlpha: 0, },
       { 
         duration: 0.2, 
         autoAlpha: 1,
@@ -105,7 +108,7 @@ function BackLayer({
       // # el 삭제
       document.querySelector('body')?.removeChild(rootEl.current);
     }
-  }, []);
+  }, [onShow, onComplete, onHide, onHideComplete]);
 
   // # 정렬
   useEffect(() => {
@@ -125,7 +128,7 @@ function BackLayer({
       }
       tl.reverse();
     }
-  }, [sw])
+  }, [sw, onHide])
 
 
   return (
