@@ -176,10 +176,6 @@ const contentsStyle = (anchor: 'left' | 'top' | 'right' | 'bottom', width: strin
     `
   }
 }
-// css`
-//   background-color: #fff;
-//   display: none;
-// `;
 
 
 export default Drawer;
