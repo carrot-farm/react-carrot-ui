@@ -179,4 +179,4 @@ export type TColorKeys = keyof typeof colors;
 export type TMainColorKeys = keyof typeof mainColors;
 
 // # 메인 색상의 키 배열 타입
-export const TMainColorArr: TMainColorKeys[] = Object.keys(TMainColors) as any[];
+export const TMainColorArr: TMainColorKeys[] = Object.keys(mainColors) as any[];
