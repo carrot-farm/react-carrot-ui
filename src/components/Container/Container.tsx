@@ -8,6 +8,7 @@ import styles from '../../styles';
 type ContainerPropsType = BaseProps & {
   /** 꽉차게 */
   fullWidth?: boolean,
+  
 };
 
 // ===== 컴포넌트
@@ -24,7 +25,7 @@ function Container({
     <Base
       {...args}
       className={className}
-      css={[mobile, tablet, desktop, fullWidth ? fullWidthStyle : undefined]}
+      css={[mobile, tablet,  fullWidth ? fullWidthStyle : undefined]}
       backgroundColor={backgroundColor}
     >
       {children}
@@ -40,15 +41,15 @@ const mobile = styles.media.s(`
 `);
 
 const tablet = styles.media.m(`
-  width: 85%;
+  width: 90%;
   margin: auto;
 `);
 
-const desktop = styles.media.l(`
-  width: 1200px;
-  max-width: 90%;
-  margin: auto;
-`);
+// const desktop = styles.media.l(`
+//   width: 1200px;
+//   max-width: 90%;
+//   margin: auto;
+// `);
 
 const fullWidthStyle = css`
   width: 100% !important;

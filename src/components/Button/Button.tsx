@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { useRef } from 'react';
-import { jsx } from '@emotion/core';
+import { jsx, css } from '@emotion/core';
 
 import Slosh from '../Shosh/Slosh';
 import styles, {
@@ -24,7 +24,9 @@ import { TMainColorKeys, TColorKeys } from '../../types/colors';
 
 
 // ===== 타입
-export type ButtonPropsType = {
+export type TButtonProps = {
+  /** buttonCreator에서 구분을 위함. */
+  name?: string;
   /** 버튼 타입 */
   type?: 'button' | 'submit';
   /** 버튼 사이즈 */
@@ -47,6 +49,8 @@ export type ButtonPropsType = {
   borderRadius?: string;
   /** 정사각형 */
   square?: boolean;
+  /** 꽉차는 크기의 버튼 */
+  fullWidth?: boolean;
   /** 내부 컴포넌트 */
   children: React.ReactNode;
   /** 클릭 했을 때 함수 */
@@ -55,6 +59,7 @@ export type ButtonPropsType = {
 
 // ===== 컴포넌트
 function Button({
+  name,
   type = 'button',
   size = 'm',
   color,
@@ -66,10 +71,11 @@ function Button({
   borderColor,
   borderRadius,
   square,
+  fullWidth,
   children,
   onClick,
   ...args
-}: ButtonPropsType) {
+}: TButtonProps) {
   const rootEl = useRef(null);
   // console.log('> ', onClick)
   // const buttonEl = useRef<HTMLButtonElement>(null);
@@ -86,12 +92,13 @@ function Button({
         // console.log('> ', _rippleColor)
 
         return (
-          <div ref={rootEl} css={[rootStyle]}>
+          <div className="carrot-ui-button-root" ref={rootEl} css={[rootStyle, fullWidth && fullWidthStyle]}>
             <Slosh disabled={disabled} borderRadius={borderRadius}>
-              <div css={containerStyle}>
+              <div css={[containerStyle]}>
                 
                 <button
                   {...args}
+                  name={name}
                   type={type}
                   disabled={disabled}
                   css={[
@@ -121,6 +128,13 @@ function Button({
     </ThemeContext.Consumer>
   );
 }
+
+const fullWidthStyle = css`
+  width: 100%;
+  & > div, button {
+    width: 100%;
+  }
+`;
 
 // ===== export
 export default Button;

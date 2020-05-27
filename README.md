@@ -13,6 +13,9 @@ react ui library
 yarn add react-carrot-ui @emotion/core gsap
 ```
 
+## api
+[storybook](http://carrot-ui.carrotlabel.com/)
+
 
 ## usage
 * **button**

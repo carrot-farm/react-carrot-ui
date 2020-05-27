@@ -114,7 +114,7 @@ const flexWrap = (wrap: flexWrapType) => css`flex-wrap: ${wrap}`;
 const flexDirection = (direction: flexDirectionType) => css`flex-direction: ${direction}`;
 
 // ===== media query
-const media: any = {
+export const media: any = {
   s: (styles: string) => {
     return css`
       @media screen and (max-width: 600px) {
@@ -123,6 +123,14 @@ const media: any = {
     `;
   },
   m: (styles: string) => { 
+    return (
+      css`
+      @media screen and (min-width: 601px){
+        ${styles}
+      }`
+    )
+  },
+  mOnly: (styles: string) => { 
     return (
       css`
       @media screen and (min-width: 601px) and (max-width: 960px) {

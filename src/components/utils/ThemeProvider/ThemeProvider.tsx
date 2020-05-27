@@ -4,9 +4,9 @@ import { useEffect, useState, useContext, createContext, useMemo, useCallback } 
 import { jsx } from '@emotion/core';
 
 // import theme, { ThemeStateType } from '../../theme';
-import ThemeContext, { themes, createSubColors } from '../../theme';
-import { TMainColorKeys } from '../../types/colors';
-import { TThemeContext, TThemeState } from '../../types/theme';
+import ThemeContext, { themes, createSubColors } from '../../../theme';
+import { TMainColorKeys } from '../../../types/colors';
+import { TThemeContext, TThemeState } from '../../../types/theme';
 
 
 // ===== 타입정의
@@ -18,7 +18,6 @@ export type ThemeProdiverType = TThemeState & {
 // ===== 컴포넌트
 function ThemeProvider({
   primaryColor,
-
   secondaryColor,
   children,
 }: ThemeProdiverType) {

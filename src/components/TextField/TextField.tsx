@@ -1,13 +1,13 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useMemo } from 'react';
 
 import styles from '../../styles';
 import { TMainColorKeys } from '../../types/colors';
 import ThemeContext from '../../theme';
 
 // ===== 타입
-export type TextFieldPropsType = {
+export type TTextFieldProps = {
   /** name 속성 */
   name?: string;
   /** value */
@@ -42,9 +42,10 @@ function TextField({
   attr,
   mainColor,
   onChange,
-}: TextFieldPropsType) {
-  const lineHeightPx = rows * (22); // 라인 수 크기
+}: TTextFieldProps) {
+  const lineHeightPx = useMemo(() => rows * (22), []); // 라인 수 크기
   const [focused, setFocused] = useState<boolean>(false); // 포커스 유무
+  // console.log('> ', rows)
 
   // # value 값 변경 시
   useEffect(() => {
@@ -77,7 +78,7 @@ function TextField({
         const _mainColor = mainColor || theme.primaryColor!;
 
         return (
-          <div css={[rootStyle]} onClick={handleFocusIn}>
+          <div className="carrot-ui-textfield-root" css={[rootStyle]} onClick={handleFocusIn}>
             {/* ===== label ===== */}
             {label && (
               <label
@@ -124,8 +125,9 @@ const rootStyle = css`
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
-  width: 100%;
+  width: inherit;
   line-height: 1.4rem;
+  background: #fff;
 `
 
 const labelStyle = (mainColor: TMainColorKeys) => css`
@@ -166,7 +168,7 @@ const textareaContainerStyle = (mainColor: TMainColorKeys, lineHeightPx: number)
     border-bottom: 1px solid;
     pointer-events: none;
     box-sizing: inherit;
-    color: ${styles.getColor("grey-lighten-3")};
+    color: ${styles.getColor("grey-lighten-1")};
   }
   &:hover:not(.disabled)::before {
     border-bottom: 1px solid;

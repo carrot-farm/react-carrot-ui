@@ -8,7 +8,7 @@ import ThemeContext from '../../theme';
 
 // ===== type
 // # props type
-type RadioPropsType = {
+export type TRadioProps = {
   /** name attribute */
   name?: string;
   /** value 속성 */
@@ -34,7 +34,7 @@ function Radio({
   mainColor,
   disabled,
   onChange,
-}: RadioPropsType) {
+}: TRadioProps) {
 
   // # 렌더링
   return (

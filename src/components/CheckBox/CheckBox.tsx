@@ -9,7 +9,7 @@ import { getColor } from '../../styles'
 
 // ===== 타입
 /** props type */
-type CheckBoxPropsType = {
+export type TCheckBoxProps = {
   /** form의 name속성 */
   name?: string;
   /** 체크 여부 */
@@ -34,7 +34,7 @@ type CheckBoxPropsType = {
 /** 체크박스 */
 function CheckBox({
   name,
-  checked = true,
+  checked = false,
   disabled = false,
   circleBox = false,
   label,
@@ -42,7 +42,7 @@ function CheckBox({
   rippleColor,
   attr,
   onChange,
-}: CheckBoxPropsType) {
+}: TCheckBoxProps) {
   // console.log('> ', disabled, checked, circleBox)
   // let iconColor = 'white';
   // if(checked) {iconColor = 'black';}
@@ -55,8 +55,8 @@ function CheckBox({
         const _rippleColor = rippleColor || theme.primaryRippleColor as TColorKeys;
 
         return(
-          <div css={[rootStyle]}>
-            <label>
+          <div className="carrot-ui-checkbox-root" css={[rootStyle]}>
+            <label css={[containerStyle(disabled)]}>
               <div css={wrapperStyle(disabled, circleBox)}>
                 {/* 실제 체크박스 */}
                 <input
@@ -72,7 +72,7 @@ function CheckBox({
                 <Icon
                   name="checkThin"
                   size="s"
-                  color={_iconColor}
+                  color={checked ? _iconColor : 'white'}
                   css={[iconStyle]}
                 />
 
@@ -99,6 +99,16 @@ const rootStyle = css`
   lihe-height: 0;
 `;
 
+const containerStyle = (disabled: boolean) => css`
+  display: flex;
+  align-items: center;
+  ${disabled ? 
+    `cursor: default;
+    color: #adb5bd;
+    `
+  : `cursor: pointer; color: #212529;`}
+`
+
 const wrapperStyle = (disabled: boolean, circleBox: boolean) => css`
   cursor: ${disabled ? "default" : "pointer"};
   position: relative;
@@ -122,8 +132,7 @@ const iconStyle = css`
 const labelStyle = (disabled: boolean) => css`
   font-size: 0.8rem;
   top: 0.2rem;
-  position: absolute;
-  left: 30px;
+  margin-left: 0.5rem;
   ${disabled ? 
     `cursor: default;
     color: #adb5bd;

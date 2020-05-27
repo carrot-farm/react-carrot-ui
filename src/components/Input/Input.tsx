@@ -9,7 +9,7 @@ import ThemeContext from '../../theme';
 
 // ===== type
 // # props type
-type InputPropsType = {
+export type TInputProps = {
   /** name attribute */
   name?: string;
   /** type 속성 */
@@ -31,7 +31,7 @@ type InputPropsType = {
   /** 컬러 */
   color?: TMainColorKeys;
   /** 값 변경 이벤트 */
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
 };
 
 // ===== component
@@ -47,12 +47,12 @@ function Input({
   attr,
   color,
   onChange,
-}: InputPropsType) {
+}: TInputProps) {
   const inputEl = useRef<HTMLInputElement>(null); // input element
   const [focused, setFocused] = useState<boolean>(false); // 포커스 유무
 
   useEffect(() => {
-    setFocused(!!value);
+    // setFocused(!!value);
   }, [value])
 
   // # focus event
@@ -82,7 +82,7 @@ function Input({
         const _color = color || theme.primaryColor!;
 
         return (
-        <div css={[rootStyle()]} onClick={handleFocusIn}>
+        <div className="carrot-ui-input-root" css={[rootStyle()]} onClick={handleFocusIn}>
           {/* label */}
           {label && <label css={labelStyle(_color)}
             className={`${focused ? "focused" : ""} ${error ? "error" : ""} ${
@@ -174,7 +174,7 @@ const inputContainerStyle = (color: TMainColorKeys) => css`
     content: '\\00a0';
     // transition: border-bottom-color, border-bottom 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     border-bottom: 1px solid;
-    border-bottom-color: ${styles.getColor('grey-lighten-3')};
+    border-bottom-color: ${styles.getColor('grey-lighten-1')};
     pointer-events: none;
     box-sizing: inherit;
     height: 1px;

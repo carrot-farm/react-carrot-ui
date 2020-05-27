@@ -10,7 +10,9 @@ import ThemeContext from '../../theme';
 
 // ===== 타입
 /** props type */
-type IconButtonPropsType = {
+export type TIconButtonProps = {
+  /** buttonCreator에서 구분을 위함. */
+  name?: string;
   /** 버튼 타입 */
   type?: "button"|"submit";
   /** 아이콘명 */
@@ -38,6 +40,7 @@ type IconButtonPropsType = {
 // ===== 컴포넌트
 /** 모바일 상단의 메뉴 등에서 사용 */
 function IconButton({
+  name,
   type = 'button',
   iconName,
   color,
@@ -50,7 +53,7 @@ function IconButton({
   disabled,
   onClick,
   ...args
-}: IconButtonPropsType) {
+}: TIconButtonProps) {
   let iSize: IconSizeType = "s";
 
   // # 사이즈 값에 따른 아이콘 사이즈
@@ -73,6 +76,7 @@ function IconButton({
         return (
           <Button
             {...args}
+            name={name}
             type={type}
             color={_color}
             backgroundColor={_backgroundColor}

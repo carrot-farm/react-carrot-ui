@@ -32,7 +32,7 @@ export const Default = () => {
   ]
   const props = {
     name: text('name', 'select'),
-    value: text('value', 'D'),
+    value: select('value', ['A', 'B', 'C', 'D', 'E'],'D'),
     native: boolean('native', false),
     options: object('options', options),
 

@@ -11,7 +11,7 @@ import Folding from '../Folding/Folding';
 
 // ===== type
 // # props type
-type SelectPropsType = {
+export type TSelectProps = {
   /** name attribute */
   name: string;
   /** value 속성 */
@@ -23,10 +23,10 @@ type SelectPropsType = {
   /** 기타 속성 */
   attr?: any;
   /** 값 변경 이벤트 */
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onChange?: (selectedOption: OptionsType) => any,
 };
 // # options type
-type OptionsType = {
+export type OptionsType = {
   /** 내부 문자 */
   text: string;
   /** 값 */
@@ -43,18 +43,26 @@ function Select({
   native = false,
   attr,
   onChange,
-}: SelectPropsType) {
+}: TSelectProps) {
   const nativeEl = useRef<HTMLSelectElement>(null);
   const [ headText, setHeadText ] = useState('');
   const [ sw, setSw ] = useState(false);
-  const _value = String(value);
+  const [_value, setValue] = useState(value);
 
   // # mount
   useEffect(() => {
     if(options && options.length) {
-      setHeadText(options[0].text);
+      const finded = options.find((a: OptionsType) => a.value === _value);
+      setHeadText(finded ? finded.text : options[0].text);
     }
-  }, []) 
+  }, []);
+
+  // # 외부에서 값 변경
+  useEffect(() => {
+    const finded = options.find((a: OptionsType) => a.value === value)!;
+    setValue(finded.value);
+    setHeadText(finded.text);
+  }, [value])
 
   // # 셀렉트 박스 on/off 컨틀롤러
   const handleToggleClick = () => {
@@ -62,7 +70,11 @@ function Select({
   };
 
   // # option 클릭
-  const handleOptionClick = useCallback((index: number, disabled:boolean | undefined) => {
+  const handleOptionClick = useCallback((
+    index: number, 
+    disabled: boolean | undefined,
+    selectedOption: OptionsType
+  ) => {
     // 이벤트 트리거 
     if(nativeEl.current) {
       nativeEl.current.selectedIndex = index;
@@ -71,20 +83,28 @@ function Select({
     if(!disabled) {
       setSw(false);
     }
+    if(onChange && onChange(selectedOption) === false) {
+      return false;
+    }
   }, [value, options, onChange]);
+
+  const handleDummyOnChnage = () => {
+
+  }
 
   // # 렌더링
   if(!options || !options.length) {
     return null
   }
+
   return (
-    <div css={[rootStyle]}>
+    <div className="carrot-ui-select-root" css={[rootStyle]}>
       {/* ===== 실제 셀렉트 엘리먼트 ===== */}
       <select
         {...attr}
         name={name}
-        // value={value}
-        // onChange={onChange}
+        value={_value}
+        onChange={handleDummyOnChnage}
         css={nativeSelectSTyle(native)}
         ref={nativeEl}
       >
@@ -110,17 +130,17 @@ function Select({
           </div>
 
           {/* 셀렉트 박스 */}
-          <div css={[cusotmSelectStyle]}>
+          <div className="custom-select-options" css={[cusotmSelectStyle]}>
             <Folding sw={sw} float={true}>
               <ul >
                 {options.map((a, i) => (
                   <li
                     className={`${a.disabled ? "disabled" : ""} ${
-                      _value === a.value ? "selected" : ""
+                      value === a.value ? "selected" : ""
                     }`}
                     data-value={a.value}
                     key={`custom-select-${i}`}
-                    onClick={() => handleOptionClick(i, a.disabled)}
+                    onClick={() => handleOptionClick(i, a.disabled, a)}
                   >
                     <Container>{a.text}</Container>
                     {!a.disabled && <Ripple color={'grey-lighten-2'} />}
@@ -138,6 +158,7 @@ function Select({
 // ===== styles
 const rootStyle = css`
   position: relative;
+  width: inherit;
 `;
 
 const nativeSelectSTyle = (native: boolean) => css`
@@ -173,6 +194,7 @@ const cusotmSelectStyle = css`
   font-size: 0.9rem;
   border: 1px solid ${styles.getColor('grey-lighten-5')};
   box-sizing: border-box;
+  z-index: 1001;
   
   & > div {
     // box-shadow: 3px 6px 15px rgba(0, 0, 0, .15);

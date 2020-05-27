@@ -22,68 +22,78 @@ type TSlosh = {
 function Slosh({ 
   disabled, 
   borderRadius,
-  responsiveness = 30,
+  responsiveness = 25,
   shadowLength = 10,
   children 
 }: TSlosh) {
   const rootEl = useRef<HTMLDivElement>(null);
+  const containerEl = useRef<HTMLDivElement>(null);
 
   // # 마운트
   useEffect(() => {
-    if(!disabled) {
-      gsap.set(rootEl.current, { 
-        transformStyle: "perspective-3d",
-        perspective: 1000,
-      });
-    }
-  }, [disabled])
+    gsap.set(rootEl.current, { 
+      perspective: 500,
+    });
+    gsap.set(containerEl.current, {
+      transformStyle: "perspective-3d",
+    })
+  }, [])
 
   // 클릭 시 흔들림
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if(disabled) {return;}
-    // const responsiveness = 30; // 민감도
-    // const shadowLength = 10; // 그림자의 길이
-    const tl = gsap.timeline();
     const el = e.currentTarget;
     const elInfo = el.getBoundingClientRect();
-    const x = e.pageX - elInfo.x - elInfo.width / 2;
-    const y = e.pageY - elInfo.y - elInfo.height / 2;
+    const x = e.pageX - window.scrollX - elInfo.x - elInfo.width / 2;
+    const y = e.pageY - window.scrollY - elInfo.y - elInfo.height / 2;
     const xRatio = x / (elInfo.width / 2) * 100;
     const yRatio = y / (elInfo.height / 2) * 100;
-    const yMove = (responsiveness * xRatio / 100);
-    const xMove = (responsiveness * yRatio / 100) * -1;
+    const yMove = xRatio * responsiveness / 100;
+    const xMove = (yRatio * responsiveness / 100) * -1;
     const xShadow = (shadowLength * xRatio / 100) * -1;
     const yShadow = (shadowLength * yRatio / 100) * -1;
 
-    tl.to(rootEl.current, {
+    // console.log('> ', y, yRatio, xMove )
+    // console.log('> ', window.scrollY, y, e.pageY, elInfo.y )
+
+    gsap.to(containerEl.current, {
       duration: 0.3,
-      rotateY: yMove,
       rotateX: xMove,
+      rotateY: yMove,
       boxShadow: `${xShadow}px ${yShadow}px 15px rgba(0, 0, 0, 0.2)`,
       ease: 'power2.out',
     })
-    .to(rootEl.current, {
+    gsap.to(containerEl.current, {
+      delay: 0.3,
       rotateY: 0,
       rotateX: 0,
       boxShadow: `0px 0px 0px rgba(0,0,0, 0)`,
     })
+
   };
 
   return (
-    <div css={rootStyle(disabled, borderRadius)} ref={rootEl} onClick={handleClick}>
-      {children}
+    <div css={rootStyle()} ref={rootEl} onClick={handleClick}>
+      <div ref={containerEl} css={containerStyle(disabled, borderRadius)}>
+        {children}
+      </div>
     </div>
   )
 }
 
 // ===== style
-const rootStyle = (disabled?: boolean, radius?: string) => css`
+const containerStyle = (disabled?: boolean, radius?: string) => css`
   position: relative;
   display: inline-block;
   line-height: 0;
   cursor: ${disabled? 'default': 'pointer'};
   background-color: transparent;
-  border-radius: ${radius || '0'}
+  border-radius: ${radius || '0'};
+  width: inherit;
+`
+const rootStyle = () => css`
+  position: relative;
+  width: inherit;
 `
 
 
