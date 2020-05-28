@@ -72,7 +72,7 @@ type TOnClicks = {
 }
 
 /** 서브및 이벤트 */
-type TOnSubmit = (values: TValues) => void |  false;
+type TOnSubmit = (values: TValues) => void | false;
 
 // # 이벤트 타입
 type TChangeEvent = React.ChangeEvent<HTMLInputElement> & OptionsType;
@@ -188,6 +188,12 @@ function FormCreator({
     const component = newModel[parentIndex].components[childIndex]
     const props = component.props;
 
+    // // # input등에서 submit 발생시 `slosh`차단
+    // if(e.nativeEvent.clientX === 0 && e.nativeEvent.clientY === 0) {
+    //   e.stopPropagation(); // 이벤트 버블링 차단
+    // }
+
+    // # 연결되어 있는 클릭 함수 실행
     if(onClicks[props.name]) {
       onClicks[props.name]({e, component: a, model: _model})
     }
@@ -196,6 +202,7 @@ function FormCreator({
   // # submit
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // console.log('> handle submit')
 
     if(onSubmit && onSubmit(getValues(_model)) === false) {
       return false;
@@ -204,12 +211,9 @@ function FormCreator({
     if(reset) {
       setModel(model);
     }
-    return true;
+    // return true;
   }
 
-  // console.log('> ', formComponents['Input'])
-  
-  
   return (
     <form className="carrot-ui-form" ref={$form} onSubmit={handleSubmit}  >
       {

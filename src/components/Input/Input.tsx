@@ -165,7 +165,7 @@ const labelStyle = (color: TMainColorKeys) =>  css`
 `;
 
 const inputContainerStyle = (color: TMainColorKeys) => css`
-  width: inherit;
+  width: 100%;
   &::before {
     position: absolute;
     left:0;

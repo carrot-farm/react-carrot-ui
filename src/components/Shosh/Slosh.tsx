@@ -41,7 +41,9 @@ function Slosh({
 
   // 클릭 시 흔들림
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if(disabled) {return;}
+    if(disabled 
+      || (e.nativeEvent.clientX === 0 && e.nativeEvent.clientY === 0)
+    ) {return;}
     const el = e.currentTarget;
     const elInfo = el.getBoundingClientRect();
     const x = e.pageX - window.scrollX - elInfo.x - elInfo.width / 2;
@@ -53,6 +55,7 @@ function Slosh({
     const xShadow = (shadowLength * xRatio / 100) * -1;
     const yShadow = (shadowLength * yRatio / 100) * -1;
 
+    // console.log('> run slosh', e.pageX, e.pageY, e.nativeEvent.clientX)
     // console.log('> ', y, yRatio, xMove )
     // console.log('> ', window.scrollY, y, e.pageY, elInfo.y )
 
