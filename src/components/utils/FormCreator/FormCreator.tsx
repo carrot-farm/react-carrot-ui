@@ -134,14 +134,15 @@ type TFormComponentsProps = {
 function FormCreator({
   model,
   labelWidth = '150px',
-  reset = false,
+  reset = true,
   align = 'horizontal',
   onChanges,
   onClicks,
   onSubmit
 }: TFormCreator) {
   const $form = useRef<HTMLFormElement>(null);
-  const [_model, setModel] = useState(model); 
+  const [_model, setModel] = useState<TModel>(model); 
+
 
   // # 변경 이벤트 핸들러
   const handleChnage = (
@@ -168,6 +169,7 @@ function FormCreator({
       props.value = el.value;
     }
 
+    // # 이벤트 핸들러 실행.
     if(onChanges && onChanges[props.name] 
       && onChanges[props.name]({e, component: a, model: _model}) === false
     ) {
@@ -209,7 +211,7 @@ function FormCreator({
     }
 
     if(reset) {
-      setModel(model);
+      setModel(clearModel(model));
     }
     // return true;
   }
@@ -306,6 +308,35 @@ const getValues = (model: TModel): TValues => {
   
   // console.log('> ', values);
   return values;
+}
+// # 폼의 값 초기화
+const clearModel = (model: TModel): TModel => {
+  const newModel = [...model];
+  let firstRadioName = '';
+
+  for(const a of newModel) {
+    for(const b of a.components) {
+      if(b.component !== 'Button' && b.component !== 'IconButton') {
+        if(b.component === 'CheckBox' || b.component === 'Switch') {
+          b.props.checked = false;
+        } else if(b.component === 'Radio') {
+          if(firstRadioName !== b.props.name) {
+          //   // firstRadioValue = b.props.value;
+            firstRadioName = b.props.name;
+            b.props.checked = true;
+          } else {
+            b.props.checked = false;
+          }
+        } else if(b.component === 'Select') {
+          b.props.value = b.props.options[0].value;
+        } else {
+          b.props.value = "";
+        }
+      }
+    }
+  }
+
+  return newModel;
 }
 
 // ===== 스타일

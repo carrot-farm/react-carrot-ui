@@ -22,10 +22,10 @@ export default {
 // ===== Default
 export const Default = () => {
   const props = {
-    model: object('model', model),
-    reset: boolean('reset', false),
+    reset: boolean('reset', true),
     align: select('align', ['vertical', 'horizontal'], 'horizontal'),
     labelWidth: '150px',
+    model: object('model', model),
     onChanges: {
       inputName: action('inputName')
     },
