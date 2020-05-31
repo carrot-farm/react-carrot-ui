@@ -41,9 +41,11 @@ function Slosh({
 
   // 클릭 시 흔들림
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // # 비활성화나 input에서 엔터키를 이용해 이벤트가 발생시 차단
     if(disabled 
       || (e.nativeEvent.clientX === 0 && e.nativeEvent.clientY === 0)
     ) {return;}
+
     const el = e.currentTarget;
     const elInfo = el.getBoundingClientRect();
     const x = e.pageX - window.scrollX - elInfo.x - elInfo.width / 2;

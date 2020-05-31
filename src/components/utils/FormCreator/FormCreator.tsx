@@ -29,17 +29,17 @@ export type TFormCreator = {
   /** 폼을 동적으로 생성할 모델 */
   model: TModel;
   /** 모바일 이상의 사이즈에서 라벨의 넓이 */
-  labelWidth: string;
+  labelWidth?: string;
   /** onSubmit 후 폼의 초기화 여부*/
-  reset: boolean;
+  reset?: boolean;
   /** 라벨의 정렬 방향 */
-  align: TAlign;
+  align?: TAlign;
   /** 폼 요소의 체인지 이벤트. false 리턴시 업데이트 안함 */
-  onChanges: TOnChanges,
+  onChanges?: TOnChanges,
   /** 버튼의 클릭 이벤트 */
-  onClicks: TOnClicks
+  onClicks?: TOnClicks
   /** 폼의 서브밋 이벤트 */
-  onSubmit: TOnSubmit
+  onSubmit?: TOnSubmit
 };
 
 // # 라벨 정렬 방향
@@ -168,7 +168,7 @@ function FormCreator({
       props.value = el.value;
     }
 
-    if(onChanges[props.name] 
+    if(onChanges && onChanges[props.name] 
       && onChanges[props.name]({e, component: a, model: _model}) === false
     ) {
       return false;
@@ -194,7 +194,7 @@ function FormCreator({
     // }
 
     // # 연결되어 있는 클릭 함수 실행
-    if(onClicks[props.name]) {
+    if(onClicks && onClicks[props.name]) {
       onClicks[props.name]({e, component: a, model: _model})
     }
   };
