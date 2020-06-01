@@ -12,7 +12,7 @@ type ModalType = {
   /** 컨텐츠 요소 */
   children: React.ReactNode;
   /** 컨테이너의 넓이 */
-  width: string;
+  width?: string;
 };
 
 // ===== component
