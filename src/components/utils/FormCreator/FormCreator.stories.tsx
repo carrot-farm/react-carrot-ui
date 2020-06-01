@@ -1,4 +1,5 @@
 /** @jsx jsx */
+import React, { useRef } from 'react';
 import { jsx, css } from '@emotion/core';
 import {
   withKnobs,
@@ -32,7 +33,8 @@ export const Default = () => {
     onClicks: {
       iconButtonName: action('iconButtonName')
     },
-    onSubmit: action('onSubmit')
+    onSubmit: action('onSubmit'),
+    formRef: useRef<HTMLFormElement>(null)
   };
 
   return (

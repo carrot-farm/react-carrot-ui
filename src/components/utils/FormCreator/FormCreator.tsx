@@ -40,6 +40,8 @@ export type TFormCreator = {
   onClicks?: TOnClicks
   /** 폼의 서브밋 이벤트 */
   onSubmit?: TOnSubmit
+  /** 폼 엘리먼트 참조 */
+  formRef?: React.RefObject<HTMLFormElement>
 };
 
 // # 라벨 정렬 방향
@@ -138,7 +140,8 @@ function FormCreator({
   align = 'horizontal',
   onChanges,
   onClicks,
-  onSubmit
+  onSubmit,
+  formRef,
 }: TFormCreator) {
   const $form = useRef<HTMLFormElement>(null);
   const [_model, setModel] = useState<TModel>(model); 
@@ -217,7 +220,7 @@ function FormCreator({
   }
 
   return (
-    <form className="carrot-ui-form" ref={$form} onSubmit={handleSubmit}  >
+    <form className="carrot-ui-form" ref={formRef} onSubmit={handleSubmit}  >
       {
         // Array.from(_model, ([k, a]) => {
         _model.map((a, i) => (
