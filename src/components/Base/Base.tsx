@@ -99,7 +99,7 @@ export type BaseProps = {
   flexDirection?: flexDirectionType;
 
   /** 클릭 했을 때 함수 */
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => any;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => any;
   /** 클릭 했을 때 함수 */
   onClickDiv?: (e: React.MouseEvent<HTMLDivElement>) => any;
 };
@@ -187,6 +187,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </span>
@@ -198,6 +199,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </p>
@@ -209,6 +211,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </ul>
@@ -220,6 +223,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </li>
@@ -231,6 +235,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </h1>
@@ -242,6 +247,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </h2>
@@ -253,6 +259,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </h3>
@@ -264,6 +271,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </h4>
@@ -275,6 +283,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </h5>
@@ -286,6 +295,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </h6>
@@ -309,6 +319,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </table>
@@ -320,6 +331,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </i>
@@ -330,6 +342,7 @@ function Base({
         {...args}
         css={cssCreator(styleProps, styles)}
         className={className}
+        onClick={onClick}
       >
         {children}
       </article>
@@ -340,6 +353,7 @@ function Base({
         {...args}
         css={cssCreator(styleProps, styles)}
         className={className}
+        onClick={onClick}
       >
         {children}
       </section>
@@ -351,6 +365,7 @@ function Base({
         css={cssCreator(styleProps, styles)}
         className={className}
         ref={refEl}
+        onClick={onClick}
       >
         {children}
       </a>
