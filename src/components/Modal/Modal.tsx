@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
 import gsap from 'gsap';
 
@@ -7,20 +7,26 @@ import gsap from 'gsap';
 type ModalType = {
   /** 모달 스위치 */
   sw: boolean;
-  /** 닫힐때 사용하는 핸들러 */
-  onClose: () => void;
   /** 컨텐츠 요소 */
   children: React.ReactNode;
   /** 컨테이너의 넓이 */
   width?: string;
+  /** show 애니메이션 후 콜백 함수 */
+  onShowCompleted?: () => void;
+  /** hide 애니메인션 후 콜백 함수 */
+  onHideCompleted?: () => void;
+  /** 닫힐때 사용하는 핸들러 */
+  onClose: () => void;
 };
 
 // ===== component
 function Modal({
+  width = '400px',
   sw = false,
-  onClose,
   children,
-  width = '400px'
+  onShowCompleted,
+  onHideCompleted,
+  onClose,
 }: ModalType) {
   const rootEl = useRef(null);
   const backdropEl = useRef(null);
@@ -31,10 +37,18 @@ function Modal({
     // # timeline 셋팅
     tl.set(rootEl.current, { perspective: 1000 });
     tl.set(contentEl.current, {
-      rotateX: 90,
+      rotateX: 60,
+      autoAlpha: 0,
       transformStyle: "perspective-3d",
-      transformOrigin: "center bottom",
+      transformOrigin: "center top",
+      onComplete: () => {
+        onShowCompleted && onShowCompleted();
+      },
+      onReverseComplete: () => {
+        onHideCompleted && onHideCompleted();
+      }
     });
+
     tl
     .to(rootEl.current, {css: { display: 'block' }}, '-=0.5')
     .fromTo(
@@ -51,7 +65,7 @@ function Modal({
         duration: 0.3,
         autoAlpha: 1,
         rotateX: 0,
-      }
+      },
     );
     // console.log('> tl', tl)
     return () => {
@@ -87,6 +101,8 @@ function Modal({
     </div>
   );
 }
+
+
 
 // ===== styles
 const style = css`
