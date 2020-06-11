@@ -36,6 +36,7 @@
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
+    "build:all": "npx build-storybook && rollup -c && tsc --emitDeclarationOnly",
     "build-storybook": "build-storybook",
     "build": "rollup -c",
     "build:types": "tsc --emitDeclarationOnly"
