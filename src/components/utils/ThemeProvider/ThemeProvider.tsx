@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useEffect, useState, useContext, createContext, useMemo, useCallback } from 'react';
 import { jsx } from '@emotion/core';
-import { gsap, CSSPlugin } from 'gsap/all'
 
 
 // import theme, { ThemeStateType } from '../../theme';
@@ -76,7 +75,5 @@ function ThemeProvider({
     </ThemeContext.Provider>
   )
 };
-
-gsap.registerPlugin(CSSPlugin);
 
 export default ThemeProvider;

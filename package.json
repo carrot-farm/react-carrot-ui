@@ -1,7 +1,7 @@
 {
   "name": "react-carrot-ui",
   "username": "carrot-farm",
-  "version": "1.2.6",
+  "version": "1.2.10",
   "license": "MIT",
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
@@ -24,7 +24,6 @@
     "babel-loader": "^8.1.0",
     "babel-plugin-named-asset-import": "^0.3.6",
     "babel-preset-react-app": "^9.1.2",
-    "gsap": "^3.2.6",
     "react-docgen-typescript-loader": "^3.7.2",
     "rollup": "^2.7.5",
     "rollup-plugin-babel": "^4.4.0",
@@ -42,7 +41,7 @@
   },
   "peerDependencies": {
     "@emotion/core": "^10.0.28",
-    "gsap": "^3.2.6",
+    "gsap": "^3.3.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }
