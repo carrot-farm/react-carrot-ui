@@ -51,6 +51,19 @@ function TextField({
   const [focused, setFocused] = useState<boolean>(false); // 포커스 유무
   // console.log('> ', rows, lineHeight)
 
+  // # mount
+  useEffect(() => {
+    // # autoHeight 셋팅
+    if(autoHeight === true && value) {
+      const enter = value.match(/\n/g);
+      const initHeight = rows * 22;
+      
+      if(autoHeight === true && enter) {
+        setLineHeight(initHeight + (enter.length * 22));
+      }
+    }
+  }, []);
+
   // # value 값 변경 시
   useEffect(() => {
     setFocused(!!value);
@@ -76,7 +89,7 @@ function TextField({
     [focused]
   );
 
-  // # 키 눌렀을 때 높이 조절
+  // # change 이벤트 시 높이 조절
   const handleOnChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const currentValue = e.currentTarget.value;
     const enter = currentValue.match(/\n/g);
