@@ -20,6 +20,8 @@ export type TTextFieldProps = {
   disabled?: boolean;
   /** 읽기전용 유무 */
   readOnly?: boolean;
+  /** 엔터키를 이용한 자동 높이 조정 유무 */
+  autoHeight?: boolean;
   /** 에러 유무 */
   error?: boolean;
   /** 기타 속성 */
@@ -38,14 +40,16 @@ function TextField({
   rows = 1,
   disabled,
   readOnly,
+  autoHeight,
   error,
   attr,
   mainColor,
   onChange,
 }: TTextFieldProps) {
-  const lineHeightPx = useMemo(() => rows * (22), []); // 라인 수 크기
+  const [lineHeight, setLineHeight] = useState(rows * 22); // 라인 수 크기
+  // const lineHeight = useMemo(() => (rows * 22), [rows]); // 라인 수 크기
   const [focused, setFocused] = useState<boolean>(false); // 포커스 유무
-  // console.log('> ', rows)
+  // console.log('> ', rows, lineHeight)
 
   // # value 값 변경 시
   useEffect(() => {
@@ -72,6 +76,21 @@ function TextField({
     [focused]
   );
 
+  // # 키 눌렀을 때 높이 조절
+  const handleOnChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const currentValue = e.currentTarget.value;
+    const enter = currentValue.match(/\n/g);
+    const initHeight = rows * 22;
+    
+    if(autoHeight === true && enter) {
+      setLineHeight(initHeight + (enter.length * 22));
+    }
+    if(onChange) {
+      onChange(e);
+    }
+  }, [onChange]);
+  
+  // # render
   return (
     <ThemeContext.Consumer>
       {({theme}) => {
@@ -96,7 +115,7 @@ function TextField({
               className={`${focused ? "focused" : ""} ${error ? "error" : ""} ${
                 disabled ? "disabled" : ""
               }`}
-              css={[textareaContainerStyle(_mainColor, lineHeightPx)]}
+              css={[textareaContainerStyle(_mainColor, lineHeight)]}
             >
               <textarea
                 {...attr}
@@ -104,7 +123,7 @@ function TextField({
                 value={value}
                 disabled={disabled}
                 readOnly={readOnly}
-                onChange={onChange}
+                onChange={handleOnChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
               />
@@ -155,7 +174,7 @@ const labelStyle = (mainColor: TMainColorKeys) => css`
   }
 `;
 
-const textareaContainerStyle = (mainColor: TMainColorKeys, lineHeightPx: number) => css`
+const textareaContainerStyle = (mainColor: TMainColorKeys, lineHeight: number) => css`
   width: inherit;
   line-height: inherit;
   &::before {
@@ -211,7 +230,7 @@ const textareaContainerStyle = (mainColor: TMainColorKeys, lineHeightPx: number)
     background: none;
     box-sizing: content-box;
     line-height: inherit;
-    height: ${lineHeightPx}px;
+    height: ${lineHeight}px;
     &:focus {
       outline: 0;
     }

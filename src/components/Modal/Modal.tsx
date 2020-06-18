@@ -80,8 +80,7 @@ function Modal({
     } else {
       tl.reverse()
     }
-  }, [sw])
-
+  }, [sw]);
 
   return (
     <div className={`react-carrot-ui_modal-root `} css={[style]} ref={rootEl}>
@@ -141,4 +140,4 @@ const contentStyle = (width: string) => css`
 `;
 
 
-export default Modal;
+export default React.memo(Modal);
