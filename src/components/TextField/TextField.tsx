@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
-import { useEffect, useCallback, useState, useMemo } from 'react';
+import { useEffect, useCallback, useState, useRef, useMemo } from 'react';
 
 import styles from '../../styles';
 import { TMainColorKeys } from '../../types/colors';
@@ -47,21 +47,24 @@ function TextField({
   onChange,
 }: TTextFieldProps) {
   const defaultHeightPx = 29;
-  const [lineHeight, setLineHeight] = useState(rows * defaultHeightPx); // 라인 수 크기
-  // const lineHeight = useMemo(() => (rows * 22), [rows]); // 라인 수 크기
+  const maxHeight = useMemo(() => (defaultHeightPx * rows), [rows, defaultHeightPx]);
+  const [lineHeight, setLineHeight] = useState(maxHeight); // 라인 수 크기
   const [focused, setFocused] = useState<boolean>(false); // 포커스 유무
+  const el = useRef<HTMLTextAreaElement>(null); // 더미 textarea 엘리먼트
   // console.log('> ', rows, lineHeight)
 
   // # mount
   useEffect(() => {
+    const scrollHeight = el.current!.scrollHeight;
     // # autoHeight 셋팅
-    if(autoHeight === true && value) {
-      const enter = value.match(/\n/g);
-      const initHeight = rows * defaultHeightPx;
+    if(autoHeight === true && scrollHeight > lineHeight ) {
+      setLineHeight(scrollHeight || defaultHeightPx);
+      // const enter = value.match(/\n/g);
+      // const initHeight = rows * defaultHeightPx;
       
-      if(autoHeight === true && enter) {
-        setLineHeight(initHeight + (enter.length * defaultHeightPx));
-      }
+      // if(autoHeight === true && enter) {
+      //   setLineHeight(initHeight + (enter.length * defaultHeightPx));
+      // }
     }
   }, []);
 
@@ -92,18 +95,23 @@ function TextField({
 
   // # change 이벤트 시 높이 조절
   const handleOnChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const currentValue = e.currentTarget.value;
-    const enter = currentValue.match(/\n/g);
-    const initHeight = rows * 22;
+    el.current!.innerHTML = e.currentTarget.value;
+    const scrollHeight = el.current!.scrollHeight;
+    const elHeight = el.current!.clientHeight;
+    // const scrollHeight = e.currentTarget.scrollHeight;
     
-    if(autoHeight === true && enter) {
-      setLineHeight(initHeight + (enter.length * 22));
+    if(autoHeight === true && lineHeight != scrollHeight ) {
+      setLineHeight(scrollHeight);
     }
     if(onChange) {
       onChange(e);
     }
-  }, [onChange]);
-  
+  }, [lineHeight, onChange]);
+
+  el.current?.addEventListener('change', () => {
+    console.log('dd')
+  }, true)
+
   // # render
   return (
     <ThemeContext.Consumer>
@@ -141,6 +149,7 @@ function TextField({
                 onFocus={handleFocus}
                 onBlur={handleBlur}
               />
+              <textarea ref={el} css={dummyTextarea(maxHeight)}  />
             </div>
           </div>
         )
@@ -151,6 +160,7 @@ function TextField({
 
 // ===== styles
 const rootStyle = (lineHeight: number) => css`
+  width: 100%;
   position: relative;
   margin-top: 16px;
   cursor: text;
@@ -158,7 +168,6 @@ const rootStyle = (lineHeight: number) => css`
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
-  width: inherit;
   line-height: ${lineHeight}px;
   background: #fff;
 `
@@ -232,7 +241,7 @@ const textareaContainerStyle = (mainColor: TMainColorKeys, lineHeight: number) =
   &.disabled {
     color: ${styles.getColor('grey-lighten-3')};
   }
-  textarea {
+  textarea:first-of-type {
     width: inherit;
     font: inherit;
     resize: none;
@@ -249,6 +258,26 @@ const textareaContainerStyle = (mainColor: TMainColorKeys, lineHeight: number) =
       outline: 0;
     }
   }
+`;
+
+const dummyTextarea = (height: number) => css`
+  width: inherit;
+  font: inherit;
+  resize: none;
+  padding:0;
+  color: currentColor;
+  margin: 0;
+  border: 0;
+  min-width: 0;
+  background: none;
+  box-sizing: content-box;
+  line-height: inherit;
+  height: ${height}px !important;
+  z-index: -1;
+  position: absolute;
+  left: 0;
+  top:0;
+  overflow: hidden;
 `;
 
 

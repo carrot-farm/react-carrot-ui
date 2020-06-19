@@ -8,7 +8,7 @@ import {
   object,
 } from "@storybook/addon-knobs";
 import { action } from '@storybook/addon-actions';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import TextField from './TextField';
 
@@ -21,24 +21,30 @@ export default {
 
 // ===== Default
 export const Default = () => {
-  const [value, setValue] = useState('');
   const props = {
     value: text('value', 'valueekdmfek\nkmdfefe\n\dskdmfd'),
     label: text('label', 'label'),
-    rows: number('rows', 1),
+    rows: number('rows', 2),
     disabled: boolean('disabled', false),
     readOnly: boolean('readOnly', false),
-    autoHeight: boolean('autoHeight', true),
+    autoHeight: boolean('autoHeight', false),
     error: boolean('error', false),
     onChange: action('onChange'),
   };
-
+  
+  const [value, setValue] = useState('');
   const handleOnChange = (e:React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log('> ', e.currentTarget.value)
+    // console.log('> ', e.currentTarget.value)
     setValue(e.currentTarget.value);
   }
 
   return (
-    <TextField name="name" {...props} onChange={handleOnChange} />
+    <React.Fragment>
+        <TextField 
+          name="name" {...props} 
+          // value={value}
+          // onChange={handleOnChange} 
+        />
+    </React.Fragment>
   );
 }
