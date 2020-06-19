@@ -55,7 +55,9 @@ function TextField({
 
   // # mount
   useEffect(() => {
+    el.current!.innerHTML = value || '';
     const scrollHeight = el.current!.scrollHeight;
+    console.log('> mount : ', scrollHeight, lineHeight)
     // # autoHeight 셋팅
     if(autoHeight === true && scrollHeight > lineHeight ) {
       setLineHeight(scrollHeight || defaultHeightPx);

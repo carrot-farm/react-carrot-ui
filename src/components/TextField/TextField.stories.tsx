@@ -24,10 +24,10 @@ export const Default = () => {
   const props = {
     value: text('value', 'valueekdmfek\nkmdfefe\n\dskdmfd'),
     label: text('label', 'label'),
-    rows: number('rows', 2),
+    rows: number('rows', 1),
     disabled: boolean('disabled', false),
     readOnly: boolean('readOnly', false),
-    autoHeight: boolean('autoHeight', false),
+    autoHeight: boolean('autoHeight', true),
     error: boolean('error', false),
     onChange: action('onChange'),
   };
