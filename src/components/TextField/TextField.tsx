@@ -46,7 +46,8 @@ function TextField({
   mainColor,
   onChange,
 }: TTextFieldProps) {
-  const [lineHeight, setLineHeight] = useState(rows * 22); // 라인 수 크기
+  const defaultHeightPx = 29;
+  const [lineHeight, setLineHeight] = useState(rows * defaultHeightPx); // 라인 수 크기
   // const lineHeight = useMemo(() => (rows * 22), [rows]); // 라인 수 크기
   const [focused, setFocused] = useState<boolean>(false); // 포커스 유무
   // console.log('> ', rows, lineHeight)
@@ -56,10 +57,10 @@ function TextField({
     // # autoHeight 셋팅
     if(autoHeight === true && value) {
       const enter = value.match(/\n/g);
-      const initHeight = rows * 22;
+      const initHeight = rows * defaultHeightPx;
       
       if(autoHeight === true && enter) {
-        setLineHeight(initHeight + (enter.length * 22));
+        setLineHeight(initHeight + (enter.length * defaultHeightPx));
       }
     }
   }, []);
@@ -110,7 +111,7 @@ function TextField({
         const _mainColor = mainColor || theme.primaryColor!;
 
         return (
-          <div className="carrot-ui-textfield-root" css={[rootStyle]} onClick={handleFocusIn}>
+          <div className="carrot-ui-textfield-root" css={[rootStyle(defaultHeightPx)]} onClick={handleFocusIn}>
             {/* ===== label ===== */}
             {label && (
               <label
@@ -149,7 +150,7 @@ function TextField({
 }
 
 // ===== styles
-const rootStyle = css`
+const rootStyle = (lineHeight: number) => css`
   position: relative;
   margin-top: 16px;
   cursor: text;
@@ -158,7 +159,7 @@ const rootStyle = css`
   align-items: center;
   box-sizing: border-box;
   width: inherit;
-  line-height: 1.4rem;
+  line-height: ${lineHeight}px;
   background: #fff;
 `
 

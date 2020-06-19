@@ -23,14 +23,14 @@ export default {
 export const Default = () => {
   const [value, setValue] = useState('');
   const props = {
-    // value: text('value', 'value'),
+    value: text('value', 'valueekdmfek\nkmdfefe\n\dskdmfd'),
     label: text('label', 'label'),
     rows: number('rows', 1),
     disabled: boolean('disabled', false),
     readOnly: boolean('readOnly', false),
     autoHeight: boolean('autoHeight', true),
     error: boolean('error', false),
-    // onChange: action('onChange'),
+    onChange: action('onChange'),
   };
 
   const handleOnChange = (e:React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -39,6 +39,6 @@ export const Default = () => {
   }
 
   return (
-    <TextField name="name" {...props} value={value} onChange={handleOnChange} />
+    <TextField name="name" {...props} onChange={handleOnChange} />
   );
 }
