@@ -45,6 +45,7 @@ function TextField({
   attr,
   mainColor,
   onChange,
+  ...args
 }: TTextFieldProps) {
   const defaultHeightPx = 29;
   const maxHeight = useMemo(() => (defaultHeightPx * rows), [rows, defaultHeightPx]);
@@ -121,7 +122,7 @@ function TextField({
         const _mainColor = mainColor || theme.primaryColor!;
 
         return (
-          <div className="carrot-ui-textfield-root" css={[rootStyle(defaultHeightPx)]} onClick={handleFocusIn}>
+          <div {...args} className="carrot-ui-textfield-root" css={[rootStyle(defaultHeightPx)]} onClick={handleFocusIn}>
             {/* ===== label ===== */}
             {label && (
               <label

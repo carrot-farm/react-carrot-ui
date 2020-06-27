@@ -4,7 +4,7 @@ import { jsx, css } from '@emotion/core';
 import gsap from 'gsap';
 
 // ===== type
-type ModalType = {
+interface ModalType {
   /** 모달 스위치 */
   sw: boolean;
   /** 컨텐츠 요소 */
@@ -27,6 +27,7 @@ function Modal({
   onShowCompleted,
   onHideCompleted,
   onClose,
+  ...args
 }: ModalType) {
   const rootEl = useRef(null);
   const backdropEl = useRef(null);
@@ -83,7 +84,7 @@ function Modal({
   }, [sw]);
 
   return (
-    <div className={`react-carrot-ui_modal-root `} css={[style]} ref={rootEl}>
+    <div {...args} className={`react-carrot-ui_modal-root `} css={[style]} ref={rootEl}>
       <div
         className={`react-carrot-ui_modal-backdrop `}
         css={[backdropStyle]}

@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { useRef, useEffect, useState } from 'react';
-import { jsx, css } from '@emotion/core';
-import gsap from 'gsap';
+import { jsx, css, SerializedStyles } from '@emotion/core';
 
 import Base, { BaseProps } from '../Base/Base';
 import Container from '../Container/Container';
@@ -10,7 +9,7 @@ import { TColorKeys } from '../../types/colors'
 
 // ===== 타입
 /** props type */
-type AppBarPropsType = BaseProps & {
+interface AppBarPropsType extends BaseProps {
   /** 앱바의 높이 */
   height?: string;
   /** 내부 컨테이너의 최대 넓이 적용 유무 */
@@ -21,6 +20,7 @@ type AppBarPropsType = BaseProps & {
   backgroundColor?: TColorKeys;
   /** 내부 컴포넌트 */
   children?: React.ReactNode;
+  
 };
 
 // ===== 컴포넌트
@@ -31,19 +31,21 @@ function AppBar({
   align = 'flex-start',
   backgroundColor = 'white',
   children,
+  css,
   ...args
 }: AppBarPropsType) {
+  // console.log('> app bar', css)
 
   return (
     <Base
       {...args}
       height={height}
-      css={rootStyle}
+      css={[rootStyle, css as SerializedStyles]}
       backgroundColor={backgroundColor}
     >
       <Container
         fullWidth={fullWidth}
-        css={[containerStyle, styles.flexAlign(align)]}
+        css={[containerStyle, styles.flexAlign(align) as SerializedStyles]}
       >
         {children}
       </Container>
@@ -57,7 +59,7 @@ const rootStyle = css`
   position: relative;
   display: flex;
   align-items: center;
-  `;
+`;
 const containerStyle = css`
   position: relative;
   display: flex;

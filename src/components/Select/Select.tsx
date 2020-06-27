@@ -26,7 +26,7 @@ export type TSelectProps = {
   onChange?: (selectedOption: OptionsType) => any,
 };
 // # options type
-export type OptionsType = {
+export interface OptionsType {
   /** 내부 문자 */
   text: string;
   /** 값 */

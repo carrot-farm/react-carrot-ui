@@ -28,6 +28,7 @@ export const Default = () => {
   const align = select('align', flexAlignValues, 'flex-start');
 
   return (
+    <div>
     <AppBar
       height={height}
       fullWidth={fullWidth}
@@ -36,6 +37,7 @@ export const Default = () => {
     >
       {children}
     </AppBar>
+    </div>
   );
 }
 // # align 

@@ -10,7 +10,7 @@ import Divider from '../Divider/Divider';
 
 // ===== type
 // # props type
-type CollapsePropsType = {
+interface CollapsePropsType {
   /** 토글 버튼의 상단 테스트 */
   headText?: string;
   /** 헤더의 높이 */
@@ -33,6 +33,7 @@ function Collapse({
   childrenFullWidth,
   children,
   onToggle,
+  ...args
 }: CollapsePropsType) {
   const [sw, setSw] = useState(false);
   const contentsContainerEl = useRef<HTMLDivElement>(null);
@@ -72,7 +73,7 @@ function Collapse({
   }, [sw, show]);
 
   return (
-    <div>
+    <div {...args}>
       {/* ===== app bar ===== */}
       <AppBar align={'space-between'} height={height}>
         <span>

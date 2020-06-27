@@ -8,7 +8,7 @@ import { TColorKeys } from '../../types/colors'
 
 // ===== type
 // # props type
-type DividerPropsType = {
+interface DividerPropsType {
   /** 높이 */
   height?: number;
   /** 선의 색상 */
@@ -19,10 +19,11 @@ type DividerPropsType = {
 function Divider({
   height = 1,
   color = 'grey-lighten-3',
+  ...args
 }: DividerPropsType) {
 
   return (
-    <div css={[rootStyle(height, color)]}></div>
+    <div {...args} css={[rootStyle(height, color)]}></div>
   )
 }
 

@@ -4,7 +4,7 @@ import { jsx, css } from '@emotion/core';
 import styles from '../../styles'
 
 // ===== 타입
-export type TablePropsType = {
+export interface TablePropsType {
   /** table의 td, tr 같은 내부 컨텐츠 */
   children: React.ReactNode;
   /** 반응형 테이블 유무 */
@@ -15,10 +15,11 @@ export type TablePropsType = {
 function Table({
   children,
   responsive,
+  ...args
 }: TablePropsType) {
 
   return (
-    <table css={[rootStyle, responsive ? responsiveTable : undefined]}>
+    <table {...args} css={[rootStyle, responsive ? responsiveTable : undefined]}>
       {children}
     </table>
   );

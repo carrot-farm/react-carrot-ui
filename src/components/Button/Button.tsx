@@ -24,7 +24,7 @@ import { TMainColorKeys, TColorKeys } from '../../types/colors';
 
 
 // ===== 타입
-export type TButtonProps = {
+export interface TButtonProps {
   /** buttonCreator에서 구분을 위함. */
   name?: string;
   /** 버튼 타입 */

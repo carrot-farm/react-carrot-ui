@@ -5,10 +5,9 @@ import Base, { BaseProps } from '../Base/Base';
 import styles from '../../styles';
 
 // ===== 타입
-type ContainerPropsType = BaseProps & {
+interface ContainerPropsType extends BaseProps {
   /** 꽉차게 */
   fullWidth?: boolean,
-  
 };
 
 // ===== 컴포넌트

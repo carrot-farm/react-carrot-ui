@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import React from 'react';
-import { jsx } from '@emotion/core';
+import { jsx, SerializedStyles } from '@emotion/core';
 import styles, {
   positionType,
   textAlignType,
@@ -34,7 +34,7 @@ export const ComponentValues = [
        ] as const;
 export type ComponentType = typeof ComponentValues[number];
 // # props
-export type BaseProps = {
+export interface BaseProps {
   /** 엘리먼트 참조 */
   refEl?: any;
   /** 내부에 렌더링 될 요소 */
@@ -98,6 +98,9 @@ export type BaseProps = {
   /** flexAlign */
   flexDirection?: flexDirectionType;
 
+  /** emotion style */
+  css?: SerializedStyles | SerializedStyles[];
+
   /** 클릭 했을 때 함수 */
   onClick?: (e: React.MouseEvent<HTMLElement>) => any;
   /** 클릭 했을 때 함수 */
@@ -142,6 +145,8 @@ function Base({
   flexWrap,
   flexDirection,
 
+  css,
+
   onClick,
   onClickDiv,
   ...args
@@ -178,13 +183,13 @@ function Base({
     flexDirection,
   };
 
-  // console.log('> ', styleProps.border)
+  // console.log('> ', css)
   // # 컴포넌트 랜더링
   if (component === "span") {
     return (
       <span
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -196,7 +201,7 @@ function Base({
     return (
       <p
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -208,7 +213,7 @@ function Base({
     return (
       <ul
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -220,7 +225,7 @@ function Base({
     return (
       <li
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -232,7 +237,7 @@ function Base({
     return (
       <h1
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -244,7 +249,7 @@ function Base({
     return (
       <h2
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -256,7 +261,7 @@ function Base({
     return (
       <h3
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -268,7 +273,7 @@ function Base({
     return (
       <h4
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -280,7 +285,7 @@ function Base({
     return (
       <h5
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -292,7 +297,7 @@ function Base({
     return (
       <h6
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -304,7 +309,7 @@ function Base({
     return (
       <button
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -316,7 +321,7 @@ function Base({
     return (
       <table
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -328,7 +333,7 @@ function Base({
     return (
       <i
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -340,7 +345,7 @@ function Base({
     return (
       <article
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         onClick={onClick}
       >
@@ -351,7 +356,7 @@ function Base({
     return (
       <section
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         onClick={onClick}
       >
@@ -362,7 +367,7 @@ function Base({
     return (
       <a
         {...args}
-        css={cssCreator(styleProps, styles)}
+        css={[cssCreator(styleProps, styles), css]}
         className={className}
         ref={refEl}
         onClick={onClick}
@@ -373,7 +378,8 @@ function Base({
   }
 
   return (
-    <div {...args} css={cssCreator(styleProps, styles)} className={className} ref={refEl}
+    <div {...args} css={[cssCreator(styleProps, styles), css]} 
+      className={className} ref={refEl}
       onClick={onClickDiv}
     >
       {children}

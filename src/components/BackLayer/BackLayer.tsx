@@ -6,12 +6,12 @@ import gsap from 'gsap';
 
 // ===== type
 // # 함수의 파라메터 타입
-type TEventParams = {
+interface TEventParams {
   rootEl: React.RefObject<HTMLDivElement>;
   backdropEl: React.RefObject<HTMLDivElement>;
 }
 // # 컴포넌트 타입
-type TBackLayer = {
+interface TBackLayer {
   /** 모달 스위치 */
   sw: boolean;
   /** contents 정렬. alignItmes */
@@ -45,6 +45,7 @@ function BackLayer({
   onHide,
   onHideComplete,
   onClick,
+  ...args
 }: TBackLayer) {
   const rootEl = useRef<HTMLDivElement>(document.createElement('div'));
   // const rootEl = useRef<HTMLDivElement>(null); // 최상단 엘리먼트
@@ -150,6 +151,7 @@ function BackLayer({
 
         {/* 컨텐트 */}
         <div
+          {...args}
           className={`react-carrot-ui_modal-content `}
           css={contentsStyle}
           ref={contentEl}

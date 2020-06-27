@@ -20,6 +20,7 @@ function Folding({
   sw = false,
   float,
   children,
+  ...args
 }: FoldingPropsType) {
   const contentsContainerEl = useRef<HTMLDivElement>(null);
 
@@ -34,7 +35,7 @@ function Folding({
   }, [sw]);
 
   return (
-    <div css={[contentsStyle()]} className={`${float?'float':''}`} ref={contentsContainerEl}>
+    <div {...args} css={[contentsStyle()]} className={`${float?'float':''}`} ref={contentsContainerEl}>
       {children}
     </div>
   )

@@ -6,7 +6,7 @@ import gsap from 'gsap';
 import BackLayer from '../BackLayer/BackLayer';
 
 // ===== type
-type DrawerType = {
+interface DrawerType {
   /** 모달 스위치 */
   sw: boolean;
   /** 모달 보여지는 위치 */
@@ -18,11 +18,11 @@ type DrawerType = {
   /** 닫힐때 사용하는 핸들러 */
   onClose: () => void;
 };
-type TAnchorAlign = {
+interface TAnchorAlign {
   justifyContent: 'flex-start' | 'center' | 'flex-end';
   alignItems: 'flex-start' | 'center' | 'flex-end';
 }
-type TAni = {
+interface TAni {
   left?: string;
   right?: string;
   top?: string;
@@ -36,6 +36,7 @@ function Drawer({
   children,
   width = '320px',
   onClose,
+  ...args
 }: DrawerType) {
   const contentEl = useRef(null);
 
@@ -118,6 +119,7 @@ function Drawer({
   
   return (
     <BackLayer 
+      {...args}
       sw={sw} 
       justifyContent={anchorAlign.justifyContent} 
       alignItems={anchorAlign.alignItems}

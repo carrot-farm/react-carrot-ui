@@ -9,7 +9,7 @@ import ThemeContext from '../../theme';
 
 // ===== type
 // # props type
-export type TInputProps = {
+export interface TInputProps {
   /** name attribute */
   name?: string;
   /** type 속성 */
@@ -47,6 +47,7 @@ function Input({
   attr,
   color,
   onChange,
+  ...args
 }: TInputProps) {
   const inputEl = useRef<HTMLInputElement>(null); // input element
   const [focused, setFocused] = useState<boolean>(false); // 포커스 유무
@@ -82,7 +83,7 @@ function Input({
         const _color = color || theme.primaryColor!;
 
         return (
-        <div className="carrot-ui-input-root" css={[rootStyle()]} onClick={handleFocusIn}>
+        <div {...args} className="carrot-ui-input-root" css={[rootStyle()]} onClick={handleFocusIn}>
           {/* label */}
           {label && <label css={labelStyle(_color)}
             className={`${focused ? "focused" : ""} ${error ? "error" : ""} ${

@@ -22,7 +22,7 @@ import { mainColors } from '../../../styles/colors'
 
 // ===== export 정보
 export default {
-  title: 'components|utils/ThemeProvider',
+  title: 'utils/ThemeProvider',
   component: ThemeProvider,
   decorators: [withKnobs],
 };

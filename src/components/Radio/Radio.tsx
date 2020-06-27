@@ -8,7 +8,7 @@ import ThemeContext from '../../theme';
 
 // ===== type
 // # props type
-export type TRadioProps = {
+export interface TRadioProps {
   /** name attribute */
   name?: string;
   /** value 속성 */
@@ -34,6 +34,7 @@ function Radio({
   mainColor,
   disabled,
   onChange,
+  ...args
 }: TRadioProps) {
 
   // # 렌더링
@@ -44,7 +45,7 @@ function Radio({
         const _rippleColor = mainColor || theme.primaryRippleColor as TColorKeys;
 
         return (
-          <div css={[rootStyle]}>
+          <div {...args} css={[rootStyle]}>
             <label css={[radioContainerStyle]}>
               {/* radio button */}
               <span css={[radioButtonStyle(_mainColor)]}>

@@ -26,6 +26,8 @@ export type TCheckBoxProps = {
   rippleColor?: TColorKeys;
   /** checkebox에 적용될 기타 속성 */
   attr?: any;
+  /** className */
+  className?: string;
   /** 값 변경 이벤트 핸들러 */
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
@@ -41,7 +43,9 @@ function CheckBox({
   iconColor,
   rippleColor,
   attr,
+  className,
   onChange,
+  ...args
 }: TCheckBoxProps) {
   // console.log('> ', disabled, checked, circleBox)
   // let iconColor = 'white';
@@ -55,7 +59,7 @@ function CheckBox({
         const _rippleColor = rippleColor || theme.primaryRippleColor as TColorKeys;
 
         return(
-          <div className="carrot-ui-checkbox-root" css={[rootStyle]}>
+          <div {...args} className={`carrot-ui-checkbox-root ${className ? className : ''}`} css={[rootStyle]}>
             <label css={[containerStyle(disabled)]}>
               <div css={wrapperStyle(disabled, circleBox)}>
                 {/* 실제 체크박스 */}

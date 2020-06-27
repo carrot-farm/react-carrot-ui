@@ -4,7 +4,7 @@ import { jsx, css } from '@emotion/core';
 import gsap from 'gsap';
 
 // ===== 타입정의
-type TSlosh = {
+interface TSlosh {
   /** 활성화 유무 */
   disabled?: boolean;
   /** border radius */
@@ -24,7 +24,8 @@ function Slosh({
   borderRadius,
   responsiveness = 25,
   shadowLength = 10,
-  children 
+  children,
+  ...args
 }: TSlosh) {
   const rootEl = useRef<HTMLDivElement>(null);
   const containerEl = useRef<HTMLDivElement>(null);
@@ -78,7 +79,7 @@ function Slosh({
   };
 
   return (
-    <div css={rootStyle()} ref={rootEl} onClick={handleClick}>
+    <div {...args} css={rootStyle()} ref={rootEl} onClick={handleClick}>
       <div ref={containerEl} css={containerStyle(disabled, borderRadius)}>
         {children}
       </div>

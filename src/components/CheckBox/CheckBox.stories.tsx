@@ -29,10 +29,6 @@ export const Default = () => {
   };
 
   return (
-    <CheckBox {...props} />
+    <CheckBox {...props}  />
   );
 }
-
-// ===== styles
-const box = css`
-`;

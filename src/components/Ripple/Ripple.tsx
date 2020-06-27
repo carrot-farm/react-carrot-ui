@@ -7,14 +7,14 @@ import { TColorKeys } from '../../types/colors'
 
 
 // ===== 타입
-type RippleType = {
+interface RippleType {
   /** 리플 색상 */
   color?: TColorKeys;
   /** 애니메이션 시간 ms */
   duration?: number;
 };
 
-type rippleArrayType = {
+interface rippleArrayType {
   x: number;
   y: number;
   size: number;
@@ -22,7 +22,7 @@ type rippleArrayType = {
 
 // ===== 컴포넌트
 /** parent의 속성이 `position:relative; overflow: hidden;`을 포함해야 한다. */
-function Ripple({ color = 'white', duration = 850 }: RippleType) {
+function Ripple({ color = 'white', duration = 850, ...args }: RippleType) {
   const [rippleArray, setRippleArray] = useState<rippleArrayType[]>([]);
 
   // # 생성된 물결을 없앰.
@@ -51,7 +51,7 @@ function Ripple({ color = 'white', duration = 850 }: RippleType) {
   };
 
   return (
-    <div css={[rippleStyle(color, duration)]} onClick={handleClick}>
+    <div {...args} css={[rippleStyle(color, duration)]} onClick={handleClick}>
       {rippleArray.length > 0 &&
         rippleArray.map((ripple, index) => {
           return (

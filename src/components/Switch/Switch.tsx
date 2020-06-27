@@ -7,7 +7,7 @@ import { TMainColorKeys } from '../../types/colors';
 import ThemeContext from '../../theme';
 
 // ===== 타입
-export type TSwitchProps = {
+export interface TSwitchProps {
   /** name 속성 */
   name?: string;
   /** checked 값 */
@@ -30,6 +30,7 @@ function Switch({
   mainColor,
   attr,
   onChange,
+  ...args
 }: TSwitchProps) {
 
   return (
@@ -38,7 +39,7 @@ function Switch({
         const _mainColor = mainColor || theme.primaryColor!;
 
         return (
-          <div className="carrot-ui-switch-root" css={[rootStyle(_mainColor)]} >
+          <div {...args} className="carrot-ui-switch-root" css={[rootStyle(_mainColor)]} >
             <label>
               {/* switch */}
               <input
