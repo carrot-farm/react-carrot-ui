@@ -1,27 +1,27 @@
 /** @jsx jsx */
-import * as React from 'react';
-import { 
-  useEffect, 
-  useState, 
-  useContext, 
-  createContext, 
-  useMemo, 
+import * as React from "react";
+import {
+  useEffect,
+  useState,
+  useContext,
+  createContext,
+  useMemo,
   useCallback,
-  useRef
-} from 'react';
-import { jsx, css } from '@emotion/core';
+  useRef,
+} from "react";
+import { jsx, css } from "@emotion/core";
 
-import { media, getColor } from '../../../styles'
-import * as formComponents from '../../../formComponents';
-import Grid from '../../Grid/Grid';
-import { TInputProps } from '../../Input/Input'
-import { TTextFieldProps } from '../../TextField/TextField';
-import { TRadioProps } from '../../Radio/Radio'
-import { OptionsType, TSelectProps } from '../../Select/Select';
-import { TSwitchProps } from '../../Switch/Switch';
-import { TCheckBoxProps } from '../../CheckBox/CheckBox';
-import { TButtonProps } from '../../Button/Button';
-import { TIconButtonProps } from '../../IconButton/IconButton';
+import { media, getColor } from "../../../styles";
+import * as formComponents from "../../../formComponents";
+import Grid from "../../Grid/Grid";
+import { TInputProps } from "../../Input/Input";
+import { TTextFieldProps } from "../../TextField/TextField";
+import { TRadioProps } from "../../Radio/Radio";
+import { OptionsType, TSelectProps } from "../../Select/Select";
+import { TSwitchProps } from "../../Switch/Switch";
+import { TCheckBoxProps } from "../../CheckBox/CheckBox";
+import { TButtonProps } from "../../Button/Button";
+import { TIconButtonProps } from "../../IconButton/IconButton";
 
 // ===== 타입정의
 // # 메인 컴포넌트 타입
@@ -35,43 +35,43 @@ export type TFormCreator = {
   /** 라벨의 정렬 방향 */
   align?: TAlign;
   /** 폼 요소의 체인지 이벤트. false 리턴시 업데이트 안함 */
-  onChanges?: TOnChanges,
+  onChanges?: TOnChanges;
   /** 버튼의 클릭 이벤트 */
-  onClicks?: TOnClicks
+  onClicks?: TOnClicks;
   /** 폼의 서브밋 이벤트 */
-  onSubmit?: TOnSubmit
+  onSubmit?: TOnSubmit;
   /** 폼 엘리먼트 참조 */
-  formRef?: React.RefObject<HTMLFormElement>
+  formRef?: React.RefObject<HTMLFormElement>;
 };
 
 // # 라벨 정렬 방향
-type TAlign = 'vertical' | 'horizontal';
+type TAlign = "vertical" | "horizontal";
 
 // # 폼 요소의 체인지 이벤트
 type TOnChanges = {
-  [name: string] : ({
+  [name: string]: ({
     e,
     component,
-    model
-   } : {
-    e: TChangeEvent,
-    component: TComponent,
-    model: TModel
-  }) => void | false
-}
+    model,
+  }: {
+    e: TChangeEvent;
+    component: TComponent;
+    model: TModel;
+  }) => void | false;
+};
 
 // # 버튼 클릭 이벤트
 type TOnClicks = {
-  [name: string] : ({
+  [name: string]: ({
     e,
     component,
-    model
-   } : {
-    e: React.MouseEvent<HTMLButtonElement>,
-    component: TComponent,
-    model: TModel
-  }) => void | false
-}
+    model,
+  }: {
+    e: React.MouseEvent<HTMLButtonElement>;
+    component: TComponent;
+    model: TModel;
+  }) => void | false;
+};
 
 /** 서브및 이벤트 */
 type TOnSubmit = (values: TValues) => void | false;
@@ -83,97 +83,151 @@ type TChangeEvent = React.ChangeEvent<HTMLInputElement> & OptionsType;
 type TValues = { [key: string]: any };
 
 // # 가격
-type TModel = any[];
+// type TModel = any[];
+export type TModel = TRow[];
 
 type TRow = {
   /** label */
-  label: string,
+  label: string;
   /** row에 대한 스타일 */
-  style?: TSTyle,
+  style?: TSTyle;
   /** form input 요소에 대한 스타일 */
   componentsStyle?: TSTyle;
   /** 폼 요소의 배열 */
-  components: TComponent[]
+  components: TComponent[];
 };
 
-type TComponent = {
-  /** 컴포넌트 요소 */
-  component: keyof typeof formComponents,
-  /** 컴포넌트 엘리먼트의 스타일링 */
-  style?: TSTyle,
-  /** 컴포넌트에 전달할 props */
-  props: TProps
-}
+// type TComponent = {
+//   /** 컴포넌트 요소 */
+//   component: keyof typeof formComponents,
+//   /** 컴포넌트 엘리먼트의 스타일링 */
+//   style?: TSTyle,
+//   /** 컴포넌트에 전달할 props */
+//   props: TProps
+// }
 
 type TSTyle = { [key: string]: string } | string;
 
-/** 컴포넌트의 props */
-type TProps = TInputProps & TSelectProps & TTextFieldProps & TRadioProps & TSwitchProps & TCheckBoxProps & TButtonProps & TIconButtonProps; 
-// type TProps = TInputProps | TSelectProps | TTextFieldProps | TRadioProps | TSwitchProps | TButtonProps | TIconButtonProps 
+type TBaseComponent = {
+  style?: TSTyle;
+};
+type TInputComponent = TBaseComponent & {
+  component: "Input";
+  props: TInputProps;
+};
+type TSelectComponent = TBaseComponent & {
+  component: "Select";
+  props: TSelectProps;
+};
+type TTextFieldComponent = TBaseComponent & {
+  component: "TextField";
+  props: TTextFieldProps;
+};
+type TRadioComponent = TBaseComponent & {
+  component: "Radio";
+  props: TRadioProps;
+};
+type TSwitchComponent = TBaseComponent & {
+  component: "Switch";
+  props: TSwitchProps;
+};
+type TCheckBoxComponent = TBaseComponent & {
+  component: "CheckBox";
+  props: TCheckBoxProps;
+};
+type TButtonComponent = TBaseComponent & {
+  component: "Button";
+  props: TButtonProps;
+};
+type TIconButtonComponent = TBaseComponent & {
+  component: "IconButton";
+  props: TIconButtonProps;
+};
 
-/** 폼 컴포넌트 props */ 
+// # 컴포넌트 타입
+type TComponent =
+  | TInputComponent
+  | TSelectComponent
+  | TTextFieldComponent
+  | TRadioComponent
+  | TSwitchComponent
+  | TCheckBoxComponent
+  | TButtonComponent
+  | TIconButtonComponent;
+
+// # 폼 크리에이터의 props
 type TFormComponentsProps = {
-  componentInfo: TComponent, 
-  parentIndex: number, 
-  childIndex: number, 
+  componentInfo: TComponent;
+  parentIndex: number;
+  childIndex: number;
   onChange: (
     e: TChangeEvent,
     componentInfo: TComponent,
-    parentIndex: number, 
+    parentIndex: number,
     childIndex: number
-  ) => any, 
+  ) => any;
   onClick: (
     e: React.MouseEvent<HTMLButtonElement>,
     componentInfo: TComponent,
-    parentIndex: number, 
+    parentIndex: number,
     childIndex: number
-  ) => any,
+  ) => any;
 };
-
 
 // ===== 컴포넌트
 /** 폼을 동적으로 생성한다. */
 function FormCreator({
   model,
-  labelWidth = '150px',
+  labelWidth = "150px",
   reset = true,
-  align = 'horizontal',
+  align = "horizontal",
   onChanges,
   onClicks,
   onSubmit,
   formRef,
 }: TFormCreator) {
   const $form = useRef<HTMLFormElement>(null);
-  const [_model, setModel] = useState<TModel>(model); 
+  const [_model, setModel] = useState<TModel>(model);
 
   // # 변경 이벤트 핸들러
   const handleChnage = (
-    e: TChangeEvent, 
-    a: TComponent, 
-    parentIndex: number, 
-    childIndex: number,
+    e: TChangeEvent,
+    a: TComponent,
+    parentIndex: number,
+    childIndex: number
   ) => {
     const el = e.currentTarget;
     const newModel = [..._model];
-    const component = newModel[parentIndex].components[childIndex]
-    const props = component.props;
+    const component = newModel[parentIndex].components[childIndex];
+    // const props = component.props;
 
     // # 값 변경
-    if(component.component === 'CheckBox' || component.component === 'Switch') {
-      props.checked = el.checked;
-    } else if(component.component === 'Select') {
-      props.value = e.value;
-    } else if(component.component === 'Radio') {
+    if (
+      component.component === "CheckBox" ||
+      component.component === "Switch"
+    ) {
+      component.props.checked = el.checked;
+    } else if (component.component === "Select") {
+      component.props.value = e.value;
+    } else if (component.component === "Radio") {
       newModel[parentIndex].components.forEach((b: TComponent) => {
-        b.props.checked = b.props.value === el.value;
-      })
-    } else {
-      props.value = el.value;
+        if (b.component === "Radio") {
+          b.props.checked = b.props.value === el.value;
+        }
+      });
+    } else if (
+      component.component === "Input" ||
+      component.component === "TextField"
+    ) {
+      component.props.value = el.value;
     }
 
     // # 이벤트 핸들러 실행.
-    if(onChanges && onChanges[props.name] 
-      && onChanges[props.name]({e, component: a, model: _model}) === false
+    if (
+      onChanges &&
+      onChanges[component.props.name!] &&
+      onChanges[component.props.name!]({ e, component: a, model: _model }) ===
+        false
     ) {
       return false;
     }
@@ -183,14 +237,14 @@ function FormCreator({
 
   // # 클릭 이벤트
   const handleClick = (
-    e: React.MouseEvent<HTMLButtonElement>, 
-    a: TComponent, 
-    parentIndex: number, 
+    e: React.MouseEvent<HTMLButtonElement>,
+    a: TComponent,
+    parentIndex: number,
     childIndex: number
   ) => {
     const newModel = [..._model];
-    const component = newModel[parentIndex].components[childIndex]
-    const props = component.props;
+    const component = newModel[parentIndex].components[childIndex];
+    // const props = component.props;
 
     // // # input등에서 submit 발생시 `slosh`차단
     // if(e.nativeEvent.clientX === 0 && e.nativeEvent.clientY === 0) {
@@ -198,8 +252,8 @@ function FormCreator({
     // }
 
     // # 연결되어 있는 클릭 함수 실행
-    if(onClicks && onClicks[props.name]) {
-      onClicks[props.name]({e, component: a, model: _model})
+    if (onClicks && onClicks[component.props.name!]) {
+      onClicks[component.props.name!]({ e, component: a, model: _model });
     }
   };
 
@@ -208,63 +262,68 @@ function FormCreator({
     e.preventDefault();
     // console.log('> handle submit')
 
-    if(onSubmit && onSubmit(getValues(_model)) === false) {
+    if (onSubmit && onSubmit(getValues(_model)) === false) {
       return false;
     }
 
-    if(reset) {
+    if (reset) {
       setModel(clearModel(model));
     }
     // return true;
-  }
+  };
 
   return (
-    <form className="carrot-ui-form" ref={formRef} onSubmit={handleSubmit}  >
-      {
-        // Array.from(_model, ([k, a]) => {
-        _model.map((a, i) => (
-          <div  
-            className="form-row"
-            key={`form-creator-${i}`} 
-            css={[rowStyle, rowStyleS, rowStyleM(align), a.style && styleFn(a.style)]} 
+    <form className="carrot-ui-form" ref={formRef} onSubmit={handleSubmit}>
+      {// Array.from(_model, ([k, a]) => {
+      _model.map((a, i) => (
+        <div
+          className="form-row"
+          key={`form-creator-${i}`}
+          css={[
+            rowStyle,
+            rowStyleS,
+            rowStyleM(align),
+            a.style && styleFn(a.style),
+          ]}
+        >
+          <div
+            className="form-label"
+            css={[labelStyle, labelStyleS, labelStyleM(labelWidth)]}
           >
-            <div className="form-label" css={[labelStyle, labelStyleS, labelStyleM(labelWidth)]}>
-              {a.label}
-            </div>
-            <div className="form-component-wrapper" 
-              css={[a.componentsStyle && styleFn(a.componentsStyle)]}
-            >
-              {
-                a.components.map((c: TComponent, j: number) => 
-                  <FormComponents
-                    componentInfo={c} 
-                    parentIndex={i} 
-                    childIndex={j}
-                    onChange={handleChnage}
-                    onClick={handleClick}
-                    key={`form-component-${j}`} 
-                  />
-                )
-              }
-            </div>
+            {a.label}
           </div>
-        ))
-      }
+          <div
+            className="form-component-wrapper"
+            css={[a.componentsStyle && styleFn(a.componentsStyle)]}
+          >
+            {a.components.map((c: TComponent, j: number) => (
+              <FormComponents
+                componentInfo={c}
+                parentIndex={i}
+                childIndex={j}
+                onChange={handleChnage}
+                onClick={handleClick}
+                key={`form-component-${j}`}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
     </form>
-  )
-};
+  );
+}
 
 // # form 요소 컴포넌트
-const FormComponents = ({ 
-  componentInfo, 
-  parentIndex, 
-  childIndex, 
-  onChange, 
+const FormComponents = ({
+  componentInfo,
+  parentIndex,
+  childIndex,
+  onChange,
   onClick,
 }: TFormComponentsProps) => {
-  const Component = formComponents[componentInfo.component];
+  const Component = formComponents[componentInfo.component] as any;
   const style = componentInfo.style;
-  
+
   return (
     <div
       className="form-component"
@@ -294,42 +353,46 @@ const FormComponents = ({
 const getValues = (model: TModel): TValues => {
   const values: any = {};
 
-  for(const a of model) {
-    for(const b of a.components) {
-      if(b.component !== 'Button' && b.component !== 'IconButton') {
-        if(b.component === 'CheckBox' || b.component === 'Switch') {
-          values[b.props.name] = !!b.props.checked
-        } else if(b.component === 'Radio' && b.props.checked) {
-          values[b.props.name] = b.props.value
+  for (const a of model) {
+    for (const b of a.components) {
+      if (
+        b.props.name &&
+        b.component !== "Button" &&
+        b.component !== "IconButton"
+      ) {
+        if (b.component === "CheckBox" || b.component === "Switch") {
+          values[b.props.name] = !!b.props.checked;
+        } else if (b.component === "Radio" && b.props.checked) {
+          values[b.props.name] = b.props.value;
         } else {
-          values[b.props.name] = b.props.value
+          values[b.props.name] = b.props.value;
         }
       }
     }
   }
-  
+
   // console.log('> ', values);
   return values;
-}
+};
 // # 폼의 값 초기화
 const clearModel = (model: TModel): TModel => {
   const newModel = [...model];
-  let firstRadioName = '';
+  let firstRadioName = "";
 
-  for(const a of newModel) {
-    for(const b of a.components) {
-      if(b.component !== 'Button' && b.component !== 'IconButton') {
-        if(b.component === 'CheckBox' || b.component === 'Switch') {
+  for (const a of newModel) {
+    for (const b of a.components) {
+      if (b.component !== "Button" && b.component !== "IconButton") {
+        if (b.component === "CheckBox" || b.component === "Switch") {
           b.props.checked = false;
-        } else if(b.component === 'Radio') {
-          if(firstRadioName !== b.props.name) {
-          //   // firstRadioValue = b.props.value;
+        } else if (b.component === "Radio") {
+          if (firstRadioName !== b.props.name && b.props.name) {
+            //   // firstRadioValue = b.props.value;
             firstRadioName = b.props.name;
             b.props.checked = true;
           } else {
             b.props.checked = false;
           }
-        } else if(b.component === 'Select') {
+        } else if (b.component === "Select") {
           b.props.value = b.props.options[0].value;
         } else {
           b.props.value = "";
@@ -339,21 +402,22 @@ const clearModel = (model: TModel): TModel => {
   }
 
   return newModel;
-}
+};
 
 // ===== 스타일
 const rowStyle = css`
   margin-bottom: 1.2rem;
   min-height: 45px;
 `;
-const rowStyleM = (align: TAlign) => media.m(`
+const rowStyleM = (align: TAlign) =>
+  media.m(`
   ${
-    align === 'vertical'
-    ? `
+    align === "vertical"
+      ? `
       flex-wrap: wrap;
       & > div{ width: 100%;}
     `
-    : `
+      : `
       display: flex;
       align-items: center;
       & > div:last-of-type {
@@ -390,13 +454,15 @@ const formComponentStyle = css`
   }
   .carrot-ui-select-root {
   }
-  .custom-select-head{
+  .custom-select-head {
     box-sizing: border-box;
-    border: 1px solid ${getColor('grey-lighten-1')};
-    border-bottom: 1px solid ${getColor('grey-lighten-1')} !important;
+    border: 1px solid ${getColor("grey-lighten-1")};
+    border-bottom: 1px solid ${getColor("grey-lighten-1")} !important;
   }
 `;
-const styleFn = (style: TSTyle) => css`${style}`;
-
+const styleFn = (style: TSTyle) =>
+  css`
+    ${style}
+  `;
 
 export default FormCreator;

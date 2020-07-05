@@ -1,7 +1,7 @@
 {
   "name": "react-carrot-ui",
   "username": "carrot-farm",
-  "version": "1.2.25",
+  "version": "1.2.26",
   "license": "MIT",
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
@@ -18,7 +18,7 @@
     "@storybook/addon-links": "^5.3.18",
     "@storybook/addon-viewport": "^5.3.18",
     "@storybook/addons": "^5.3.18",
-    "@storybook/react": "^5.3.18",
+    "@storybook/react": "^5.3.19",
     "@svgr/rollup": "^5.4.0",
     "@types/react-dom": "^16.9.8",
     "babel-loader": "^8.1.0",
