@@ -24,7 +24,7 @@ export default {
 export const Default = () => {
   const props = {
     reset: boolean("reset", true),
-    align: select("align", ["vertical", "horizontal"], "horizontal"),
+    direction: select("direction", ["vertical", "horizontal"], "horizontal"),
     labelWidth: "150px",
     model: object("model", model),
     onChanges: {

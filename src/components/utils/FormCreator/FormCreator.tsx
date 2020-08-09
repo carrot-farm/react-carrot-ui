@@ -1,19 +1,10 @@
 /** @jsx jsx */
 import * as React from "react";
-import {
-  useEffect,
-  useState,
-  useContext,
-  createContext,
-  useMemo,
-  useCallback,
-  useRef,
-} from "react";
+import { useState, useMemo, useCallback, useRef } from "react";
 import { jsx, css } from "@emotion/core";
 
 import { media, getColor } from "../../../styles";
 import * as formComponents from "../../../formComponents";
-import Grid from "../../Grid/Grid";
 import { TInputProps } from "../../Input/Input";
 import { TTextFieldProps } from "../../TextField/TextField";
 import { TRadioProps } from "../../Radio/Radio";
@@ -33,7 +24,7 @@ export type TFormCreator = {
   /** onSubmit 후 폼의 초기화 여부*/
   reset?: boolean;
   /** 라벨의 정렬 방향 */
-  align?: TAlign;
+  direction?: Tdirection;
   /** 폼 요소의 체인지 이벤트. false 리턴시 업데이트 안함 */
   onChanges?: TOnChanges;
   /** 버튼의 클릭 이벤트 */
@@ -45,7 +36,7 @@ export type TFormCreator = {
 };
 
 // # 라벨 정렬 방향
-type TAlign = "vertical" | "horizontal";
+type Tdirection = "vertical" | "horizontal";
 
 // # 폼 요소의 체인지 이벤트
 type TOnChanges = {
@@ -180,7 +171,7 @@ function FormCreator({
   model,
   labelWidth = "150px",
   reset = true,
-  align = "horizontal",
+  direction = "horizontal",
   onChanges,
   onClicks,
   onSubmit,
@@ -272,29 +263,44 @@ function FormCreator({
     // return true;
   };
 
+  // # root style
+  const rootStyleMemo = useCallback(
+    (direction: Tdirection, style?: TSTyle) => () => [
+      rowStyle,
+      rowStyleS,
+      rowStyleM(direction),
+      style && styleFn(style),
+    ],
+    []
+  );
+
+  // # label style
+  const labelSTyleMemo = useCallback(
+    (labelWidth: string) => () => [
+      labelStyle,
+      labelStyleS,
+      labelStyleM(labelWidth),
+    ],
+    []
+  );
+
+  // # component Style
+  const styleMemo = useCallback((style) => () => [style && styleFn(style)], []);
+
   return (
     <form className="carrot-ui-form" ref={formRef} onSubmit={handleSubmit}>
-      {// Array.from(_model, ([k, a]) => {
-      _model.map((a, i) => (
+      {_model.map((a, i) => (
         <div
           className="form-row"
           key={`form-creator-${i}`}
-          css={[
-            rowStyle,
-            rowStyleS,
-            rowStyleM(align),
-            a.style && styleFn(a.style),
-          ]}
+          css={rootStyleMemo(direction, a.style)}
         >
-          <div
-            className="form-label"
-            css={[labelStyle, labelStyleS, labelStyleM(labelWidth)]}
-          >
+          <div className="form-label" css={labelSTyleMemo(labelWidth)}>
             {a.label}
           </div>
           <div
             className="form-component-wrapper"
-            css={[a.componentsStyle && styleFn(a.componentsStyle)]}
+            css={styleMemo(a.componentsStyle)}
           >
             {a.components.map((c: TComponent, j: number) => (
               <FormComponents
@@ -322,28 +328,34 @@ const FormComponents = ({
   onClick,
 }: TFormComponentsProps) => {
   const Component = formComponents[componentInfo.component] as any;
-  const style = componentInfo.style;
+
+  // # 클릭 이벤트 핸들러
+  const handleClick = useCallback(
+    (e: any) => onClick && onClick(e, componentInfo, parentIndex, childIndex),
+    [componentInfo, parentIndex, childIndex]
+  );
+
+  // # 체인지 이벤트 핸들러
+  const handleChange = useCallback(
+    (e: any) => onChange(e, componentInfo, parentIndex, childIndex),
+    [componentInfo, parentIndex, childIndex]
+  );
+
+  const rootStyeMemo = useMemo(
+    () => [
+      formComponentStyle,
+      componentInfo.style && styleFn(componentInfo.style),
+    ],
+    [formComponentStyle, componentInfo]
+  );
 
   return (
-    <div
-      className="form-component"
-      css={[formComponentStyle, style && styleFn(style)]}
-    >
+    <div className="form-component" css={rootStyeMemo}>
       {componentInfo.component === "Button" ||
       componentInfo.component === "IconButton" ? (
-        <Component
-          {...componentInfo.props}
-          onClick={(e: any) =>
-            onClick(e, componentInfo, parentIndex, childIndex)
-          }
-        />
+        <Component {...componentInfo.props} onClick={handleClick} />
       ) : (
-        <Component
-          {...componentInfo.props}
-          onChange={(e: any) =>
-            onChange(e, componentInfo, parentIndex, childIndex)
-          }
-        />
+        <Component {...componentInfo.props} onChange={handleChange} />
       )}
     </div>
   );
@@ -409,10 +421,10 @@ const rowStyle = css`
   margin-bottom: 1.2rem;
   min-height: 45px;
 `;
-const rowStyleM = (align: TAlign) =>
+const rowStyleM = (direction: Tdirection) =>
   media.m(`
   ${
-    align === "vertical"
+    direction === "vertical"
       ? `
       flex-wrap: wrap;
       & > div{ width: 100%;}
