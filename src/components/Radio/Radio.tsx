@@ -1,10 +1,11 @@
 /** @jsx jsx */
-import { jsx, css } from '@emotion/core';
+import { jsx, css } from "@emotion/core";
+import React, { useCallback, useEffect, useState } from "react";
 
-import styles from '../../styles';
-import Ripple from '../Ripple/Ripple';
-import { TMainColorKeys, TColorKeys } from '../../types/colors';
-import ThemeContext from '../../theme';
+import styles from "../../styles";
+import Ripple from "../Ripple/Ripple";
+import { TMainColorKeys, TColorKeys } from "../../types/colors";
+import ThemeContext from "../../theme";
 
 // ===== type
 // # props type
@@ -22,8 +23,8 @@ export interface TRadioProps {
   /** 비활성화 */
   disabled?: boolean;
   /** 값 변경 이벤트 */
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
-};
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 // ===== component
 function Radio({
@@ -36,38 +37,57 @@ function Radio({
   onChange,
   ...args
 }: TRadioProps) {
+  const [_checked, setChecked] = useState(checked);
+
+  // # 값 변경 시
+  useEffect(() => setChecked(checked), [checked]);
+
+  // #  mainColor
+  const _mainColor = useCallback(
+    (color?: TMainColorKeys): TMainColorKeys =>
+      mainColor || (color === "white" ? "black" : color!),
+    [mainColor]
+  );
+
+  // # 체인지 이벤트
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      onChange(e);
+    }
+  }, []);
 
   // # 렌더링
   return (
     <ThemeContext.Consumer>
-      {({theme})=> {
-        const _mainColor = mainColor || (theme.primaryColor === 'white') ? 'black' : theme.primaryColor!;
-        const _rippleColor = mainColor || theme.primaryRippleColor as TColorKeys;
-
+      {({ theme }) => {
         return (
           <div {...args} css={[rootStyle]}>
             <label css={[radioContainerStyle]}>
               {/* radio button */}
-              <span css={[radioButtonStyle(_mainColor)]}>
+              <span css={radioButtonStyle(_mainColor(theme.primaryColor))}>
                 <input
                   type="radio"
                   name={name}
                   value={value}
-                  checked={checked}
+                  checked={_checked}
                   disabled={disabled}
-                  onChange={onChange}
+                  onChange={handleChange}
                 />
-                <span className={`button-outer`} >
-                  {(!disabled || !checked) && <Ripple color={_rippleColor} />}
+                <span className={`button-outer`}>
+                  {(!disabled || !checked) && (
+                    <Ripple color={mainColor || theme.primaryRippleColor} />
+                  )}
                 </span>
                 <span className={`button-inner`} />
               </span>
 
               {/* label */}
-              <span className={`label ${disabled ? 'disabled' : ''}`}>{label}</span>
+              <span className={`label ${disabled ? "disabled" : ""}`}>
+                {label}
+              </span>
             </label>
           </div>
-        )
+        );
       }}
     </ThemeContext.Consumer>
   );
@@ -87,19 +107,18 @@ const radioContainerStyle = css`
     display: block;
     margin-left: 7px;
     font-size: 0.9rem;
-    color: ${styles.getColor('grey-darken-4')};
+    color: ${styles.getColor("grey-darken-4")};
   }
   .label.disabled {
-    color: ${styles.getColor('grey')};
+    color: ${styles.getColor("grey")};
   }
-`
+`;
 
 const radioButtonStyle = (mainColor: TMainColorKeys) => css`
   position: relative;
   display: inline-block;
   height: 25px;
   width: 25px;
-  
 
   input {
     display: none;
@@ -114,11 +133,11 @@ const radioButtonStyle = (mainColor: TMainColorKeys) => css`
     line-height: 0;
     overflow: hidden;
     position: relative;
-    background-color: ${styles.getColor('grey-lighten-3')}
+    background-color: ${styles.getColor("grey-lighten-3")};
   }
 
   .button-inner {
-    display:block;
+    display: block;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -135,12 +154,9 @@ const radioButtonStyle = (mainColor: TMainColorKeys) => css`
     transform: scale(1);
   }
   input:disabled ~ .button-inner {
-    background-color: ${styles.getColor('grey')};
+    background-color: ${styles.getColor("grey")};
   }
-
-  
 `;
-
 
 // ===== export
 export default Radio;
