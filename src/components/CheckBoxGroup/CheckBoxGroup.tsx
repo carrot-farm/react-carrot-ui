@@ -13,7 +13,7 @@ import CheckBox, { TCheckBoxProps } from "../CheckBox/CheckBox";
 /** props type */
 export type TCheckBoxGroupProps = {
   items: TCheckBoxProps[];
-  onChange: (checked: (string | undefined)[]) => void;
+  onChange?: (checked: (string | undefined)[]) => void;
 };
 
 type TChanged = {
