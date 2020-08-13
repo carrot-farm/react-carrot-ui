@@ -1,11 +1,11 @@
 /** @jsx jsx */
-import { useRef, useEffect, useState } from 'react';
-import { jsx, css, SerializedStyles } from '@emotion/core';
+import { jsx, css, SerializedStyles } from "@emotion/core";
+import { useRef, useEffect, useState } from "react";
 
-import Base, { BaseProps } from '../Base/Base';
-import Container from '../Container/Container';
-import styles, { flexAlignType } from '../../styles';
-import { TColorKeys } from '../../types/colors'
+import Base, { BaseProps } from "../Base/Base";
+import Container from "../Container/Container";
+import styles, { flexAlignType } from "../../styles";
+import { TColorKeys } from "../../types/colors";
 
 // ===== 타입
 /** props type */
@@ -20,16 +20,15 @@ interface AppBarPropsType extends BaseProps {
   backgroundColor?: TColorKeys;
   /** 내부 컴포넌트 */
   children?: React.ReactNode;
-  
-};
+}
 
 // ===== 컴포넌트
 /** 모바일 상단의 메뉴 등에서 사용 */
 function AppBar({
-  height = '60px',
+  height = "60px",
   fullWidth,
-  align = 'flex-start',
-  backgroundColor = 'white',
+  align = "flex-start",
+  backgroundColor = "white",
   children,
   css,
   ...args
@@ -53,7 +52,6 @@ function AppBar({
   );
 }
 
-
 // ===== styles
 const rootStyle = css`
   position: relative;
@@ -65,7 +63,6 @@ const containerStyle = css`
   display: flex;
   align-items: center;
 `;
-
 
 // ===== export
 export default AppBar;

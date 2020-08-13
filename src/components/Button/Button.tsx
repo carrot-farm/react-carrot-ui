@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import { useRef } from 'react';
-import { jsx, css } from '@emotion/core';
+import { useRef } from "react";
+import { jsx, css } from "@emotion/core";
 
-import Slosh from '../Shosh/Slosh';
+import Slosh from "../Shosh/Slosh";
 import styles, {
   hoverColorStyle,
   sizeStyle,
@@ -17,20 +17,18 @@ import styles, {
   borderColorStyle,
   containerStyle,
 } from "./ButtonStyles";
-import Ripple from '../Ripple/Ripple';
-import ThemeContext from '../../theme';
-import { TMainColorKeys, TColorKeys } from '../../types/colors';
-
-
+import Ripple from "../Ripple/Ripple";
+import ThemeContext from "../../theme";
+import { TMainColorKeys, TColorKeys } from "../../types/colors";
 
 // ===== 타입
 export interface TButtonProps {
   /** buttonCreator에서 구분을 위함. */
   name?: string;
   /** 버튼 타입 */
-  type?: 'button' | 'submit';
+  type?: "button" | "submit";
   /** 버튼 사이즈 */
-  size?: 's' | 'm' | 'l';
+  size?: "s" | "m" | "l";
   /** 배경 색상 */
   backgroundColor?: TMainColorKeys;
   /** 마우스 오버시 컬러 */
@@ -55,13 +53,14 @@ export interface TButtonProps {
   children: React.ReactNode;
   /** 클릭 했을 때 함수 */
   onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
-};
+}
 
 // ===== 컴포넌트
+/** 버튼 컴포넌트 */
 function Button({
   name,
-  type = 'button',
-  size = 'm',
+  type = "button",
+  size = "m",
   color,
   backgroundColor,
   hoverColor,
@@ -84,18 +83,23 @@ function Button({
     <ThemeContext.Consumer>
       {({ theme }) => {
         const _backgroundColor = backgroundColor || theme.primaryColor!;
-        const _hoverColor = hoverColor || theme.primaryDarkenColor as TColorKeys;
-        const _color = color || theme.primaryTextColor as TColorKeys;
-        const _rippleColor = rippleColor || theme.primaryRippleColor as TColorKeys;
+        const _hoverColor =
+          hoverColor || (theme.primaryDarkenColor as TColorKeys);
+        const _color = color || (theme.primaryTextColor as TColorKeys);
+        const _rippleColor =
+          rippleColor || (theme.primaryRippleColor as TColorKeys);
         const _borderColor = borderColor || theme.primaryColor!;
-        
+
         // console.log('> ', _rippleColor)
 
         return (
-          <div className="carrot-ui-button-root" ref={rootEl} css={[rootStyle, fullWidth && fullWidthStyle]}>
+          <div
+            className="carrot-ui-button-root"
+            ref={rootEl}
+            css={[rootStyle, fullWidth && fullWidthStyle]}
+          >
             <Slosh disabled={disabled} borderRadius={borderRadius}>
               <div css={[containerStyle]}>
-                
                 <button
                   {...args}
                   name={name}
@@ -119,11 +123,10 @@ function Button({
                   <span>{children}</span>
                   {!disabled && <Ripple color={_rippleColor} />}
                 </button>
-                
               </div>
             </Slosh>
           </div>
-        )
+        );
       }}
     </ThemeContext.Consumer>
   );
@@ -131,11 +134,11 @@ function Button({
 
 const fullWidthStyle = css`
   width: 100%;
-  & > div, button {
+  & > div,
+  button {
     width: 100%;
   }
 `;
 
 // ===== export
 export default Button;
-
