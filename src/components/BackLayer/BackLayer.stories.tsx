@@ -1,50 +1,52 @@
 /** @jsx jsx */
-import { jsx, css } from '@emotion/core';
-import {
-  withKnobs,
-  text,
-  boolean,
-  select,
-  number,
-} from "@storybook/addon-knobs";
-import {action} from '@storybook/addon-actions';
+import { jsx, css } from "@emotion/core";
+import { withKnobs, text, boolean, select } from "@storybook/addon-knobs";
+import { action } from "@storybook/addon-actions";
 
-import BackLayer from './BackLayer';
+import BackLayer from "./BackLayer";
 
 export default {
-  title: 'components|BackLayer',
+  title: "components|BackLayer",
   component: BackLayer,
   decorators: [withKnobs],
 };
 
-export const modal = ()  => {
+export const modal = () => {
   // # childer
-  const children = text("children", 'children');
+  const children = text("children", "children");
 
   // # props
   const props: any = {
     sw: boolean("sw", false),
-    alignItems: select('alignItems', ['flex-start', 'center', 'flex-end'], 'center'),
-    justifyContent: select('justifyContent', ['flex-start', 'center', 'flex-end'], 'center'),
-    onClick: action('backlayerClick'),
-    onShow: action('onShow'),
-    onComplete: action('onComplete'),
-    onHide: action('onHide'),
-    onHideComplete: action('onHideComplete'),
-  }
+    alignItems: select(
+      "alignItems",
+      ["flex-start", "center", "flex-end"],
+      "center"
+    ),
+    justifyContent: select(
+      "justifyContent",
+      ["flex-start", "center", "flex-end"],
+      "center"
+    ),
+    onClick: action("backlayerClick"),
+    onShow: action("onShow"),
+    onComplete: action("onComplete"),
+    onHide: action("onHide"),
+    onHideComplete: action("onHideComplete"),
+  };
 
   return (
     <div css={[style]}>
-      <BackLayer {...props}  >{children}</BackLayer>
+      <BackLayer {...props}>{children}</BackLayer>
     </div>
   );
 };
 
 modal.story = {
-  name: 'Default'
+  name: "Default",
 };
 
 const style = css`
   div {
   }
-`
+`;
