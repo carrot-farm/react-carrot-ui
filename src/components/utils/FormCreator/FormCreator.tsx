@@ -5,7 +5,7 @@ import { jsx, css } from "@emotion/core";
 
 import { media, getColor } from "../../../styles";
 import * as formComponents from "../../../formComponents";
-import { TInputProps } from "../../Input/Input";
+import { TInputProps } from "../../form/Input/Input";
 import { TTextFieldProps } from "../../TextField/TextField";
 import { TRadioProps } from "../../Radio/Radio";
 import { OptionsType, TSelectProps } from "../../Select/Select";
@@ -79,7 +79,7 @@ export type TModel = TRow[];
 
 type TRow = {
   /** label */
-  label: string;
+  label?: string;
   /** row에 대한 스타일 */
   style?: TSTyle;
   /** form input 요소에 대한 스타일 */
@@ -136,7 +136,7 @@ type TIconButtonComponent = TBaseComponent & {
 };
 
 // # 컴포넌트 타입
-type TComponent =
+export type TComponent =
   | TInputComponent
   | TSelectComponent
   | TTextFieldComponent
