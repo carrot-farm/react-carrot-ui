@@ -8,10 +8,9 @@ import React, {
 } from "react";
 import { jsx, css } from "@emotion/core";
 
-import styles from "../../styles";
-import { TMainColorKeys, TColorKeys } from "../../types/colors";
-import colors from "../../styles/colors";
-import ThemeContext from "../../theme";
+import styles from "../../../styles";
+import { TMainColorKeys, TColorKeys } from "../../../types/colors";
+import ThemeContext from "../../../theme";
 
 // ===== type
 // # props type
@@ -136,7 +135,7 @@ function Input({
 
             {/* input */}
             <div
-              css={[inputContainerStyle(_color)]}
+              css={inputContainerStyle(_color)}
               className={`${focused ? "focused" : ""} ${error ? "error" : ""} ${
                 disabled ? "disabled" : ""
               }`}
@@ -157,7 +156,7 @@ function Input({
 
             {/* helper text */}
             {helperText && (
-              <div css={[helperTextStyle(error ? "red" : "grey-darken-1")]}>
+              <div css={helperTextStyle(error ? "red" : "grey-darken-1")}>
                 {helperText}
               </div>
             )}

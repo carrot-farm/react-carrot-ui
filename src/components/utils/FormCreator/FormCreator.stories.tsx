@@ -15,7 +15,7 @@ import FormCreator, { TModel } from "./FormCreator";
 
 // ===== export 정보
 export default {
-  title: "utils|FormCreator",
+  title: "utils/FormCreator",
   component: FormCreator,
   decorators: [withKnobs],
 };

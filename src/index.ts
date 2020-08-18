@@ -12,7 +12,7 @@ export { default as Folding } from "./components/Folding/Folding";
 export { default as Grid } from "./components/Grid/Grid";
 export { default as Icon } from "./components/Icon/Icon";
 export { default as IconButton } from "./components/IconButton/IconButton";
-export { default as Input } from "./components/Input/Input";
+export { default as Input } from "./components/form/Input/Input";
 export { default as Modal } from "./components/Modal/Modal";
 export { default as Radio } from "./components/Radio/Radio";
 export { default as RadioGroup } from "./components/RadioGroup/RadioGroup";
