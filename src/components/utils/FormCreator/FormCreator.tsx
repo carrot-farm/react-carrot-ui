@@ -9,8 +9,8 @@ import { TInputProps } from "../../form/Input/Input";
 import { TTextFieldProps } from "../../TextField/TextField";
 import { TRadioProps } from "../../Radio/Radio";
 import { OptionsType, TSelectProps } from "../../Select/Select";
-import { TSwitchProps } from "../../Switch/Switch";
-import { TCheckBoxProps } from "../../CheckBox/CheckBox";
+import { TSwitchProps } from "../../form/Switch/Switch";
+import { TCheckBoxProps } from "../../form/CheckBox/CheckBox";
 import { TButtonProps } from "../../Button/Button";
 import { TIconButtonProps } from "../../IconButton/IconButton";
 

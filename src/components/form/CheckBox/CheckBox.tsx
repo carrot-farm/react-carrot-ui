@@ -2,11 +2,11 @@
 import { jsx, css } from "@emotion/core";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 
-import Icon from "../Icon/Icon";
-import Ripple from "../Ripple/Ripple";
-import ThemeContext from "../../theme";
-import { TMainColorKeys, TColorKeys } from "../../types/colors";
-import { getColor } from "../../styles";
+import Icon from "../../Icon/Icon";
+import Ripple from "../../Ripple/Ripple";
+import ThemeContext from "../../../theme";
+import { TMainColorKeys, TColorKeys } from "../../../types/colors";
+import { getColor } from "../../../styles";
 
 // ===== 타입
 /** props type */

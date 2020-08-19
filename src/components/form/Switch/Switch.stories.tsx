@@ -1,27 +1,33 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
-import { withKnobs, boolean, select, text } from "@storybook/addon-knobs";
+import {
+  withKnobs,
+  boolean,
+  text,
+  number,
+  object,
+  select,
+} from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 
-import CheckBox from "./CheckBox";
+import Switch from "./Switch";
+import { mainColorsArr } from "../../../styles";
 
 // ===== export 정보
 export default {
-  title: "form|CheckBox",
-  component: CheckBox,
+  title: "form/Switch",
+  component: Switch,
   decorators: [withKnobs],
 };
 
-// ===== 컴포넌트
-// # default
+// ===== Default
 export const Default = () => {
   const props = {
     checked: boolean("checked", false),
     disabled: boolean("disabled", false),
-    circleBox: boolean("circleBox", false),
-    label: text("label", "label"),
+    mainColor: select("mainColor", mainColorsArr, "blue"),
     onChange: action("onChange"),
   };
 
-  return <CheckBox {...props} />;
+  return <Switch name="switch" {...props} />;
 };

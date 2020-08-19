@@ -2,7 +2,7 @@ export { default as AppBar } from "./components/AppBar/AppBar";
 export { default as BackLayer } from "./components/BackLayer/BackLayer";
 export { default as Base } from "./components/Base/Base";
 export { default as Button } from "./components/Button/Button";
-export { default as CheckBox } from "./components/CheckBox/CheckBox";
+export { default as CheckBox } from "./components/form/CheckBox/CheckBox";
 export { default as CheckBoxGroup } from "./components/CheckBoxGroup/CheckBoxGroup";
 export { default as Collapse } from "./components/Collapse/Collapse";
 export { default as Container } from "./components/Container/Container";
@@ -19,7 +19,7 @@ export { default as RadioGroup } from "./components/RadioGroup/RadioGroup";
 export { default as Ripple } from "./components/Ripple/Ripple";
 export { default as Select } from "./components/Select/Select";
 export { default as Slosh } from "./components/Shosh/Slosh";
-export { default as Switch } from "./components/Switch/Switch";
+export { default as Switch } from "./components/form/Switch/Switch";
 export { default as Table } from "./components/Table/Table";
 export { default as TextField } from "./components/TextField/TextField";
 

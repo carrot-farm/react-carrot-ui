@@ -26,6 +26,7 @@ export default {
 export const Default = () => {
   const { model } = useFormController({
     model: formModel,
+    autoRegist: true,
   });
 
   return <div></div>;

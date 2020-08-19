@@ -1,16 +1,19 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState, useMemo } from "react";
 
-import styles from "../../styles";
-import { TMainColorKeys } from "../../types/colors";
-import ThemeContext from "../../theme";
-import { check } from "../Icon/svg";
+import styles from "../../../styles";
+import { TMainColorKeys } from "../../../types/colors";
+import ThemeContext from "../../../theme";
 
 // ===== 타입
 export interface TSwitchProps {
   /** name 속성 */
   name?: string;
+  /** 클래스명 */
+  className?: string;
+  /** style */
+  style?: React.CSSProperties;
   /** checked 값 */
   checked?: boolean;
   /** 비활성화 유무 */
@@ -20,26 +23,37 @@ export interface TSwitchProps {
   /** 기타 속성 */
   attr?: boolean;
   /** textarea 속성 */
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => any;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => boolean | void;
 }
 
 // ===== 컴포넌트
 function Switch({
   name,
-  checked,
+  className,
+  style,
+  checked = false,
   disabled,
   mainColor,
   attr,
   onChange,
   ...args
 }: TSwitchProps) {
-  const [_checked, setChecked] = useState(!!checked);
+  const [_checked, setChecked] = useState(checked);
+
+  // # 이벤트 변경 감시
+  useEffect(() => {
+    setChecked(checked);
+  }, [checked]);
+
+  // # className
+  const classNameMemo = useMemo(() => className || "", [className]);
 
   // # 값 변경
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onChange) {
-      onChange(e);
+    if (onChange && onChange(e) === false) {
+      return;
     }
+    setChecked(e.currentTarget.checked);
   }, []);
 
   return (
@@ -50,7 +64,8 @@ function Switch({
         return (
           <div
             {...args}
-            className="carrot-ui-switch-root"
+            className={`carrot-ui-switch-root ${classNameMemo}`}
+            style={style}
             css={rootStyle(_mainColor)}
           >
             <label>
@@ -59,7 +74,7 @@ function Switch({
                 {...attr}
                 type="checkbox"
                 name={name}
-                checked={checked}
+                checked={_checked}
                 disabled={disabled}
                 onChange={handleChange}
               />

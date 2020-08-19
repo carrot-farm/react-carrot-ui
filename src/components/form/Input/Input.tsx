@@ -38,7 +38,7 @@ export interface TInputProps {
   /** 컬러 */
   color?: TMainColorKeys;
   /** 값 변경 이벤트 */
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => boolean | void;
 }
 
 // ===== component
@@ -103,10 +103,10 @@ function Input({
 
   // # 체인지 이벤트
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setInnerValue(e.target.value);
-    if (onChange) {
-      onChange(e);
+    if (onChange && onChange(e) === false) {
+      return;
     }
+    setInnerValue(e.target.value);
   }, []);
 
   // # 렌더링

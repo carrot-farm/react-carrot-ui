@@ -14,9 +14,10 @@ import ThemeProvider from "./ThemeProvider";
 import Button from "../../Button/Button";
 import Input from "../../form/Input/Input";
 import IconButton from "../../IconButton/IconButton";
-import CheckBox from "../../CheckBox/CheckBox";
+import CheckBox from "../../form/CheckBox/CheckBox";
+// import CheckBox from "~/components/form/CheckBox/CheckBox";
 import Radio from "../../Radio/Radio";
-import Switch from "../../Switch/Switch";
+import Switch from "../../form/Switch/Switch";
 import TextField from "../../TextField/TextField";
 import { mainColors } from "../../../styles/colors";
 
