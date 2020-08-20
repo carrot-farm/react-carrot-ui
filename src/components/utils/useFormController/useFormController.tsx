@@ -3,7 +3,6 @@ import { jsx } from "@emotion/core";
 import { useCallback, useState, useEffect } from "react";
 
 import { TModel, TComponent } from "../FormCreator/FormCreator";
-import { TSwitchProps } from "../../form/Switch/Switch";
 
 /** props type */
 export interface IUseFormControllerProps {
@@ -22,16 +21,18 @@ export interface IReturnData {
 }
 
 /** 폼컨트롤러 커스텀 훅 */
-function useFormController({ autoRegist, model }: IUseFormControllerProps): IReturnData {
+function useFormController({
+  autoRegist,
+  model,
+}: IUseFormControllerProps): IReturnData {
   const [_model, setModel] = useState<TModel>(model); // 외부에 노출되는 폼 모델
   const [_formValues, setFormValues] = useState({}); // 폼의 전체 값을 저장.
 
   // # mount
   useEffect(() => {
-
     // autoRegister 등록
-    if(autoRegist === true) {
-      autoRegister(_model)
+    if (autoRegist === true) {
+      autoRegister(_model);
     }
   }, []);
 
@@ -44,23 +45,19 @@ function useFormController({ autoRegist, model }: IUseFormControllerProps): IRet
   );
 
   // # 전체 모델을 순회하면서 자동으로 register 함수를 실행한다.
-  const autoRegister = useCallback(
-    (m: TModel) => {
-      return mapModel((c) => {
-        
-        if (c.props?.name) {
-          if (c.component === "Switch") {
-            console.log("> ", c.props.checked);
-            // register(c.props.name, c.props.checked);
-          } else {
-            // register(c.props.name, c.props.value);
-          }
+  const autoRegister = useCallback((m: TModel) => {
+    return mapModel((c) => {
+      if (c.props?.name) {
+        if (c.component === "Switch") {
+          console.log("> ", c.props.checked);
+          // register(c.props.name, c.props.checked);
+        } else {
+          // register(c.props.name, c.props.value);
         }
-        return c;
-      }, m);
-    },
-    []
-  );
+      }
+      return c;
+    }, m);
+  }, []);
 
   return { register, model: _model };
 }

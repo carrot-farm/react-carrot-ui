@@ -11,14 +11,14 @@ import {
 import { action } from "@storybook/addon-actions";
 
 import ThemeProvider from "./ThemeProvider";
-import Button from "../../Button/Button";
+import Button from "../../form/Button/Button";
 import Input from "../../form/Input/Input";
-import IconButton from "../../IconButton/IconButton";
+import IconButton from "../../form/IconButton/IconButton";
 import CheckBox from "../../form/CheckBox/CheckBox";
 // import CheckBox from "~/components/form/CheckBox/CheckBox";
-import Radio from "../../Radio/Radio";
+import Radio from "../../form/Radio/Radio";
 import Switch from "../../form/Switch/Switch";
-import TextField from "../../TextField/TextField";
+import TextField from "../../form/TextField/TextField";
 import { mainColors } from "../../../styles/colors";
 
 // ===== export 정보

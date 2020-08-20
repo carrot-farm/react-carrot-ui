@@ -1,14 +1,7 @@
 /** @jsx jsx */
-import React, { useRef } from "react";
-import { jsx, css } from "@emotion/core";
-import {
-  withKnobs,
-  boolean,
-  text,
-  number,
-  object,
-  select,
-} from "@storybook/addon-knobs";
+import { useRef } from "react";
+import { jsx } from "@emotion/core";
+import { withKnobs, boolean, object, select } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 
 import FormCreator, { TModel } from "./FormCreator";

@@ -6,13 +6,13 @@ import { jsx, css } from "@emotion/core";
 import { media, getColor } from "../../../styles";
 import * as formComponents from "../../../formComponents";
 import { TInputProps } from "../../form/Input/Input";
-import { TTextFieldProps } from "../../TextField/TextField";
-import { TRadioProps } from "../../Radio/Radio";
-import { OptionsType, TSelectProps } from "../../Select/Select";
+import { TTextFieldProps } from "../../form/TextField/TextField";
+import { TRadioProps } from "../../form/Radio/Radio";
+import { OptionsType, TSelectProps } from "../../form/Select/Select";
 import { TSwitchProps } from "../../form/Switch/Switch";
 import { TCheckBoxProps } from "../../form/CheckBox/CheckBox";
-import { TButtonProps } from "../../Button/Button";
-import { TIconButtonProps } from "../../IconButton/IconButton";
+import { TButtonProps } from "../../form/Button/Button";
+import { TIconButtonProps } from "../../form/IconButton/IconButton";
 
 // ===== 타입정의
 // # 메인 컴포넌트 타입

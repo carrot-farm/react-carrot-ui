@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
-import Icon from "../../Icon/Icon";
-import Ripple from "../../Ripple/Ripple";
+import Icon from "../../others/Icon/Icon";
+import Ripple from "../../others/Ripple/Ripple";
 import ThemeContext from "../../../theme";
 import { TMainColorKeys, TColorKeys } from "../../../types/colors";
 import { getColor } from "../../../styles";

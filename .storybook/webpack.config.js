@@ -27,13 +27,13 @@ module.exports = ({ config }) => {
     ],
   });
 
-  config.resolve = {
-    ...config.resolve,
-    alias: {
-      ...config.resolve.alias,
-      "~": path.join(__dirname, "../src"),
-    },
-  };
+  // config.resolve = {
+  //   ...config.resolve,
+  //   alias: {
+  //     ...config.resolve.alias,
+  //     "~": path.join(__dirname, "../src"),
+  //   },
+  // };
 
   config.resolve.extensions.push(".ts", ".tsx");
   return config;
