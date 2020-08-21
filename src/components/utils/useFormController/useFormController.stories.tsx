@@ -4,6 +4,7 @@ import { withKnobs } from "@storybook/addon-knobs";
 
 import useFormController from "./useFormController";
 import { TModel } from "../FormCreator/FormCreator";
+import FormCreator from "../FormCreator/FormCreator";
 
 // ===== export 정보
 export default {
@@ -14,22 +15,32 @@ export default {
 
 // ===== Default
 export const Default = () => {
-  const { model } = useFormController({
+  const { model, values, control } = useFormController({
     model: formModel,
     autoRegist: true,
   });
 
-  return <div></div>;
+  console.log("> ", control);
+
+  return (
+    <div>
+      {JSON.stringify(values)}
+      <br />
+      <FormCreator model={model} />
+    </div>
+  );
 };
 
 // ===== model
 const formModel: TModel = [
   {
+    label: "input",
     components: [
       {
         component: "Input",
         props: {
           name: "test_input",
+          defaultValue: "input_defaultValue",
         },
       },
     ],
