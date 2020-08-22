@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { withKnobs } from "@storybook/addon-knobs";
+import { withKnobs, object } from "@storybook/addon-knobs";
 
 import useFormController from "./useFormController";
 import { TModel } from "../FormCreator/FormCreator";
@@ -20,13 +20,20 @@ export const Default = () => {
     autoRegist: true,
   });
 
-  console.log("> ", control);
+  // setValue test
+  const testSetValueClick = () => {
+    control.setValue("test_input", "ddd");
+  };
 
   return (
     <div>
-      {JSON.stringify(values)}
+      values: {JSON.stringify(values)}
       <br />
-      <FormCreator model={model} />
+      model: {JSON.stringify(model)}
+      <br />
+      <button onClick={testSetValueClick}>test setValue()</button>
+      <br />
+      <FormCreator model={object("Model", model)} />
     </div>
   );
 };

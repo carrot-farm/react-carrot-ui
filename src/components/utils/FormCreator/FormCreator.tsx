@@ -1,10 +1,11 @@
 /** @jsx jsx */
 import * as React from "react";
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { jsx, css } from "@emotion/core";
 
 import { media, getColor } from "../../../styles";
 import * as formComponents from "../../../formComponents";
+import { IControl } from "../useFormController/useFormController";
 import { TInputProps } from "../../form/Input/Input";
 import { TTextFieldProps } from "../../form/TextField/TextField";
 import { TRadioProps } from "../../form/Radio/Radio";
@@ -29,10 +30,12 @@ export type TFormCreator = {
   onChanges?: TOnChanges;
   /** 버튼의 클릭 이벤트 */
   onClicks?: TOnClicks;
-  /** 폼의 서브밋 이벤트 */
-  onSubmit?: TOnSubmit;
   /** 폼 엘리먼트 참조 */
   formRef?: React.RefObject<HTMLFormElement>;
+  /** useFormController의 control */
+  control?: IControl;
+  /** 폼의 서브밋 이벤트 */
+  onSubmit?: TOnSubmit;
 };
 
 // # 라벨 정렬 방향
@@ -174,11 +177,18 @@ function FormCreator({
   direction = "horizontal",
   onChanges,
   onClicks,
-  onSubmit,
   formRef,
+  control,
+  onSubmit,
 }: TFormCreator) {
   const $form = useRef<HTMLFormElement>(null);
   const [_model, setModel] = useState<TModel>(model);
+  const { values: formValues } = control || {};
+
+  // # control의 formValues 변경 감시
+  useEffect(() => {
+    console.log("> watch form values: ", formValues);
+  }, [formValues]);
 
   // # 변경 이벤트 핸들러
   const handleChnage = (
