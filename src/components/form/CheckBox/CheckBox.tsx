@@ -13,8 +13,10 @@ import { getColor } from "../../../styles";
 export type TCheckBoxProps = {
   /** form의 name속성 */
   name?: string;
-  /** 체크 여부 */
-  checked?: boolean;
+  /** 기본값 */
+  defaultValue?: boolean;
+  /** 값 */
+  value?: boolean;
   /** 비활성화 여부 */
   disabled?: boolean;
   /** 원형 체크박스 여부 */
@@ -37,7 +39,8 @@ export type TCheckBoxProps = {
 /** 체크박스 */
 function CheckBox({
   name,
-  checked = false,
+  defaultValue = false,
+  value = false,
   disabled = false,
   circleBox = false,
   label,
@@ -48,12 +51,12 @@ function CheckBox({
   onChange,
   ...args
 }: TCheckBoxProps) {
-  const [_checked, setChecked] = useState(checked);
+  const [_value, setValue] = useState(defaultValue);
 
   // # 값 변경 감시
   useEffect(() => {
-    setChecked(checked);
-  }, [checked]);
+    setValue(value);
+  }, [value]);
 
   // #  iconColor
   const _iconColor = useCallback(
@@ -68,14 +71,18 @@ function CheckBox({
     [rippleColor]
   );
 
-  // # 클릭 이벤트 시
-  const handleChange = useCallback((e) => {
-    // console.log("> ", e.currentTarget.checked);
-    if (onChange) {
-      onChange(e);
-    }
-    setChecked(e.currentTarget.checked);
-  }, []);
+  // # 체인지 이벤트 시
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      // console.log("> ", e.currentTarget.checked);
+      if (onChange) {
+        onChange(e);
+      }
+
+      setValue(e.currentTarget.checked);
+    },
+    [value, _value, defaultValue]
+  );
 
   return (
     <ThemeContext.Consumer>
@@ -93,7 +100,7 @@ function CheckBox({
                   {...attr}
                   type="checkbox"
                   name={name}
-                  checked={_checked}
+                  checked={_value}
                   disabled={disabled}
                   onChange={handleChange}
                 />
@@ -102,7 +109,7 @@ function CheckBox({
                 <Icon
                   name="checkThin"
                   size="s"
-                  color={_checked ? _iconColor(theme.primaryColor) : "white"}
+                  color={_value ? _iconColor(theme.primaryColor) : "white"}
                   css={iconStyle}
                 />
 

@@ -23,7 +23,7 @@ export const Default = () => {
         "flex-start"
       )}
       align={select("align", ["flex-start", "center", "flex-end"], "center")}
-      space={number("Space", 7)}
+      space={number("Space", 8)}
     >
       <div style={{ width: 50, height: 50, border: "1px solid" }} />
       <div style={{ width: 50, height: 50, border: "1px solid" }} />

@@ -181,14 +181,8 @@ function FormCreator({
   control,
   onSubmit,
 }: TFormCreator) {
-  const $form = useRef<HTMLFormElement>(null);
+  // const $form = useRef<HTMLFormElement>(null);
   const [_model, setModel] = useState<TModel>(model);
-  const { values: formValues } = control || {};
-
-  // # control의 formValues 변경 감시
-  useEffect(() => {
-    console.log("> watch form values: ", formValues);
-  }, [formValues]);
 
   // # 변경 이벤트 핸들러
   const handleChnage = (
@@ -202,11 +196,8 @@ function FormCreator({
     const component = newModel[parentIndex].components[childIndex];
     // const props = component.props;
 
-    // # 값 변경
-    if (
-      component.component === "CheckBox" ||
-      component.component === "Switch"
-    ) {
+    // 값 변경
+    if (component.component === "Switch") {
       component.props.checked = el.checked;
     } else if (component.component === "Select") {
       component.props.value = e.value;
@@ -223,7 +214,17 @@ function FormCreator({
       component.props.value = el.value;
     }
 
-    // # 이벤트 핸들러 실행.
+    // control이 있을 경우 값 반영
+    // if (control && component.props.name) {
+    //   if (component.props && component.props.checked) {
+    //     control.setValue(component.props.name, component.props.checked);
+    //   } else if (component.props.value) {
+    //     control.setValue(component.props.name, component.props.value);
+    //   }
+    //   console.log("> changed: ");
+    // }
+
+    // 이벤트 핸들러 실행.
     if (
       onChanges &&
       onChanges[component.props.name!] &&
@@ -382,7 +383,7 @@ const getValues = (model: TModel): TValues => {
         b.component !== "Button" &&
         b.component !== "IconButton"
       ) {
-        if (b.component === "CheckBox" || b.component === "Switch") {
+        if (b.component === "Switch") {
           values[b.props.name] = !!b.props.checked;
         } else if (b.component === "Radio" && b.props.checked) {
           values[b.props.name] = b.props.value;
@@ -404,7 +405,7 @@ const clearModel = (model: TModel): TModel => {
   for (const a of newModel) {
     for (const b of a.components) {
       if (b.component !== "Button" && b.component !== "IconButton") {
-        if (b.component === "CheckBox" || b.component === "Switch") {
+        if (b.component === "Switch") {
           b.props.checked = false;
         } else if (b.component === "Radio") {
           if (firstRadioName !== b.props.name && b.props.name) {

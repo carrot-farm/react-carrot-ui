@@ -33,7 +33,7 @@ export const Default = () => {
       <br />
       <button onClick={testSetValueClick}>test setValue()</button>
       <br />
-      <FormCreator model={object("Model", model)} />
+      <FormCreator model={object("Model", model)} control={control} />
     </div>
   );
 };

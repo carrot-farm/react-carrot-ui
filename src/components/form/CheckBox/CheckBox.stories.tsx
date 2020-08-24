@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { jsx, css } from "@emotion/core";
-import { withKnobs, boolean, select, text } from "@storybook/addon-knobs";
+import { jsx } from "@emotion/core";
+import { withKnobs, boolean, text } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 
 import CheckBox from "./CheckBox";
@@ -15,13 +15,13 @@ export default {
 // ===== 컴포넌트
 // # default
 export const Default = () => {
-  const props = {
-    checked: boolean("checked", false),
-    disabled: boolean("disabled", false),
-    circleBox: boolean("circleBox", false),
-    label: text("label", "label"),
-    onChange: action("onChange"),
-  };
-
-  return <CheckBox {...props} />;
+  return (
+    <CheckBox
+      value={boolean("Value", false)}
+      disabled={boolean("disabled", false)}
+      circleBox={boolean("circleBox", false)}
+      label={text("label", "label")}
+      onChange={action("onChange")}
+    />
+  );
 };
