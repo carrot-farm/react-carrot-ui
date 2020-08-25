@@ -14,8 +14,10 @@ export interface TSwitchProps {
   className?: string;
   /** style */
   style?: React.CSSProperties;
-  /** checked 값 */
-  checked?: boolean;
+  /** 기본값 */
+  defaultValue?: boolean;
+  /** 값 */
+  value?: boolean;
   /** 비활성화 유무 */
   disabled?: boolean;
   /** 메인 원색 */
@@ -31,19 +33,20 @@ function Switch({
   name,
   className,
   style,
-  checked = false,
+  defaultValue,
+  value,
   disabled,
   mainColor,
   attr,
   onChange,
   ...args
 }: TSwitchProps) {
-  const [_checked, setChecked] = useState(checked);
+  const [_value, setValue] = useState(value || defaultValue);
 
   // # 이벤트 변경 감시
   useEffect(() => {
-    setChecked(checked);
-  }, [checked]);
+    setValue(value);
+  }, [value]);
 
   // # className
   const classNameMemo = useMemo(() => className || "", [className]);
@@ -53,7 +56,7 @@ function Switch({
     if (onChange && onChange(e) === false) {
       return;
     }
-    setChecked(e.currentTarget.checked);
+    setValue(e.currentTarget.checked);
   }, []);
 
   return (
@@ -74,7 +77,7 @@ function Switch({
                 {...attr}
                 type="checkbox"
                 name={name}
-                checked={_checked}
+                checked={!!_value}
                 disabled={disabled}
                 onChange={handleChange}
               />
@@ -114,21 +117,21 @@ const rootStyle = (mainColor: TMainColorKeys) => css`
     position: relative;
     cursor: pointer;
     .carrot-ui_switch-track {
-      width: 50px;
-      height: 30px;
-      border-radius: 15.5px;
+      width: 42px;
+      height: 24px;
+      border-radius: 12px;
       background-color: ${styles.getColor("grey-lighten-3")};
       transition: background-color 0.2s;
     }
     .carrot-ui_switch-thumb {
-      width: 26px;
-      height: 26px;
+      width: 20px;
+      height: 20px;
       background-color: ${styles.getColor("white")};
       border-radius: 50%;
       transition: background-color, transform 0.2s linear;
       z-index: 1;
       position: absolute;
-      left: 3px;
+      left: 5px;
       top: 2px;
       boxshadow: 0px 2px 1px rgba(0, 0, 0, 0.2);
     }
@@ -149,7 +152,7 @@ const rootStyle = (mainColor: TMainColorKeys) => css`
       transition: background-color 0.2s;
     }
     .carrot-ui_switch-thumb {
-      transform: translateX(18px);
+      transform: translateX(15px);
     }
   }
 `;

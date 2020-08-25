@@ -81,9 +81,9 @@ function useFormController({
 
     mapModel((c, keyMap) => {
       if (c.props?.name) {
-        if (c.component === "Switch") {
+        if (c.component === "Switch" || c.component === "CheckBox") {
           // console.log("> ", c.props.checked);
-          _values[c.props.name] = c.props.checked;
+          _values[c.props.name] = c.props.value;
         } else if (c.component === "Input") {
           // console.log("> keyMap: ", c.props.name, keyMap);
           _values[c.props.name] = c.props.value || c.props.defaultValue;

@@ -95,7 +95,7 @@ const model: TModel = [
     components: [
       {
         component: "CheckBox",
-        props: { name: "checkbox", checked: false, label: "체크박스" },
+        props: { name: "checkbox", value: true, label: "체크박스" },
       },
     ],
   },
@@ -104,7 +104,7 @@ const model: TModel = [
     components: [
       {
         component: "Switch",
-        props: { name: "switch", checked: false },
+        props: { name: "switch", value: true },
       },
     ],
   },

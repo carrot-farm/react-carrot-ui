@@ -23,7 +23,7 @@ export default {
 // ===== Default
 export const Default = () => {
   const props = {
-    checked: boolean("checked", false),
+    value: boolean("Value", false),
     disabled: boolean("disabled", false),
     mainColor: select("mainColor", mainColorsArr, "blue"),
     onChange: action("onChange"),

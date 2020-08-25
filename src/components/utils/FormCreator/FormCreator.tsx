@@ -194,11 +194,14 @@ function FormCreator({
     const el = e.currentTarget;
     const newModel = [..._model];
     const component = newModel[parentIndex].components[childIndex];
-    // const props = component.props;
+    // console.log("> ", e);
 
     // 값 변경
-    if (component.component === "Switch") {
-      component.props.checked = el.checked;
+    if (
+      component.component === "Switch" ||
+      component.component === "CheckBox"
+    ) {
+      component.props.value = el.checked;
     } else if (component.component === "Select") {
       component.props.value = e.value;
     } else if (component.component === "Radio") {
@@ -384,7 +387,7 @@ const getValues = (model: TModel): TValues => {
         b.component !== "IconButton"
       ) {
         if (b.component === "Switch") {
-          values[b.props.name] = !!b.props.checked;
+          values[b.props.name] = b.props.value;
         } else if (b.component === "Radio" && b.props.checked) {
           values[b.props.name] = b.props.value;
         } else {
@@ -406,7 +409,7 @@ const clearModel = (model: TModel): TModel => {
     for (const b of a.components) {
       if (b.component !== "Button" && b.component !== "IconButton") {
         if (b.component === "Switch") {
-          b.props.checked = false;
+          b.props.value = false;
         } else if (b.component === "Radio") {
           if (firstRadioName !== b.props.name && b.props.name) {
             //   // firstRadioValue = b.props.value;
@@ -468,7 +471,7 @@ const formComponentStyle = css`
     margin: 0;
     margin-top: 0;
     margin-bottom: 0;
-    padding: 10px 0 7px;
+    padding: 10px 0 8px;
   }
   .carrot-ui-input-root {
   }
