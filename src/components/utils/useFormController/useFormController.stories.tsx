@@ -50,6 +50,26 @@ const formModel: TModel = [
           defaultValue: "input_defaultValue",
         },
       },
+      {
+        component: "Switch",
+        props: {
+          name: "test_switch",
+          value: true,
+        },
+      },
+      {
+        component: "CheckBox",
+        props: {
+          name: "test_checkbox",
+          value: true,
+        },
+      },
+      {
+        component: "Radio",
+        props: {
+          name: "test_radio",
+        },
+      },
     ],
   },
 ];

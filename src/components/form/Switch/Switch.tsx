@@ -41,7 +41,8 @@ function Switch({
   onChange,
   ...args
 }: TSwitchProps) {
-  const [_value, setValue] = useState(value || defaultValue);
+  const [_value, setValue] = useState(defaultValue);
+  console.log("> switch: ", _value, value, defaultValue);
 
   // # 이벤트 변경 감시
   useEffect(() => {
