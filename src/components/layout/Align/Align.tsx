@@ -27,7 +27,7 @@ function Align({
   direction = "horizontal",
   justify = "flex-start",
   align = "center",
-  space = 8,
+  space = 16,
   children,
 }: TAlign) {
   const rootStyleMemo = useMemo(

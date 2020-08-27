@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import * as React from "react";
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { jsx, css } from "@emotion/core";
 
 import { media, getColor } from "../../../styles";
@@ -9,6 +9,7 @@ import { IControl } from "../useFormController/useFormController";
 import { TInputProps } from "../../form/Input/Input";
 import { TTextFieldProps } from "../../form/TextField/TextField";
 import { TRadioProps } from "../../form/Radio/Radio";
+import { TRadioGroupProps } from "../../form/RadioGroup/RadioGroup";
 import { OptionsType, TSelectProps } from "../../form/Select/Select";
 import { TSwitchProps } from "../../form/Switch/Switch";
 import { TCheckBoxProps } from "../../form/CheckBox/CheckBox";
@@ -121,6 +122,10 @@ type TRadioComponent = TBaseComponent & {
   component: "Radio";
   props: TRadioProps;
 };
+type TRadioGroupComponent = TBaseComponent & {
+  component: "RadioGroup";
+  props: TRadioGroupProps;
+};
 type TSwitchComponent = TBaseComponent & {
   component: "Switch";
   props: TSwitchProps;
@@ -144,6 +149,7 @@ export type TComponent =
   | TSelectComponent
   | TTextFieldComponent
   | TRadioComponent
+  | TRadioGroupComponent
   | TSwitchComponent
   | TCheckBoxComponent
   | TButtonComponent
@@ -191,12 +197,11 @@ function FormCreator({
     parentIndex: number,
     childIndex: number
   ) => {
-    const el = e.currentTarget;
+    const el = e.currentTarget; // 이벤트 엘리먼트
     const newModel = [..._model];
     const component = newModel[parentIndex].components[childIndex];
-    // console.log("> ", e);
 
-    // 값 변경
+    // 값 변경 컴포넌트에 반영
     if (
       component.component === "Switch" ||
       component.component === "CheckBox"
@@ -210,22 +215,15 @@ function FormCreator({
           b.props.checked = b.props.value === el.value;
         }
       });
+    } else if (component.component === "RadioGroup") {
+      console.log("> radio group change: ", component.props.value, el.value);
+      component.props.value = el.value;
     } else if (
       component.component === "Input" ||
       component.component === "TextField"
     ) {
       component.props.value = el.value;
     }
-
-    // control이 있을 경우 값 반영
-    // if (control && component.props.name) {
-    //   if (component.props && component.props.checked) {
-    //     control.setValue(component.props.name, component.props.checked);
-    //   } else if (component.props.value) {
-    //     control.setValue(component.props.name, component.props.value);
-    //   }
-    //   console.log("> changed: ");
-    // }
 
     // 이벤트 핸들러 실행.
     if (
@@ -362,6 +360,8 @@ const FormComponents = ({
     ],
     [formComponentStyle, componentInfo]
   );
+
+  // console.log("> ", componentInfo.props);
 
   return (
     <div className="form-component" css={rootStyeMemo}>

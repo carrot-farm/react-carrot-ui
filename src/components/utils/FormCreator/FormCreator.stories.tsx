@@ -129,12 +129,29 @@ const model: TModel = [
     ],
   },
   {
+    label: "라디오 그룹",
+    components: [
+      {
+        component: "RadioGroup",
+        props: {
+          name: "radio_group",
+          value: "pig",
+          items: [
+            { label: "carrot", value: "carrot" },
+            { label: "pig", value: "pig" },
+            { label: "cow", value: "cow" },
+          ],
+        },
+      },
+    ],
+  },
+  {
     label: "셀렉트",
     components: [
       {
         component: "Select",
         props: {
-          name: "radio",
+          name: "select",
           value: "water",
           options: [
             { text: "당근", value: "당근" },
