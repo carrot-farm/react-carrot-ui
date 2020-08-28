@@ -12,6 +12,7 @@ export default {
   component: useFormController,
   decorators: [withKnobs],
 };
+let i = 0;
 
 // ===== Default
 export const Default = () => {
@@ -22,14 +23,14 @@ export const Default = () => {
 
   // setValue test
   const testSetValueClick = () => {
-    control.setValue("test_input", "ddd");
+    control.setValue("test_input", "달걀");
   };
 
   return (
     <div>
       values: {JSON.stringify(values)}
       <br />
-      model: {JSON.stringify(model)}
+      {/* model: {JSON.stringify(model)} */}
       <br />
       <button onClick={testSetValueClick}>test setValue()</button>
       <br />
@@ -57,19 +58,24 @@ const formModel: TModel = [
           value: true,
         },
       },
-      {
-        component: "CheckBox",
-        props: {
-          name: "test_checkbox",
-          value: true,
-        },
-      },
-      {
-        component: "Radio",
-        props: {
-          name: "test_radio",
-        },
-      },
+      // {
+      //   component: "CheckBox",
+      //   props: {
+      //     name: "test_checkbox",
+      //     value: true,
+      //   },
+      // },
+      // {
+      //   component: "RadioGroup",
+      //   props: {
+      //     name: "test_radio",
+      //     items: [
+      //       { label: "carrot", value: "carrot" },
+      //       { label: "banana", value: "banana" },
+      //       { label: "apple", value: "apple" },
+      //     ],
+      //   },
+      // },
     ],
   },
 ];

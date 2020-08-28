@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import * as React from "react";
+import { useEffect } from "react";
 import { useState, useMemo, useCallback } from "react";
 import { jsx, css } from "@emotion/core";
 
@@ -190,6 +191,11 @@ function FormCreator({
   // const $form = useRef<HTMLFormElement>(null);
   const [_model, setModel] = useState<TModel>(model);
 
+  // # mount
+  useEffect(() => {
+    // console.log("> FormCreator mount: \n", control);
+  }, []);
+
   // # 변경 이벤트 핸들러
   const handleChnage = (
     e: TChangeEvent,
@@ -216,7 +222,7 @@ function FormCreator({
         }
       });
     } else if (component.component === "RadioGroup") {
-      console.log("> radio group change: ", component.props.value, el.value);
+      // console.log("> radio group change: ", component.props.value, el.value);
       component.props.value = el.value;
     } else if (
       component.component === "Input" ||
@@ -331,7 +337,7 @@ function FormCreator({
   );
 }
 
-// # form 요소 컴포넌트
+// ===== form 요소 컴포넌트
 const FormComponents = ({
   componentInfo,
   parentIndex,
@@ -353,6 +359,7 @@ const FormComponents = ({
     [componentInfo, parentIndex, childIndex]
   );
 
+  // # 스타일
   const rootStyeMemo = useMemo(
     () => [
       formComponentStyle,

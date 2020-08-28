@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 
 import { TModel, TComponent } from "../FormCreator/FormCreator";
 
@@ -22,7 +22,11 @@ export interface IUseFormControllerReturn {
   control: IControl;
 }
 
+type TWatcher = (value: IValues) => void;
+
 export interface IControl {
+  /** _formValue 변경시 함수가 등록되어 있으면 실행 */
+  watcher: React.MutableRefObject<TWatcher | undefined>;
   /** 모델 셋 함수 */
   setModel: (model: TModel) => void;
   /** register 함수 */
@@ -53,14 +57,56 @@ function useFormController({
   const [_model, setModel] = useState<TModel>(model); // 외부에 노출되는 폼 모델
   const [_formValues, setFormValues] = useState<IValues>({}); // 폼의 전체 값을 저장.
   const [modelKeyMap, setModelKeyMap] = useState<IModelKeyMap>({}); // 모델의 키 위치를 저장한다.
+  const watcher = useRef<TWatcher>();
+  const prevValues = useRef<IValues>({});
 
   // # mount
   useEffect(() => {
+    // console.log("> useFormController mount ");
     // autoRegister 등록
     if (autoRegist === true) {
       autoRegister(_model);
     }
   }, []);
+
+  // # watch change `_formValue`
+  useEffect(() => {
+    const diff: IValues = {};
+    let isDiff: boolean = false;
+    console.log("> call watch change: \n", isDiff, _formValues, prevValues);
+
+    // watcher가 등록되어 있을 경우 실행.
+    if (typeof watcher.current === "function") {
+      watcher.current(_formValues);
+    }
+
+    // Object.keys(_formValues).map((k) => {
+    //   if (_formValues[k] !== prevValues.current[k]) {
+    //     isDiff = true;
+    //     diff[k] = _formValues[k];
+    //     const [i, j] = modelKeyMap[k];
+    //     console.log("> diff: ", i, j, _model[i].components[j]);
+    //     const changedComponent = _model[i].components[j];
+    //     if (
+    //       changedComponent.component !== "Button" &&
+    //       changedComponent.component !== "IconButton"
+    //     ) {
+    //       _model[i].components[j].props.value = _formValues[k];
+    //     }
+    //   }
+    //   return k;
+    // });
+
+    // console.log("> isDiff: \n", isDiff);
+    // if (isDiff === true) {
+    //   setModel(_model);
+    // }
+
+    // console.log("> diff: \n", modelKeyMap);
+
+    // 이전 상태값 업데이트
+    prevValues.current = { ..._formValues };
+  }, [_formValues]);
 
   // # name과 value로 값을 등록하는 함수
   const register = useCallback(
@@ -75,34 +121,39 @@ function useFormController({
   );
 
   // # 전체 모델을 순회하면서 자동으로 register 함수를 실행한다.
-  const autoRegister = useCallback((m: TModel) => {
-    const _values: IValues = {};
-    const _modelKeyMap: IModelKeyMap = {};
+  const autoRegister = useCallback(
+    (m: TModel) => {
+      const _values: IValues = {};
+      const _modelKeyMap: IModelKeyMap = {};
 
-    mapModel((c, keyMap) => {
-      if (c.props?.name) {
-        if (c.component === "Switch" || c.component === "CheckBox") {
-          // console.log("> ", c.props.checked);
-          _values[c.props.name] = c.props.value;
-        } else if (c.component === "Input") {
-          // console.log("> keyMap: ", c.props.name, keyMap);
-          _values[c.props.name] = c.props.value || c.props.defaultValue;
+      mapModel((c, keyMap) => {
+        if (c.props?.name) {
           _modelKeyMap[c.props.name] = keyMap;
+          if (c.component === "Switch" || c.component === "CheckBox") {
+            // console.log("> ", c.props.checked);
+            _values[c.props.name] = c.props.value;
+          } else if (c.component === "Input") {
+            // console.log("> keyMap: ", c.props.name, keyMap);
+            _values[c.props.name] = c.props.value || c.props.defaultValue;
+          }
         }
-      }
-      return c;
-    }, m);
+        return c;
+      }, m);
 
-    setFormValues({
-      ..._formValues,
-      ..._values,
-    });
+      // console.log("> autoRegister: \n", _values);
+      // 값 저장
+      setFormValues({
+        ..._formValues,
+        ..._values,
+      });
 
-    // 키맵 저장
-    setModelKeyMap({
-      ..._modelKeyMap,
-    });
-  }, []);
+      // 키맵 저장
+      setModelKeyMap({
+        ..._modelKeyMap,
+      });
+    },
+    [_formValues]
+  );
 
   // # 등록된 키/값을 제거한다.
   const unregister = useCallback((key: string) => {
@@ -114,27 +165,41 @@ function useFormController({
 
   // # key / value로 값을 업데이트 한다.
   const setValue = useCallback(
-    (key: string, value: any) => {
-      if (_formValues[key]) {
-        _formValues[key] = value;
-        setFormValues({
-          ..._formValues,
-        });
-
-        // 모델 업데이트
-        if (modelKeyMap[key]) {
-          const changedComponent =
-            _model[modelKeyMap[key][0]].components[modelKeyMap[key][1]];
-
-          if (changedComponent.component === "Input") {
-            changedComponent.props.value = value;
-          }
-          // console.log("> ", modelKeyMap[key], _model);
-          setModel([..._model]);
-        }
+    (name: string, value: any) => {
+      console.log("> setValue: ", _formValues, name, value);
+      if (!_formValues[name]) {
+        return;
       }
+
+      // _formValues[key] = value;
+      setFormValues({
+        ..._formValues,
+        [name]: value,
+      });
+
+      // 모델 업데이트
+      updateModel(name, value);
     },
-    [_formValues, modelKeyMap]
+    [_formValues, modelKeyMap, _model]
+  );
+
+  // # 모델을 업데이트 한다.
+  const updateModel = useCallback(
+    (name: string, value: any) => {
+      const [i, j] = modelKeyMap[name]; // 키맵
+      const changedComponent = _model[i].components[j]; // 변경될 컴포넌트 모델
+
+      // console.log("> ", changedComponent);
+      if (
+        changedComponent.component !== "Button" &&
+        changedComponent.component !== "IconButton"
+      ) {
+        changedComponent.props.value = value;
+      }
+
+      setModel([..._model]);
+    },
+    [_model, modelKeyMap]
   );
 
   return {
@@ -146,6 +211,7 @@ function useFormController({
       autoRegister,
       unregister,
       setValue,
+      watcher: watcher,
     },
   };
 }
