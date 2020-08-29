@@ -35,8 +35,10 @@ export interface IControl {
   autoRegister: (mode: TModel) => void;
   /** 등록을 해제한다. */
   unregister: (key: string) => void;
-  /** key / value 형태로 값을 등록한다. */
+  /** key / value 형태로 값을 변경한다. */
   setValue: (key: string, value: any) => void;
+  /** 오브젝트 형태로 값을 변경한다. */
+  setValues: (values: IValues) => void;
 }
 
 /** 값 객체 */
@@ -73,7 +75,7 @@ function useFormController({
   useEffect(() => {
     const diff: IValues = {};
     let isDiff: boolean = false;
-    console.log("> call watch change: \n", isDiff, _formValues, prevValues);
+    // console.log("> call watch change: \n", isDiff, _formValues, prevValues);
 
     // watcher가 등록되어 있을 경우 실행.
     if (typeof watcher.current === "function") {
@@ -163,15 +165,15 @@ function useFormController({
     setFormValues(obj);
   }, []);
 
-  // # key / value로 값을 업데이트 한다.
+  // # key / value로 값을 업데이트 한다.(동시에 여러개를 적용시 마지막 것만 적용된다.)
   const setValue = useCallback(
     (name: string, value: any) => {
-      console.log("> setValue: ", _formValues, name, value);
-      if (!_formValues[name]) {
+      if (_formValues[name] === undefined) {
         return;
       }
+      // console.log("> setValue: ", _formValues);
+      // console.log("> setValue(name / value): ", name, value);
 
-      // _formValues[key] = value;
       setFormValues({
         ..._formValues,
         [name]: value,
@@ -180,16 +182,43 @@ function useFormController({
       // 모델 업데이트
       updateModel(name, value);
     },
-    [_formValues, modelKeyMap, _model]
+    [_formValues]
   );
 
-  // # 모델을 업데이트 한다.
+  // # 여러개의 key / value를 업데이트 한다.
+  const setValues = useCallback(
+    (_values: IValues) => {
+      const newModel = [..._model];
+
+      setFormValues({
+        ..._formValues,
+        ..._values,
+      });
+
+      Object.keys(_values).map((name) => {
+        const [i, j] = modelKeyMap[name];
+        const changedComponent = newModel[i].components[j];
+
+        if (
+          changedComponent.component !== "Button" &&
+          changedComponent.component !== "IconButton"
+        ) {
+          changedComponent.props.value = _values[name];
+        }
+      });
+
+      setModel(newModel);
+    },
+    [_formValues, _model, modelKeyMap]
+  );
+
+  // # setValue -> model 업데이트
   const updateModel = useCallback(
     (name: string, value: any) => {
       const [i, j] = modelKeyMap[name]; // 키맵
       const changedComponent = _model[i].components[j]; // 변경될 컴포넌트 모델
 
-      // console.log("> ", changedComponent);
+      // console.log("> updateModel: ", name, value, changedComponent);
       if (
         changedComponent.component !== "Button" &&
         changedComponent.component !== "IconButton"
@@ -211,6 +240,7 @@ function useFormController({
       autoRegister,
       unregister,
       setValue,
+      setValues,
       watcher: watcher,
     },
   };

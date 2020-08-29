@@ -23,7 +23,17 @@ export const Default = () => {
 
   // setValue test
   const testSetValueClick = () => {
-    control.setValue("test_input", "달걀");
+    // console.log("> click: ", values);
+    control.setValue("test_switch", !values.test_switch);
+  };
+
+  const handleSetValuesClick = () => {
+    control.setValues({
+      test_input: values.test_input === "carrot" ? "당근" : "carrot",
+      test_switch: !values.test_switch,
+      test_checkbox: !values.test_checkbox,
+      test_radio: values.test_radio === "carrot" ? "banana" : "carrot",
+    });
   };
 
   return (
@@ -34,7 +44,9 @@ export const Default = () => {
       <br />
       <button onClick={testSetValueClick}>test setValue()</button>
       <br />
-      <FormCreator model={object("Model", model)} control={control} />
+      <button onClick={handleSetValuesClick}>test setValues()</button>
+      <br />
+      <FormCreator model={model} control={control} />
     </div>
   );
 };
@@ -48,7 +60,7 @@ const formModel: TModel = [
         component: "Input",
         props: {
           name: "test_input",
-          defaultValue: "input_defaultValue",
+          defaultValue: "carrot",
         },
       },
       {
@@ -58,24 +70,25 @@ const formModel: TModel = [
           value: true,
         },
       },
-      // {
-      //   component: "CheckBox",
-      //   props: {
-      //     name: "test_checkbox",
-      //     value: true,
-      //   },
-      // },
-      // {
-      //   component: "RadioGroup",
-      //   props: {
-      //     name: "test_radio",
-      //     items: [
-      //       { label: "carrot", value: "carrot" },
-      //       { label: "banana", value: "banana" },
-      //       { label: "apple", value: "apple" },
-      //     ],
-      //   },
-      // },
+      {
+        component: "CheckBox",
+        props: {
+          name: "test_checkbox",
+          value: true,
+        },
+      },
+      {
+        component: "RadioGroup",
+        props: {
+          name: "test_radio",
+          value: "apple",
+          items: [
+            { label: "carrot", value: "carrot" },
+            { label: "banana", value: "banana" },
+            { label: "apple", value: "apple" },
+          ],
+        },
+      },
     ],
   },
 ];
