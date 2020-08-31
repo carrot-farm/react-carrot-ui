@@ -73,8 +73,8 @@ function useFormController({
 
   // # watch change `_formValue`
   useEffect(() => {
-    const diff: IValues = {};
-    let isDiff: boolean = false;
+    // const diff: IValues = {};
+    // let isDiff: boolean = false;
     // console.log("> call watch change: \n", isDiff, _formValues, prevValues);
 
     // watcher가 등록되어 있을 경우 실행.
@@ -168,6 +168,8 @@ function useFormController({
   // # key / value로 값을 업데이트 한다.(동시에 여러개를 적용시 마지막 것만 적용된다.)
   const setValue = useCallback(
     (name: string, value: any) => {
+      console.log("> _formValues: ", _formValues);
+      console.log("> setValue(name / value): ", name, value);
       if (_formValues[name] === undefined) {
         return;
       }
@@ -231,6 +233,16 @@ function useFormController({
     [_model, modelKeyMap]
   );
 
+  const bindChange = useCallback(
+    (f) => ({ name, value }) => {
+      console.log("> bindChange: ", _formValues, name, value);
+      f && f({ name, value });
+
+      setValue(name, value);
+    },
+    [_formValues]
+  );
+
   return {
     values: _formValues,
     model: _model,
@@ -241,6 +253,7 @@ function useFormController({
       unregister,
       setValue,
       setValues,
+      bindChange,
       watcher: watcher,
     },
   };

@@ -33,6 +33,7 @@ export const Default = () => {
       test_switch: !values.test_switch,
       test_checkbox: !values.test_checkbox,
       test_radio: values.test_radio === "carrot" ? "banana" : "carrot",
+      test_select: values.test_select === "carrot" ? "banana" : "carrot",
     });
   };
 
@@ -46,7 +47,13 @@ export const Default = () => {
       <br />
       <button onClick={handleSetValuesClick}>test setValues()</button>
       <br />
-      <FormCreator model={model} control={control} />
+      <FormCreator
+        model={model}
+        values={values}
+        onChange={({ name, value }) =>
+          console.log("> change: \n", name, value, values)
+        }
+      />
     </div>
   );
 };
@@ -86,6 +93,18 @@ const formModel: TModel = [
             { label: "carrot", value: "carrot" },
             { label: "banana", value: "banana" },
             { label: "apple", value: "apple" },
+          ],
+        },
+      },
+      {
+        component: "Select",
+        props: {
+          name: "test_select",
+          value: "carrot",
+          options: [
+            { text: "carrot", value: "carrot" },
+            { text: "banana", value: "banana" },
+            { text: "apple", value: "apple" },
           ],
         },
       },

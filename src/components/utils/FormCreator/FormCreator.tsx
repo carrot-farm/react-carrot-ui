@@ -7,15 +7,15 @@ import { jsx, css } from "@emotion/core";
 import { media, getColor } from "../../../styles";
 import * as formComponents from "../../../formComponents";
 import { IControl } from "../useFormController/useFormController";
-import { TInputProps } from "../../form/Input/Input";
-import { TTextFieldProps } from "../../form/TextField/TextField";
-import { TRadioProps } from "../../form/Radio/Radio";
-import { TRadioGroupProps } from "../../form/RadioGroup/RadioGroup";
-import { OptionsType, TSelectProps } from "../../form/Select/Select";
-import { TSwitchProps } from "../../form/Switch/Switch";
-import { TCheckBoxProps } from "../../form/CheckBox/CheckBox";
-import { TButtonProps } from "../../form/Button/Button";
-import { TIconButtonProps } from "../../form/IconButton/IconButton";
+import Input, { TInputProps } from "../../form/Input/Input";
+import TextField, { TTextFieldProps } from "../../form/TextField/TextField";
+import Radio, { TRadioProps } from "../../form/Radio/Radio";
+import RadioGroup, { TRadioGroupProps } from "../../form/RadioGroup/RadioGroup";
+import Select, { OptionsType, TSelectProps } from "../../form/Select/Select";
+import Switch, { TSwitchProps } from "../../form/Switch/Switch";
+import CheckBox, { TCheckBoxProps } from "../../form/CheckBox/CheckBox";
+import Button, { TButtonProps } from "../../form/Button/Button";
+import IconButton, { TIconButtonProps } from "../../form/IconButton/IconButton";
 
 // ===== 타입정의
 // # 메인 컴포넌트 타입
@@ -38,6 +38,19 @@ export type TFormCreator = {
   control?: IControl;
   /** 폼의 서브밋 이벤트 */
   onSubmit?: TOnSubmit;
+  /** 폼의 체인지 이벤트. 전체 이벤트를 캐치 */
+  onChange?: (
+    { name, value }: { name: string; value: any },
+    {
+      e,
+      component,
+      model,
+    }: {
+      e: TChangeEvent;
+      component: TComponent;
+      model: TModel;
+    }
+  ) => void;
 };
 
 // # 라벨 정렬 방향
@@ -186,7 +199,9 @@ function FormCreator({
   onClicks,
   formRef,
   control,
+  values,
   onSubmit,
+  onChange,
 }: TFormCreator) {
   // const $form = useRef<HTMLFormElement>(null);
   const [_model, setModel] = useState<TModel>(model);
@@ -194,7 +209,14 @@ function FormCreator({
   // # mount
   useEffect(() => {
     // console.log("> FormCreator mount: \n", control);
+    // if (control?.watcher.current) {
+    //   control.watcher.current = (values) => console.log("> values: ", values);
+    // }
   }, []);
+
+  useEffect(() => {
+    // console.log("> watch value: ", values);
+  }, [values]);
 
   // # 변경 이벤트 핸들러
   const handleChnage = (
@@ -239,6 +261,41 @@ function FormCreator({
         false
     ) {
       return false;
+    }
+
+    // # change 이벤트
+    if (
+      onChange &&
+      component.props.name &&
+      component.component !== "Button" &&
+      component.component !== "IconButton"
+    ) {
+      console.log("> values: ", values);
+      onChange(
+        { name: component.props.name, value: component.props.value },
+        {
+          e,
+          component: a,
+          model: _model,
+        }
+      );
+    }
+
+    // 컨트롤러가 있을 때 변경 값 반영
+    if (
+      control?.setValue &&
+      component.props.name &&
+      component.component !== "Button" &&
+      component.component !== "IconButton"
+    ) {
+      console.log(
+        "> FormCreator.handleChnage \n",
+        component,
+        "\n",
+        component.props.name,
+        component.props.value
+      );
+      control.setValue(component.props.name, component.props.value);
     }
 
     setModel(newModel);
@@ -320,15 +377,19 @@ function FormCreator({
             className="form-component-wrapper"
             css={styleMemo(a.componentsStyle)}
           >
+            {JSON.stringify(values)}
             {a.components.map((c: TComponent, j: number) => (
-              <FormComponents
-                componentInfo={c}
-                parentIndex={i}
-                childIndex={j}
-                onChange={handleChnage}
-                onClick={handleClick}
-                key={`form-component-${j}`}
-              />
+              <React.Fragment>
+                {/* <Input onChange={() => console.log("> input; ", values)} /> */}
+                <FormComponents
+                  componentInfo={c}
+                  parentIndex={i}
+                  childIndex={j}
+                  onChange={handleChnage}
+                  onClick={handleClick}
+                  key={`form-component-${j}`}
+                />
+              </React.Fragment>
             ))}
           </div>
         </div>
@@ -345,7 +406,29 @@ const FormComponents = ({
   onChange,
   onClick,
 }: TFormComponentsProps) => {
-  const Component = formComponents[componentInfo.component] as any;
+  const { component: componentName } = componentInfo;
+  // const Component = formComponents[componentInfo.component] as any;
+  let Component: any;
+
+  if (componentName === "Button") {
+    Component = Button;
+  } else if (componentName === "IconButton") {
+    Component = IconButton;
+  } else if (componentName === "CheckBox") {
+    Component = CheckBox;
+  } else if (componentName === "Input") {
+    Component = Input;
+  } else if (componentName === "Select") {
+    Component = Select;
+  } else if (componentName === "Radio") {
+    Component = Radio;
+  } else if (componentName === "RadioGroup") {
+    Component = RadioGroup;
+  } else if (componentName === "Switch") {
+    Component = Switch;
+  } else if (componentName === "TextField") {
+    Component = TextField;
+  }
 
   // # 클릭 이벤트 핸들러
   const handleClick = useCallback(
@@ -372,8 +455,7 @@ const FormComponents = ({
 
   return (
     <div className="form-component" css={rootStyeMemo}>
-      {componentInfo.component === "Button" ||
-      componentInfo.component === "IconButton" ? (
+      {componentName === "Button" || componentName === "IconButton" ? (
         <Component {...componentInfo.props} onClick={handleClick} />
       ) : (
         <Component {...componentInfo.props} onChange={handleChange} />

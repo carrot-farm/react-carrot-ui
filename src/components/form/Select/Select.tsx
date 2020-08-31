@@ -14,7 +14,7 @@ export type TSelectProps = {
   /** name attribute */
   name: string;
   /** value 속성 */
-  value: string;
+  value?: string;
   /** options 값 */
   options: OptionsType[];
   /** native로 보여줄 것인지 결정. */
