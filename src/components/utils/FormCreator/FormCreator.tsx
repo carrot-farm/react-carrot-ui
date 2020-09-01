@@ -437,10 +437,12 @@ const FormComponents = ({
   );
 
   // # 체인지 이벤트 핸들러
-  const handleChange = useCallback(
-    (e: any) => onChange(e, componentInfo, parentIndex, childIndex),
-    [componentInfo, parentIndex, childIndex]
-  );
+  // const handleChange = useCallback(
+  //   (e: any) => onChange(e, componentInfo, parentIndex, childIndex),
+  //   [componentInfo, parentIndex, childIndex]
+  // );
+  const handleChange = (e: any) =>
+    onChange(e, componentInfo, parentIndex, childIndex);
 
   // # 스타일
   const rootStyeMemo = useMemo(

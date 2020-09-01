@@ -50,9 +50,7 @@ export const Default = () => {
       <FormCreator
         model={model}
         values={values}
-        onChange={({ name, value }) =>
-          console.log("> change: \n", name, value, values)
-        }
+        onChange={control.bindChange()}
       />
     </div>
   );

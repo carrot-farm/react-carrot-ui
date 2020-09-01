@@ -247,6 +247,7 @@ function useFormController({
     values: _formValues,
     model: _model,
     control: {
+      values: _formValues,
       setModel,
       register,
       autoRegister,
