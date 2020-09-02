@@ -49,8 +49,11 @@ export const Default = () => {
       <br />
       <FormCreator
         model={model}
-        values={values}
         onChange={control.bindChange()}
+        onSubmit={control.bindSubmit((values) => {
+          console.log("> bindSubmit: ", values);
+          return;
+        })}
       />
     </div>
   );

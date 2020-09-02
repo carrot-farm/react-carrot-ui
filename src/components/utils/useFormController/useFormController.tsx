@@ -16,8 +16,10 @@ export interface IUseFormControllerProps {
 export interface IUseFormControllerReturn {
   /** 컨트롤 가능한 폼 모델 */
   model: TModel;
-  /** 값 객체 */
+  /** 값 객들 */
   values: IValues;
+  /** 저장된 값들 */
+  savedValues: IValues;
   /** 폼 컨트롤을 위해 만든 객체 */
   control: IControl;
 }
@@ -39,7 +41,24 @@ export interface IControl {
   setValue: (key: string, value: any) => void;
   /** 오브젝트 형태로 값을 변경한다. */
   setValues: (values: IValues) => void;
+  /** 이벤트를 연결한다. */
+  bindChange: TBindChange;
+  /** 서브및을 연결한다. */
+  bindSubmit: TBindSubmit;
 }
+
+type TBindChange = (
+  f?: TBindF
+) => (keyValue: { name: string; value: any }) => void;
+
+type TBindF = (keyValue: {
+  name: string;
+  value: any;
+}) => { name: string; value: any };
+
+type TBindSubmit = (
+  f?: (values: IValues) => void | boolean
+) => (values: IValues) => void | boolean;
 
 /** 값 객체 */
 export interface IValues {
@@ -58,9 +77,10 @@ function useFormController({
 }: IUseFormControllerProps): IUseFormControllerReturn {
   const [_model, setModel] = useState<TModel>(model); // 외부에 노출되는 폼 모델
   const [_formValues, setFormValues] = useState<IValues>({}); // 폼의 전체 값을 저장.
+  const [savedValues, setSavedValues] = useState<IValues>({}); // 저장한값
   const [modelKeyMap, setModelKeyMap] = useState<IModelKeyMap>({}); // 모델의 키 위치를 저장한다.
   const watcher = useRef<TWatcher>();
-  const prevValues = useRef<IValues>({});
+  const prevValues = useRef<IValues>();
 
   // # mount
   useEffect(() => {
@@ -189,15 +209,34 @@ function useFormController({
 
   // # 여러개의 key / value를 업데이트 한다.
   const setValues = useCallback(
-    (_values: IValues) => {
+    (_values: IValues, isSaveValues?: boolean) => {
       const newModel = [..._model];
+      const filteredValues: IValues = {};
 
-      setFormValues({
-        ..._formValues,
-        ..._values,
+      // register로 등록되어 있는 값들만 추려 낸다.
+      const filtered = Object.keys(_values).map((k) => {
+        return _formValues[k] ? ((filteredValues[k] = _values[k]), k) : false;
       });
 
-      Object.keys(_values).map((name) => {
+      // console.log("> setValues\n", _formValues, filtered, filteredValues);
+
+      // 등록된 값과 일치하는게 없을 경우
+      if (!filtered.length) {
+        return;
+      }
+
+      // 저장여부
+      if (isSaveValues === true) {
+        setSavedValues(filteredValues);
+      }
+
+      // 값 업데이트
+      setFormValues({
+        ..._formValues,
+        ...filteredValues,
+      });
+
+      Object.keys(filteredValues).map((name) => {
         const [i, j] = modelKeyMap[name];
         const changedComponent = newModel[i].components[j];
 
@@ -205,7 +244,7 @@ function useFormController({
           changedComponent.component !== "Button" &&
           changedComponent.component !== "IconButton"
         ) {
-          changedComponent.props.value = _values[name];
+          changedComponent.props.value = filteredValues[name];
         }
       });
 
@@ -233,21 +272,67 @@ function useFormController({
     [_model, modelKeyMap]
   );
 
-  const bindChange = useCallback(
+  // # 체인지 이벤트 연결
+  const bindChange = useCallback<TBindChange>(
     (f) => ({ name, value }) => {
-      console.log("> bindChange: ", _formValues, name, value);
-      f && f({ name, value });
+      // console.log("> bindChange: ", _formValues, name, value);
+      if (f) {
+        const newValue = f({ name, value });
+        setValue(newValue.name, newValue.value);
+        return;
+      }
 
       setValue(name, value);
     },
     [_formValues]
   );
 
+  // # 서브밋 이벤트 연결
+  const bindSubmit = useCallback(
+    (f) => (_values: IValues) => {
+      // console.log("> bindSubmi: \n", _value);
+      if (f && f(_values) === false) {
+        return false;
+      }
+
+      clear(_formValues);
+      return false;
+    },
+    [_formValues]
+  );
+
+  // # 전체 값을 삭제 한다.
+  const clear = useCallback(
+    (values: IValues) => {
+      const clearValues: IValues = {};
+
+      Object.keys(values).map((k) => {
+        const type = typeof values[k];
+        // console.log("> type", type);
+        if (type === "boolean") {
+          clearValues[k] = false;
+        } else if (type === "number") {
+          clearValues[k] = 0;
+        } else if (type === "object") {
+          Array.isArray(values[k])
+            ? (clearValues[k] = [])
+            : (clearValues[k] = {});
+        } else {
+          clearValues[k] = "";
+        }
+      });
+
+      setValues(clearValues);
+    },
+    [setValues]
+  );
+
   return {
-    values: _formValues,
+    values: { ..._formValues },
+    savedValues,
     model: _model,
     control: {
-      values: _formValues,
+      watcher: watcher,
       setModel,
       register,
       autoRegister,
@@ -255,7 +340,7 @@ function useFormController({
       setValue,
       setValues,
       bindChange,
-      watcher: watcher,
+      bindSubmit,
     },
   };
 }
