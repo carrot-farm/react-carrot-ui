@@ -57,8 +57,8 @@ type TBindF = (keyValue: {
 }) => { name: string; value: any };
 
 type TBindSubmit = (
-  f?: (values: IValues) => void | boolean
-) => (values: IValues) => void | boolean;
+  f?: (values: IValues) => void | false
+) => (values: IValues) => void | false;
 
 /** 값 객체 */
 export interface IValues {

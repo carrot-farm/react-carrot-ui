@@ -199,7 +199,6 @@ function FormCreator({
   onClicks,
   formRef,
   control,
-  values,
   onSubmit,
   onChange,
 }: TFormCreator) {
@@ -213,10 +212,6 @@ function FormCreator({
     //   control.watcher.current = (values) => console.log("> values: ", values);
     // }
   }, []);
-
-  useEffect(() => {
-    // console.log("> watch value: ", values);
-  }, [values]);
 
   // # 변경 이벤트 핸들러
   const handleChnage = (
@@ -270,7 +265,6 @@ function FormCreator({
       component.component !== "Button" &&
       component.component !== "IconButton"
     ) {
-      console.log("> values: ", values);
       onChange(
         { name: component.props.name, value: component.props.value },
         {
@@ -377,7 +371,6 @@ function FormCreator({
             className="form-component-wrapper"
             css={styleMemo(a.componentsStyle)}
           >
-            {JSON.stringify(values)}
             {a.components.map((c: TComponent, j: number) => (
               <React.Fragment>
                 {/* <Input onChange={() => console.log("> input; ", values)} /> */}
