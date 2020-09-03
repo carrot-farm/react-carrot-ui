@@ -34,23 +34,12 @@ export type TFormCreator = {
   onClicks?: TOnClicks;
   /** 폼 엘리먼트 참조 */
   formRef?: React.RefObject<HTMLFormElement>;
-  /** useFormController의 control */
-  control?: IControl;
+  // /** useFormController의 control */
+  // control?: IControl;
   /** 폼의 서브밋 이벤트 */
   onSubmit?: TOnSubmit;
   /** 폼의 체인지 이벤트. 전체 이벤트를 캐치 */
-  onChange?: (
-    { name, value }: { name: string; value: any },
-    {
-      e,
-      component,
-      model,
-    }: {
-      e: TChangeEvent;
-      component: TComponent;
-      model: TModel;
-    }
-  ) => void;
+  onChange?: ({ name, value }: { name: string; value: any }) => void;
 };
 
 // # 라벨 정렬 방향
@@ -198,20 +187,11 @@ function FormCreator({
   onChanges,
   onClicks,
   formRef,
-  control,
+  // control,
   onSubmit,
   onChange,
 }: TFormCreator) {
-  // const $form = useRef<HTMLFormElement>(null);
   const [_model, setModel] = useState<TModel>(model);
-
-  // # mount
-  useEffect(() => {
-    // console.log("> FormCreator mount: \n", control);
-    // if (control?.watcher.current) {
-    //   control.watcher.current = (values) => console.log("> values: ", values);
-    // }
-  }, []);
 
   // # 변경 이벤트 핸들러
   const handleChnage = (
@@ -230,20 +210,17 @@ function FormCreator({
       component.component === "CheckBox"
     ) {
       component.props.value = el.checked;
-    } else if (component.component === "Select") {
-      component.props.value = e.value;
     } else if (component.component === "Radio") {
       newModel[parentIndex].components.forEach((b: TComponent) => {
         if (b.component === "Radio") {
           b.props.checked = b.props.value === el.value;
         }
       });
-    } else if (component.component === "RadioGroup") {
-      // console.log("> radio group change: ", component.props.value, el.value);
-      component.props.value = el.value;
     } else if (
       component.component === "Input" ||
-      component.component === "TextField"
+      component.component === "TextField" ||
+      component.component === "Select" ||
+      component.component === "RadioGroup"
     ) {
       component.props.value = el.value;
     }
@@ -258,39 +235,26 @@ function FormCreator({
       return false;
     }
 
-    // # change 이벤트
+    // # 전체 change 이벤트
     if (
       onChange &&
       component.props.name &&
-      component.component !== "Button" &&
-      component.component !== "IconButton"
+      !(
+        component.component === "Button" || component.component === "IconButton"
+      )
     ) {
-      onChange(
-        { name: component.props.name, value: component.props.value },
-        {
-          e,
-          component: a,
-          model: _model,
-        }
-      );
+      onChange({ name: component.props.name, value: component.props.value });
     }
 
     // 컨트롤러가 있을 때 변경 값 반영
-    if (
-      control?.setValue &&
-      component.props.name &&
-      component.component !== "Button" &&
-      component.component !== "IconButton"
-    ) {
-      console.log(
-        "> FormCreator.handleChnage \n",
-        component,
-        "\n",
-        component.props.name,
-        component.props.value
-      );
-      control.setValue(component.props.name, component.props.value);
-    }
+    // if (
+    //   control?.setValue &&
+    //   component.props.name &&
+    //   component.component !== "Button" &&
+    //   component.component !== "IconButton"
+    // ) {
+    //   control.setValue(component.props.name, component.props.value);
+    // }
 
     setModel(newModel);
   };

@@ -102,30 +102,6 @@ function useFormController({
       watcher.current(_formValues);
     }
 
-    // Object.keys(_formValues).map((k) => {
-    //   if (_formValues[k] !== prevValues.current[k]) {
-    //     isDiff = true;
-    //     diff[k] = _formValues[k];
-    //     const [i, j] = modelKeyMap[k];
-    //     console.log("> diff: ", i, j, _model[i].components[j]);
-    //     const changedComponent = _model[i].components[j];
-    //     if (
-    //       changedComponent.component !== "Button" &&
-    //       changedComponent.component !== "IconButton"
-    //     ) {
-    //       _model[i].components[j].props.value = _formValues[k];
-    //     }
-    //   }
-    //   return k;
-    // });
-
-    // console.log("> isDiff: \n", isDiff);
-    // if (isDiff === true) {
-    //   setModel(_model);
-    // }
-
-    // console.log("> diff: \n", modelKeyMap);
-
     // 이전 상태값 업데이트
     prevValues.current = { ..._formValues };
   }, [_formValues]);
@@ -149,14 +125,22 @@ function useFormController({
       const _modelKeyMap: IModelKeyMap = {};
 
       mapModel((c, keyMap) => {
-        if (c.props?.name) {
-          _modelKeyMap[c.props.name] = keyMap;
-          if (c.component === "Switch" || c.component === "CheckBox") {
-            // console.log("> ", c.props.checked);
-            _values[c.props.name] = c.props.value;
-          } else if (c.component === "Input") {
-            // console.log("> keyMap: ", c.props.name, keyMap);
-            _values[c.props.name] = c.props.value || c.props.defaultValue;
+        const { props } = c;
+
+        if (props?.name) {
+          _modelKeyMap[props.name] = keyMap;
+
+          if (
+            c.component === "Input" ||
+            c.component === "Select" ||
+            c.component === "RadioGroup" ||
+            c.component === "TextField" ||
+            c.component === "Switch" ||
+            c.component === "CheckBox"
+          ) {
+            _values[props.name] = c.props.value || c.props.defaultValue;
+          } else if (c.component === "Radio") {
+            _values[props.name] = c.props.value;
           }
         }
         return c;
@@ -185,21 +169,18 @@ function useFormController({
     setFormValues(obj);
   }, []);
 
-  // # key / value로 값을 업데이트 한다.(동시에 여러개를 적용시 마지막 것만 적용된다.)
+  // # key / value로 값을 업데이트 한다.
   const setValue = useCallback(
     (name: string, value: any) => {
-      console.log("> _formValues: ", _formValues);
-      console.log("> setValue(name / value): ", name, value);
+      // console.log("> _formValues: ", _formValues);
+      // console.log("> setValue(name / value): ", name, value);
       if (_formValues[name] === undefined) {
         return;
       }
-      // console.log("> setValue: ", _formValues);
-      // console.log("> setValue(name / value): ", name, value);
 
-      setFormValues({
-        ..._formValues,
-        [name]: value,
-      });
+      // 변경 값 저장
+      _formValues[name] = value;
+      setFormValues(_formValues);
 
       // 모델 업데이트
       updateModel(name, value);
@@ -240,12 +221,15 @@ function useFormController({
         const [i, j] = modelKeyMap[name];
         const changedComponent = newModel[i].components[j];
 
+        // 버튼과 아이콘 버튼은 제외
         if (
-          changedComponent.component !== "Button" &&
-          changedComponent.component !== "IconButton"
+          changedComponent.component === "Button" ||
+          changedComponent.component === "IconButton"
         ) {
-          changedComponent.props.value = filteredValues[name];
+          return;
         }
+
+        changedComponent.props.value = filteredValues[name];
       });
 
       setModel(newModel);
@@ -257,14 +241,12 @@ function useFormController({
   const updateModel = useCallback(
     (name: string, value: any) => {
       const [i, j] = modelKeyMap[name]; // 키맵
-      const changedComponent = _model[i].components[j]; // 변경될 컴포넌트 모델
+      const item = _model[i].components[j]; // 변경될 컴포넌트 모델
 
       // console.log("> updateModel: ", name, value, changedComponent);
-      if (
-        changedComponent.component !== "Button" &&
-        changedComponent.component !== "IconButton"
-      ) {
-        changedComponent.props.value = value;
+
+      if (item.component !== "Button" && item.component !== "IconButton") {
+        item.props.value = value;
       }
 
       setModel([..._model]);
@@ -275,7 +257,7 @@ function useFormController({
   // # 체인지 이벤트 연결
   const bindChange = useCallback<TBindChange>(
     (f) => ({ name, value }) => {
-      // console.log("> bindChange: ", _formValues, name, value);
+      console.log("> bindChange: ", name, value);
       if (f) {
         const newValue = f({ name, value });
         setValue(newValue.name, newValue.value);

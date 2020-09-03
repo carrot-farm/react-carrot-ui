@@ -50,11 +50,11 @@ function Radio({
   );
 
   // # 체인지 이벤트
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
       onChange(e);
     }
-  }, []);
+  };
 
   // # 렌더링
   return (

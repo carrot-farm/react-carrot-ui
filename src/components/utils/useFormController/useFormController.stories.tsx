@@ -24,7 +24,7 @@ export const Default = () => {
   // setValue test
   const testSetValueClick = () => {
     // console.log("> click: ", values);
-    control.setValue("test_switch", !values.test_switch);
+    control.setValue("test_input", "당근");
   };
 
   const handleSetValuesClick = () => {

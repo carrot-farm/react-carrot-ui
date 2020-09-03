@@ -55,16 +55,13 @@ function RadioGroup({
   }, [value]);
 
   // # change event
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (onChange && onChange(e) === false) {
-        return;
-      }
-      // console.log("> e", e.currentTarget.value);
-      setValue(e.currentTarget.value);
-    },
-    [_value]
-  );
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChange && onChange(e) === false) {
+      return;
+    }
+    // console.log("> e", e.currentTarget.value);
+    setValue(e.currentTarget.value);
+  };
 
   return (
     <div className={"carrot-ui-radioGroup-root"} css={rootStyle}>

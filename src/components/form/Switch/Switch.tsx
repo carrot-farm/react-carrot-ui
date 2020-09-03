@@ -53,12 +53,12 @@ function Switch({
   const classNameMemo = useMemo(() => className || "", [className]);
 
   // # 값 변경
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange && onChange(e) === false) {
       return;
     }
     setValue(e.currentTarget.checked);
-  }, []);
+  };
 
   return (
     <ThemeContext.Consumer>

@@ -14,7 +14,9 @@ export type TSelectProps = {
   /** name attribute */
   name: string;
   /** value 속성 */
-  value?: string;
+  value?: string | number;
+  /** 기본 값 */
+  defaultValue?: string | number;
   /** options 값 */
   options: OptionsType[];
   /** native로 보여줄 것인지 결정. */
@@ -27,7 +29,7 @@ export type TSelectProps = {
 // # options type
 export interface OptionsType {
   /** 내부 문자 */
-  text: string;
+  text: string | number;
   /** 값 */
   value: string;
   /** 비활성화 */
@@ -40,15 +42,18 @@ export interface OptionsType {
 function Select({
   name,
   value,
+  defaultValue,
   options,
   native = false,
   attr,
   onChange,
 }: TSelectProps) {
   const nativeEl = useRef<HTMLSelectElement>(null);
-  const [headText, setHeadText] = useState("");
+  const [headText, setHeadText] = useState<string | number | undefined>("");
   const [sw, setSw] = useState(false);
-  const [_value, setValue] = useState(value);
+  const [_value, setValue] = useState<string | number | undefined>(
+    value || defaultValue
+  );
 
   // # mount
   useEffect(() => {
