@@ -24,7 +24,7 @@ export type TSelectProps = {
   /** 기타 속성 */
   attr?: any;
   /** 값 변경 이벤트 */
-  onChange?: (selectedOption: OptionsType) => any;
+  onChange?: (selectedOption: IOnchageParams) => any;
 };
 // # options type
 export interface OptionsType {
@@ -36,6 +36,10 @@ export interface OptionsType {
   disabled?: boolean;
   /** 선택유무 */
   selected?: boolean;
+}
+// # onChange params
+interface IOnchageParams extends OptionsType {
+  name: string;
 }
 
 // ===== component
@@ -90,7 +94,8 @@ function Select({
       if (!disabled) {
         setSw(false);
       }
-      if (onChange && onChange(selectedOption) === false) {
+      // console.log('> ', selectedOption)
+      if (onChange && onChange({ name, ...selectedOption }) === false) {
         return false;
       }
     },

@@ -219,10 +219,11 @@ function FormCreator({
     } else if (
       component.component === "Input" ||
       component.component === "TextField" ||
-      component.component === "Select" ||
       component.component === "RadioGroup"
     ) {
       component.props.value = el.value;
+    } else if (component.component === "Select") {
+      component.props.value = e.value;
     }
 
     // 이벤트 핸들러 실행.
