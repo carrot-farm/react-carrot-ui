@@ -1,21 +1,14 @@
 /** @jsx jsx */
-import React, { useRef } from "react";
-import { jsx, css } from "@emotion/core";
-import {
-  withKnobs,
-  boolean,
-  text,
-  number,
-  object,
-  select,
-} from "@storybook/addon-knobs";
+import { useRef } from "react";
+import { jsx } from "@emotion/core";
+import { withKnobs, boolean, object, select } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 
 import FormCreator, { TModel } from "./FormCreator";
 
 // ===== export 정보
 export default {
-  title: "utils|FormCreator",
+  title: "utils/FormCreator",
   component: FormCreator,
   decorators: [withKnobs],
 };
@@ -24,7 +17,7 @@ export default {
 export const Default = () => {
   const props = {
     reset: boolean("reset", true),
-    align: select("align", ["vertical", "horizontal"], "horizontal"),
+    direction: select("direction", ["vertical", "horizontal"], "horizontal"),
     labelWidth: "150px",
     model: object("model", model),
     onChanges: {
@@ -102,7 +95,7 @@ const model: TModel = [
     components: [
       {
         component: "CheckBox",
-        props: { name: "checkbox", checked: false, label: "체크박스" },
+        props: { name: "checkbox", value: true, label: "체크박스" },
       },
     ],
   },
@@ -111,7 +104,7 @@ const model: TModel = [
     components: [
       {
         component: "Switch",
-        props: { name: "switch", checked: false },
+        props: { name: "switch", value: true },
       },
     ],
   },
@@ -136,12 +129,29 @@ const model: TModel = [
     ],
   },
   {
+    label: "라디오 그룹",
+    components: [
+      {
+        component: "RadioGroup",
+        props: {
+          name: "radio_group",
+          value: "pig",
+          items: [
+            { label: "carrot", value: "carrot" },
+            { label: "pig", value: "pig" },
+            { label: "cow", value: "cow" },
+          ],
+        },
+      },
+    ],
+  },
+  {
     label: "셀렉트",
     components: [
       {
         component: "Select",
         props: {
-          name: "radio",
+          name: "select",
           value: "water",
           options: [
             { text: "당근", value: "당근" },

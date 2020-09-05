@@ -1,27 +1,21 @@
 /** @jsx jsx */
 import * as React from "react";
-import {
-  useEffect,
-  useState,
-  useContext,
-  createContext,
-  useMemo,
-  useCallback,
-  useRef,
-} from "react";
+import { useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { jsx, css } from "@emotion/core";
 
 import { media, getColor } from "../../../styles";
 import * as formComponents from "../../../formComponents";
-import Grid from "../../Grid/Grid";
-import { TInputProps } from "../../Input/Input";
-import { TTextFieldProps } from "../../TextField/TextField";
-import { TRadioProps } from "../../Radio/Radio";
-import { OptionsType, TSelectProps } from "../../Select/Select";
-import { TSwitchProps } from "../../Switch/Switch";
-import { TCheckBoxProps } from "../../CheckBox/CheckBox";
-import { TButtonProps } from "../../Button/Button";
-import { TIconButtonProps } from "../../IconButton/IconButton";
+import { IControl } from "../useFormController/useFormController";
+import Input, { TInputProps } from "../../form/Input/Input";
+import TextField, { TTextFieldProps } from "../../form/TextField/TextField";
+import Radio, { TRadioProps } from "../../form/Radio/Radio";
+import RadioGroup, { TRadioGroupProps } from "../../form/RadioGroup/RadioGroup";
+import Select, { OptionsType, TSelectProps } from "../../form/Select/Select";
+import Switch, { TSwitchProps } from "../../form/Switch/Switch";
+import CheckBox, { TCheckBoxProps } from "../../form/CheckBox/CheckBox";
+import Button, { TButtonProps } from "../../form/Button/Button";
+import IconButton, { TIconButtonProps } from "../../form/IconButton/IconButton";
 
 // ===== 타입정의
 // # 메인 컴포넌트 타입
@@ -33,19 +27,23 @@ export type TFormCreator = {
   /** onSubmit 후 폼의 초기화 여부*/
   reset?: boolean;
   /** 라벨의 정렬 방향 */
-  align?: TAlign;
+  direction?: Tdirection;
   /** 폼 요소의 체인지 이벤트. false 리턴시 업데이트 안함 */
   onChanges?: TOnChanges;
   /** 버튼의 클릭 이벤트 */
   onClicks?: TOnClicks;
-  /** 폼의 서브밋 이벤트 */
-  onSubmit?: TOnSubmit;
   /** 폼 엘리먼트 참조 */
   formRef?: React.RefObject<HTMLFormElement>;
+  // /** useFormController의 control */
+  // control?: IControl;
+  /** 폼의 서브밋 이벤트 */
+  onSubmit?: TOnSubmit;
+  /** 폼의 체인지 이벤트. 전체 이벤트를 캐치 */
+  onChange?: ({ name, value }: { name: string; value: any }) => void;
 };
 
 // # 라벨 정렬 방향
-type TAlign = "vertical" | "horizontal";
+type Tdirection = "vertical" | "horizontal";
 
 // # 폼 요소의 체인지 이벤트
 type TOnChanges = {
@@ -88,7 +86,7 @@ export type TModel = TRow[];
 
 type TRow = {
   /** label */
-  label: string;
+  label?: string;
   /** row에 대한 스타일 */
   style?: TSTyle;
   /** form input 요소에 대한 스타일 */
@@ -127,6 +125,10 @@ type TRadioComponent = TBaseComponent & {
   component: "Radio";
   props: TRadioProps;
 };
+type TRadioGroupComponent = TBaseComponent & {
+  component: "RadioGroup";
+  props: TRadioGroupProps;
+};
 type TSwitchComponent = TBaseComponent & {
   component: "Switch";
   props: TSwitchProps;
@@ -145,11 +147,12 @@ type TIconButtonComponent = TBaseComponent & {
 };
 
 // # 컴포넌트 타입
-type TComponent =
+export type TComponent =
   | TInputComponent
   | TSelectComponent
   | TTextFieldComponent
   | TRadioComponent
+  | TRadioGroupComponent
   | TSwitchComponent
   | TCheckBoxComponent
   | TButtonComponent
@@ -180,13 +183,14 @@ function FormCreator({
   model,
   labelWidth = "150px",
   reset = true,
-  align = "horizontal",
+  direction = "horizontal",
   onChanges,
   onClicks,
-  onSubmit,
   formRef,
+  // control,
+  onSubmit,
+  onChange,
 }: TFormCreator) {
-  const $form = useRef<HTMLFormElement>(null);
   const [_model, setModel] = useState<TModel>(model);
 
   // # 변경 이벤트 핸들러
@@ -196,19 +200,16 @@ function FormCreator({
     parentIndex: number,
     childIndex: number
   ) => {
-    const el = e.currentTarget;
+    const el = e.currentTarget; // 이벤트 엘리먼트
     const newModel = [..._model];
     const component = newModel[parentIndex].components[childIndex];
-    // const props = component.props;
 
-    // # 값 변경
+    // 값 변경 컴포넌트에 반영
     if (
-      component.component === "CheckBox" ||
-      component.component === "Switch"
+      component.component === "Switch" ||
+      component.component === "CheckBox"
     ) {
-      component.props.checked = el.checked;
-    } else if (component.component === "Select") {
-      component.props.value = e.value;
+      component.props.value = el.checked;
     } else if (component.component === "Radio") {
       newModel[parentIndex].components.forEach((b: TComponent) => {
         if (b.component === "Radio") {
@@ -217,12 +218,15 @@ function FormCreator({
       });
     } else if (
       component.component === "Input" ||
-      component.component === "TextField"
+      component.component === "TextField" ||
+      component.component === "RadioGroup"
     ) {
       component.props.value = el.value;
+    } else if (component.component === "Select") {
+      component.props.value = e.value;
     }
 
-    // # 이벤트 핸들러 실행.
+    // 이벤트 핸들러 실행.
     if (
       onChanges &&
       onChanges[component.props.name!] &&
@@ -231,6 +235,27 @@ function FormCreator({
     ) {
       return false;
     }
+
+    // # 전체 change 이벤트
+    if (
+      onChange &&
+      component.props.name &&
+      !(
+        component.component === "Button" || component.component === "IconButton"
+      )
+    ) {
+      onChange({ name: component.props.name, value: component.props.value });
+    }
+
+    // 컨트롤러가 있을 때 변경 값 반영
+    // if (
+    //   control?.setValue &&
+    //   component.props.name &&
+    //   component.component !== "Button" &&
+    //   component.component !== "IconButton"
+    // ) {
+    //   control.setValue(component.props.name, component.props.value);
+    // }
 
     setModel(newModel);
   };
@@ -272,39 +297,57 @@ function FormCreator({
     // return true;
   };
 
+  // # root style
+  const rootStyleMemo = useCallback(
+    (direction: Tdirection, style?: TSTyle) => () => [
+      rowStyle,
+      rowStyleS,
+      rowStyleM(direction),
+      style && styleFn(style),
+    ],
+    []
+  );
+
+  // # label style
+  const labelSTyleMemo = useCallback(
+    (labelWidth: string) => () => [
+      labelStyle,
+      labelStyleS,
+      labelStyleM(labelWidth),
+    ],
+    []
+  );
+
+  // # component Style
+  const styleMemo = useCallback((style) => () => [style && styleFn(style)], []);
+
   return (
     <form className="carrot-ui-form" ref={formRef} onSubmit={handleSubmit}>
-      {// Array.from(_model, ([k, a]) => {
-      _model.map((a, i) => (
+      {_model.map((a, i) => (
         <div
           className="form-row"
           key={`form-creator-${i}`}
-          css={[
-            rowStyle,
-            rowStyleS,
-            rowStyleM(align),
-            a.style && styleFn(a.style),
-          ]}
+          css={rootStyleMemo(direction, a.style)}
         >
-          <div
-            className="form-label"
-            css={[labelStyle, labelStyleS, labelStyleM(labelWidth)]}
-          >
+          <div className="form-label" css={labelSTyleMemo(labelWidth)}>
             {a.label}
           </div>
           <div
             className="form-component-wrapper"
-            css={[a.componentsStyle && styleFn(a.componentsStyle)]}
+            css={styleMemo(a.componentsStyle)}
           >
             {a.components.map((c: TComponent, j: number) => (
-              <FormComponents
-                componentInfo={c}
-                parentIndex={i}
-                childIndex={j}
-                onChange={handleChnage}
-                onClick={handleClick}
-                key={`form-component-${j}`}
-              />
+              <React.Fragment>
+                {/* <Input onChange={() => console.log("> input; ", values)} /> */}
+                <FormComponents
+                  componentInfo={c}
+                  parentIndex={i}
+                  childIndex={j}
+                  onChange={handleChnage}
+                  onClick={handleClick}
+                  key={`form-component-${j}`}
+                />
+              </React.Fragment>
             ))}
           </div>
         </div>
@@ -313,7 +356,7 @@ function FormCreator({
   );
 }
 
-// # form 요소 컴포넌트
+// ===== form 요소 컴포넌트
 const FormComponents = ({
   componentInfo,
   parentIndex,
@@ -321,29 +364,61 @@ const FormComponents = ({
   onChange,
   onClick,
 }: TFormComponentsProps) => {
-  const Component = formComponents[componentInfo.component] as any;
-  const style = componentInfo.style;
+  const { component: componentName } = componentInfo;
+  // const Component = formComponents[componentInfo.component] as any;
+  let Component: any;
+
+  if (componentName === "Button") {
+    Component = Button;
+  } else if (componentName === "IconButton") {
+    Component = IconButton;
+  } else if (componentName === "CheckBox") {
+    Component = CheckBox;
+  } else if (componentName === "Input") {
+    Component = Input;
+  } else if (componentName === "Select") {
+    Component = Select;
+  } else if (componentName === "Radio") {
+    Component = Radio;
+  } else if (componentName === "RadioGroup") {
+    Component = RadioGroup;
+  } else if (componentName === "Switch") {
+    Component = Switch;
+  } else if (componentName === "TextField") {
+    Component = TextField;
+  }
+
+  // # 클릭 이벤트 핸들러
+  const handleClick = useCallback(
+    (e: any) => onClick && onClick(e, componentInfo, parentIndex, childIndex),
+    [componentInfo, parentIndex, childIndex]
+  );
+
+  // # 체인지 이벤트 핸들러
+  // const handleChange = useCallback(
+  //   (e: any) => onChange(e, componentInfo, parentIndex, childIndex),
+  //   [componentInfo, parentIndex, childIndex]
+  // );
+  const handleChange = (e: any) =>
+    onChange(e, componentInfo, parentIndex, childIndex);
+
+  // # 스타일
+  const rootStyeMemo = useMemo(
+    () => [
+      formComponentStyle,
+      componentInfo.style && styleFn(componentInfo.style),
+    ],
+    [formComponentStyle, componentInfo]
+  );
+
+  // console.log("> ", componentInfo.props);
 
   return (
-    <div
-      className="form-component"
-      css={[formComponentStyle, style && styleFn(style)]}
-    >
-      {componentInfo.component === "Button" ||
-      componentInfo.component === "IconButton" ? (
-        <Component
-          {...componentInfo.props}
-          onClick={(e: any) =>
-            onClick(e, componentInfo, parentIndex, childIndex)
-          }
-        />
+    <div className="form-component" css={rootStyeMemo}>
+      {componentName === "Button" || componentName === "IconButton" ? (
+        <Component {...componentInfo.props} onClick={handleClick} />
       ) : (
-        <Component
-          {...componentInfo.props}
-          onChange={(e: any) =>
-            onChange(e, componentInfo, parentIndex, childIndex)
-          }
-        />
+        <Component {...componentInfo.props} onChange={handleChange} />
       )}
     </div>
   );
@@ -360,8 +435,8 @@ const getValues = (model: TModel): TValues => {
         b.component !== "Button" &&
         b.component !== "IconButton"
       ) {
-        if (b.component === "CheckBox" || b.component === "Switch") {
-          values[b.props.name] = !!b.props.checked;
+        if (b.component === "Switch") {
+          values[b.props.name] = b.props.value;
         } else if (b.component === "Radio" && b.props.checked) {
           values[b.props.name] = b.props.value;
         } else {
@@ -382,8 +457,8 @@ const clearModel = (model: TModel): TModel => {
   for (const a of newModel) {
     for (const b of a.components) {
       if (b.component !== "Button" && b.component !== "IconButton") {
-        if (b.component === "CheckBox" || b.component === "Switch") {
-          b.props.checked = false;
+        if (b.component === "Switch") {
+          b.props.value = false;
         } else if (b.component === "Radio") {
           if (firstRadioName !== b.props.name && b.props.name) {
             //   // firstRadioValue = b.props.value;
@@ -409,10 +484,10 @@ const rowStyle = css`
   margin-bottom: 1.2rem;
   min-height: 45px;
 `;
-const rowStyleM = (align: TAlign) =>
+const rowStyleM = (direction: Tdirection) =>
   media.m(`
   ${
-    align === "vertical"
+    direction === "vertical"
       ? `
       flex-wrap: wrap;
       & > div{ width: 100%;}
@@ -445,7 +520,7 @@ const formComponentStyle = css`
     margin: 0;
     margin-top: 0;
     margin-bottom: 0;
-    padding: 10px 0 7px;
+    padding: 10px 0 8px;
   }
   .carrot-ui-input-root {
   }

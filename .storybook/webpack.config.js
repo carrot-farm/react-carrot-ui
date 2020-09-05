@@ -1,28 +1,40 @@
-module.exports = ({ config, mode }) => {
+const path = require("path");
+
+module.exports = ({ config }) => {
   config.module.rules.push({
     test: /\.(ts|tsx)$/,
     use: [
       {
-        loader: require.resolve('babel-loader'),
+        loader: require.resolve("babel-loader"),
         options: {
-          presets: [['react-app', { flow: false, typescript: true }]],
+          presets: [["react-app", { flow: false, typescript: true }]],
           plugins: [
             [
-              require.resolve('babel-plugin-named-asset-import'),
+              require.resolve("babel-plugin-named-asset-import"),
               {
                 loaderMap: {
                   svg: {
-                    ReactComponent: '@svgr/webpack?-svgo,+titleProp,+ref![path]'
-                  }
-                }
-              }
-            ]
-          ]
-        }
+                    ReactComponent:
+                      "@svgr/webpack?-svgo,+titleProp,+ref![path]",
+                  },
+                },
+              },
+            ],
+          ],
+        },
       },
-      require.resolve('react-docgen-typescript-loader')
-    ]
+      require.resolve("react-docgen-typescript-loader"),
+    ],
   });
-  config.resolve.extensions.push('.ts', '.tsx');
+
+  // config.resolve = {
+  //   ...config.resolve,
+  //   alias: {
+  //     ...config.resolve.alias,
+  //     "~": path.join(__dirname, "../src"),
+  //   },
+  // };
+
+  config.resolve.extensions.push(".ts", ".tsx");
   return config;
 };
